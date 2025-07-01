@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dbfile 입력하기</title>
+    <link href="/css/form.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <form id="fileForm">
+        <input type="file" id="dbFile"/>
+        <button type="submit">파일 올리기</button>
+    </form>
+    <div id="responseDiv">
+
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+<script>
+    // DOM이 완전히 로드되고 파싱 완료된 시점에 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM 준비 완료!');
+        document.getElementById("fileForm").addEventListener('submit',ajaxSubmit);
+    });
+
+    /*
+        업로드한 파일을 ajax로 보낸 후 DB table에 추가
+     */
+    function ajaxSubmit(event){
+        event.preventDefault();
+
+        const formData = new FormData();
+        const file = document.getElementById("dbFile").files[0];
+        formData.append('file', file);
+
+        $.ajax({
+            url: '/upload/toTable',
+            method: 'POST',
+            data: formData,              // 일반 데이터나 FormData 객체
+            processData: false,          // 파일 업로드 시 false
+            contentType: false,          // 파일 업로드 시 false
+            success: function(response) {
+                console.log('성공:', response);
+                console.log('리턴 타입 : '+typeof response);
+
+                makeResultHtml(response);
+
+            },
+            error: function(xhr, status, error) {
+                console.error('실패:', error);
+            }
+        });
+    }
+
+    /*
+       전체성공시 조회하기 버튼을 클릭하면 작동
+       db table에 있는 모든 user 정보 가져옴
+    */
+    function ajaxSelectAll(event){
+        event.preventDefault();
+
+        $.ajax({
+            url: '/upload/fullSelect',
+            method: 'POST',
+            success: function (response) {
+                makeTableHtml(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('실패:', error);
+            }
+        });
+
+    }
+
+    /*
+        전체성공/각 줄별로 실패를 HTML로 동적 생성
+     */
+    function makeResultHtml(response){
+        let responseSpace = document.getElementById('responseDiv');
+        let responseSpaceText = '';
+
+        //사용자가 잘못된 파일 올려서 null로 리턴될 경우
+        if (response == ""){
+            console.log("사용자가 잘못된 파일 올림");
+            responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
+            responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;
+            responseSpace.innerHTML = responseSpaceText;
+        } else{
+            //전체 성공
+            if (response.totalCount == response.successCount){
+                responseSpaceText += `<h3>▼ 전체 성공</h3>`;
+                responseSpaceText += `<h3>레코드 건수  ${response.successCount}건 입력 성공</h3>`;
+                responseSpaceText += `<button id="findAllButton">조회버튼</button>`;
+
+                //조회하기 결과 표가 붙을 자리
+                responseSpaceText += `<div id="result"></div>`;
+
+                responseSpace.innerHTML = responseSpaceText;
+                document.getElementById("findAllButton").addEventListener('click',function(event){
+                    ajaxSelectAll(event);
+                });
+
+                //일부 실패
+            } else{
+                responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
+                responseSpaceText += `<h3>성공  ${response.successCount}건, 실패 ${response.totalCount - response.successCount}건 </h3>`;
+                responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
+                response.userResultDTOList.forEach(userResultDTO => {
+                    if(userResultDTO.successFlag == 0){
+                        responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
+                    } else{}
+                });
+                responseSpace.innerHTML = responseSpaceText;
+            }
+
+        }
+    }
+
+    /*
+        DB table에 있는 레코드 각각을 HTML로 동적 생성
+     */
+    function makeTableHtml(response){
+        let resultSpace = document.getElementById('result');
+        let resultSpaceText = '';
+
+        resultSpaceText += '<table>';
+
+        resultSpaceText += `<tr>`;
+        resultSpaceText += `<th> ID </th>`;
+        resultSpaceText += `<th> PWD </th>`;
+        resultSpaceText += `<th> NAME </th>`;
+        resultSpaceText += `<th> LEVEL </th>`;
+        resultSpaceText += `<th> DESC </th>`;
+        resultSpaceText += `<th> REG_DATE </th>`;
+        resultSpaceText += `</tr>`;
+
+        response.forEach(userDTO => {
+            console.log("배열 하나: " + userDTO+'\n');
+            console.log('내용 : '+ userDTO.id+'\n');
+            console.log('내용: '+ userDTO.pwd+'\n');
+            console.log('내용: '+ userDTO.name+'\n');
+            console.log('내용: '+ userDTO.level+'\n');
+            console.log('내용: '+ userDTO.desc+'\n');
+
+            //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
+            console.log('내용: '+ userDTO.reg_date+'\n');
+
+            const date = parseDate(userDTO.reg_date);
+            let regDateText = makeRegDate(date);
+
+            resultSpaceText += `<tr>`;
+            resultSpaceText += `<td> ${userDTO.id} </td>`;
+            resultSpaceText += `<td> ${userDTO.pwd} </td>`;
+            resultSpaceText += `<td> ${userDTO.name} </td>`;
+            resultSpaceText += `<td> ${userDTO.level} </td>`;
+            resultSpaceText += `<td> ${userDTO.desc} </td>`;
+            resultSpaceText += `<td> ${regDateText} </td>`;
+            resultSpaceText += `</tr>`;
+
+        });
+
+        resultSpaceText += `</table>` ;
+
+        resultSpace.innerHTML = resultSpaceText;
+    }
+
+    /*
+        파일 문자열을 자바스크립트 객체 Date로 변환한다.
+        @param string 문자열
+        @return Date 객체
+     */
+    function parseDate(dateString){
+        const [datePart, timePart] = dateString.split(" ");
+        const [year, month, day] = datePart.split("-");
+        const [hour, minute, second] = timePart.split(":");
+
+        const date = new Date(
+            parseInt(year),
+            parseInt(month) - 1, // JS month is 0-based
+            parseInt(day),
+            parseInt(hour),
+            parseInt(minute),
+            parseInt(second)
+        );
+
+        console.log(date.getFullYear());
+        console.log(date.getMonth() + 1); // (주의: 0-based)
+        console.log(date.getDate());
+        console.log(date.getHours());
+        console.log(date.getMinutes());
+
+        return date;
+    }
+
+    /*
+        자바스크립트 객체 Date의 각각 연/월/일 부분을 분리 후, 한글을 붙인다.
+        @param Date 객체
+        @return string 문자열
+     */
+    function makeRegDate(date){
+        let regDateText = '';
+        regDateText += date.getFullYear()+"년";
+        regDateText += (date.getMonth()+1)+"월";
+        regDateText += (date.getDate())+"일    ";
+
+        if(parseInt(date.getHours()) < 10){
+            regDateText += "0"+(date.getHours())+"시";
+        }
+        else{
+            regDateText += (date.getHours())+"시";
+        }
+
+        if(parseInt(date.getMinutes()) < 10){
+            regDateText += "0"+(date.getMinutes())+"분";
+        }
+        else{
+            regDateText += (date.getMinutes())+"분";
+        }
+
+        return regDateText;
+
+    }
+
+</script>
+
+</html>
