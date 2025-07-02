@@ -7,8 +7,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 @Entity
 @Table(name = "t_user")
+@Getter
+@Setter
+@ToString
 public class User {
 
     @Id
@@ -31,51 +38,4 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime regDate;
 
-    public String getId() {
-        return id;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public LocalDateTime getRegDate() {
-        return regDate;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public void setRegDate(LocalDateTime regDate) {
-        this.regDate = regDate;
-    }
 }

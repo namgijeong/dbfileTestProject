@@ -20,6 +20,7 @@ import com.example.test2.data.dto.UserDTO;
 import com.example.test2.data.dto.UserResultDTO;
 import com.example.test2.data.entity.User;
 import com.example.test2.data.dto.UserTotalResultDTO;
+import com.example.test2.utility.Utility;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUserById(String id) {
         User user =userDAO.select(id);
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setPwd(user.getPwd());
-        userDTO.setName(user.getName());
-        userDTO.setLevel(user.getLevel());
-        userDTO.setDesc(user.getDesc());
-        userDTO.setRegDate(user.getRegDate());
-
+        UserDTO userDTO = Utility.makeUserToUserDTO(user);
         return userDTO;
     }
 
@@ -54,13 +48,12 @@ public class UserServiceImpl implements UserService {
 
             int count = 0;
             int successCount = 0;
+            String line;
             List<UserResultDTO> userResultDTOList = new ArrayList<>();
-            UserTotalResultDTO userTotalResultDTO = new UserTotalResultDTO();
+            UserTotalResultDTO userTotalResultDTO = null;
 
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))){
-
-                String line;
 
                 /*
                     파일 한줄씩 읽어라.
@@ -70,56 +63,57 @@ public class UserServiceImpl implements UserService {
 
                 while ((line = reader.readLine()) != null) {
                     System.out.println("읽은 줄:" +line);
-                    UserResultDTO userResultDTO =  new UserResultDTO();
+                    UserResultDTO userResultDTO = null;
                     count++;
 
                     try{
                         //슬래시 단위로 나누기
                         String[] parts = line.split("/");
 
-                        //vo로 할당하기
-                        UserDTO userDTO = new UserDTO();
-
                         //공백이면 null로 만들기
-                        String[] clearParts = makeEmptyStringNull(parts);
+                        String[] clearParts = Utility.makeEmptyStringNull(parts);
+                        LocalDateTime localDateTime = Utility.makeStringToLocalDateTime(clearParts[5]);
 
-                        userDTO.setId(clearParts[0]);
-                        userDTO.setPwd(clearParts[1]);
-                        userDTO.setName(clearParts[2]);
-                        userDTO.setLevel(clearParts[3]);
-                        userDTO.setDesc(clearParts[4]);
+                        //vo로 할당하기
+                        UserDTO userDTO = new UserDTO.Builder()
+                                            .id(clearParts[0])
+                                            .pwd(clearParts[1])
+                                            .name(clearParts[2])
+                                            .level(clearParts[3])
+                                            .desc(clearParts[4])
+                                            .regDate(localDateTime)
+                                            .build();
 
-                        LocalDateTime localDateTime = makeStringToLocalDateTime(clearParts[5]);
-                        userDTO.setRegDate(localDateTime);
-
-                        User user = new User();
-                        user.setId(userDTO.getId());
-                        user.setPwd(userDTO.getPwd());
-                        user.setName(userDTO.getName());
-                        user.setLevel(userDTO.getLevel());
-                        user.setDesc(userDTO.getDesc());
-                        user.setRegDate(userDTO.getRegDate());
+                        User user = Utility.makeUserDTOToUser(userDTO);
 
                         userDAO.insert(user);
 
-                        userResultDTO.setSuccessLine(count);
-                        userResultDTO.setSuccessFlag(1);
+                        userResultDTO = new UserResultDTO.Builder()
+                                .successLine(count)
+                                .successFlag(1)
+                                .build();
+
                         successCount++;
 
                     } catch(Exception e){ // 개별 라인에서 오류 발생해도 다음 줄로 계속
                         System.err.println("라인 오류: " + line);
-                        userResultDTO.setFailLine(count);
-                        userResultDTO.setFailText(line);
-                        userResultDTO.setSuccessFlag(0);
+
+                        userResultDTO = new UserResultDTO.Builder()
+                                            .failLine(count)
+                                            .failText(line)
+                                            .successFlag(0)
+                                            .build();
                     } finally{
                         userResultDTOList.add(userResultDTO);
 
                     }
                 }
 
-                userTotalResultDTO.setUserResultDTOList(userResultDTOList);
-                userTotalResultDTO.setTotalCount(count);
-                userTotalResultDTO.setSuccessCount(successCount);
+                userTotalResultDTO = new UserTotalResultDTO.Builder()
+                                        .userResultDTOList(userResultDTOList)
+                                        .totalCount(count)
+                                        .successCount(successCount)
+                                        .build();
 
                 return userTotalResultDTO;
 
@@ -138,19 +132,11 @@ public class UserServiceImpl implements UserService {
     /*db table에 있는 user 레코드를 모두 조회한다.*/
     @Override
     public List<UserDTO> findAll() {
-
         List<User> userList = userDAO.selectAll();
         List<UserDTO> userDTOList = new ArrayList<>();
 
         for (User user : userList){
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            userDTO.setPwd(user.getPwd());
-            userDTO.setName(user.getName());
-            userDTO.setLevel(user.getLevel());
-            userDTO.setDesc(user.getDesc());
-            userDTO.setRegDate(user.getRegDate());
-
+            UserDTO userDTO = Utility.makeUserToUserDTO(user);
             userDTOList.add(userDTO);
         }
         return userDTOList;
@@ -161,33 +147,5 @@ public class UserServiceImpl implements UserService {
         userDAO.deleteAll();
     }
 
-    /*
-        문자열 각 부분이 공백으로 이루어진 빈 문자열일때 null로 처리
-        컬럼이 not null인데 정상 db insert되는 것을 방지
-        내용이 있는경우 공백만 제거한다.
-     */
-    public String[] makeEmptyStringNull(String[] parts){
-        for (int i = 0; i < parts.length; i++){
-            if(parts[i].trim().equals("")){
-                parts[i] = null;
-            }
-            else{
-                parts[i] = parts[i].trim();
-            }
-        }
 
-        return parts;
-    }
-
-    /*
-     * String을 LocalDateTime으로 바꿔야한다.
-     * 이때 String이어도 형식이 맞아야해서
-     * 사전에 공백을 제거했었다.
-     * */
-    public LocalDateTime makeStringToLocalDateTime(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
-
-        return localDateTime;
-    }
 }
