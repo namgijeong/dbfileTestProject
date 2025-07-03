@@ -11,12 +11,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import com.example.test2.data.dto.UserDtoBase;
+
 @Entity
 @Table(name = "t_user")
 @Getter
 @Setter
 @ToString
-public class User {
+public class User implements UserDtoBase {
 
     @Id
     @Column(nullable = false)

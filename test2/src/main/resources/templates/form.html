@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>dbfile 입력하기</title>
+    <title>남기정</title>
     <link href="/css/form.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -76,12 +76,19 @@
     /*
         전체성공/각 줄별로 실패를 HTML로 동적 생성
      */
-    function makeResultHtml(response){
+    function makeResultHtml(response) {
         let responseSpace = document.getElementById('responseDiv');
         let responseSpaceText = '';
 
-        //사용자가 잘못된 파일 올려서 null로 리턴될 경우
-        if (response == ""){
+        //파일읽기 리더가 실패했을때
+        if (response.exceptionCode == "FAIL_FILE_OPEN") {
+            console.log("파일 열기 실패");
+            responseSpaceText += `<h1>파일 읽기 실패하였습니다.</h1>`;
+            responseSpaceText += `<h1>다시 재시도 해주세요.</h1>`;
+            responseSpace.innerHTML = responseSpaceText;
+
+        //사용자가 잘못된 파일 확장자를 올렸을때
+        }else if(response.exceptionCode == "WRONG_FILE_EXTENSION"){
             console.log("사용자가 잘못된 파일 올림");
             responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
             responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;
@@ -100,7 +107,6 @@
                 document.getElementById("findAllButton").addEventListener('click',function(event){
                     ajaxSelectAll(event);
                 });
-
                 //일부 실패
             } else{
                 responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
@@ -124,45 +130,53 @@
         let resultSpace = document.getElementById('result');
         let resultSpaceText = '';
 
-        resultSpaceText += '<table>';
-
-        resultSpaceText += `<tr>`;
-        resultSpaceText += `<th> ID </th>`;
-        resultSpaceText += `<th> PWD </th>`;
-        resultSpaceText += `<th> NAME </th>`;
-        resultSpaceText += `<th> LEVEL </th>`;
-        resultSpaceText += `<th> DESC </th>`;
-        resultSpaceText += `<th> REG_DATE </th>`;
-        resultSpaceText += `</tr>`;
-
-        response.forEach(userDTO => {
-            console.log("배열 하나: " + userDTO+'\n');
-            console.log('내용 : '+ userDTO.id+'\n');
-            console.log('내용: '+ userDTO.pwd+'\n');
-            console.log('내용: '+ userDTO.name+'\n');
-            console.log('내용: '+ userDTO.level+'\n');
-            console.log('내용: '+ userDTO.desc+'\n');
-
-            //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
-            console.log('내용: '+ userDTO.reg_date+'\n');
-
-            const date = parseDate(userDTO.reg_date);
-            let regDateText = makeRegDate(date);
+        //현재 테이블에 아무런 레코드도 저장되어있지 않을때
+        if (response.exceptionCode == "EMPTY_USER_TABLE"){
+            resultSpaceText += `<h1>현재 DB에 아무 정보도 존재하지 않습니다.</h1>`
+        }
+        //테이블에 하나의 레코드라도 있으면
+        else{
+            resultSpaceText += '<table>';
 
             resultSpaceText += `<tr>`;
-            resultSpaceText += `<td> ${userDTO.id} </td>`;
-            resultSpaceText += `<td> ${userDTO.pwd} </td>`;
-            resultSpaceText += `<td> ${userDTO.name} </td>`;
-            resultSpaceText += `<td> ${userDTO.level} </td>`;
-            resultSpaceText += `<td> ${userDTO.desc} </td>`;
-            resultSpaceText += `<td> ${regDateText} </td>`;
+            resultSpaceText += `<th> ID </th>`;
+            resultSpaceText += `<th> PWD </th>`;
+            resultSpaceText += `<th> NAME </th>`;
+            resultSpaceText += `<th> LEVEL </th>`;
+            resultSpaceText += `<th> DESC </th>`;
+            resultSpaceText += `<th> REG_DATE </th>`;
             resultSpaceText += `</tr>`;
 
-        });
+            response.forEach(userDTO => {
+                console.log("배열 하나: " + userDTO+'\n');
+                console.log('내용 : '+ userDTO.id+'\n');
+                console.log('내용: '+ userDTO.pwd+'\n');
+                console.log('내용: '+ userDTO.name+'\n');
+                console.log('내용: '+ userDTO.level+'\n');
+                console.log('내용: '+ userDTO.desc+'\n');
 
-        resultSpaceText += `</table>` ;
+                //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
+                console.log('내용: '+ userDTO.reg_date+'\n');
+
+                const date = parseDate(userDTO.reg_date);
+                let regDateText = makeRegDate(date);
+
+                resultSpaceText += `<tr>`;
+                resultSpaceText += `<td> ${userDTO.id} </td>`;
+                resultSpaceText += `<td> ${userDTO.pwd} </td>`;
+                resultSpaceText += `<td> ${userDTO.name} </td>`;
+                resultSpaceText += `<td> ${userDTO.level} </td>`;
+                resultSpaceText += `<td> ${userDTO.desc} </td>`;
+                resultSpaceText += `<td> ${regDateText} </td>`;
+                resultSpaceText += `</tr>`;
+
+            });
+
+            resultSpaceText += `</table>` ;
+        }
 
         resultSpace.innerHTML = resultSpaceText;
+
     }
 
     /*

@@ -2,7 +2,13 @@ package com.example.test2.controller;
 
 import java.util.List;
 
+import com.example.test2.exception.EmptyUserTable;
+import com.example.test2.exception.FailFileOpen;
+import com.example.test2.exception.WrongFileExtension;
+import com.example.test2.response.ExceptionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,37 +28,35 @@ import com.example.test2.data.dto.UserTotalResultDTO;
 @RequiredArgsConstructor
 @Slf4j
 public class UploadController {
-    @Autowired
+
     private final UserService userService;
 
 
-    @GetMapping("/")
-    public String showForm(){
-        return "form";
-    }
-
     @PostMapping("/toTable")
-    public UserTotalResultDTO toTable(MultipartFile file) {
+    public ResponseEntity<?> toTable(MultipartFile file) {
         userService.deleteAll();
 
-        UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
-        if (userTotalResultDTO != null){
-            return userTotalResultDTO;
-        } else{
-            return null;
+        try{
+            UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
+            return ResponseEntity.ok(userTotalResultDTO);
+        }catch(FailFileOpen e1){
+            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("FAIL_FILE_OPEN",e1.getMessage()));
+        }catch(WrongFileExtension e2){
+            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("WRONG_FILE_EXTENSION",e2.getMessage()));
         }
 
+        //return userTotalResultDTO;
     }
 
     @PostMapping("/fullSelect")
-    public List<UserDTO> fullSelect(){
-        List<UserDTO> userDTOList = userService.findAll();
-
-        if (userDTOList != null && userDTOList.size()>0){
-            return userDTOList;
-        } else{
-            return null;
+    public ResponseEntity<?> fullSelect(){
+        try{
+            List<UserDTO> userDTOList = userService.findAll();
+            return ResponseEntity.ok(userDTOList);
+        }catch(EmptyUserTable e1){
+            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("EMPTY_USER_TABLE",e1.getMessage()));
         }
 
+        //return userDTOList;
     }
 }

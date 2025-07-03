@@ -2,6 +2,7 @@ package com.example.test2.data.dao.impl;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,14 +11,10 @@ import com.example.test2.data.entity.User;
 import com.example.test2.data.repository.UserRepository;
 
 @Component
+@RequiredArgsConstructor
 public class UserDAOImpl implements UserDAO {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserDAOImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     /*아이디를 가지고 user 레코드 찾기*/
     @Override
