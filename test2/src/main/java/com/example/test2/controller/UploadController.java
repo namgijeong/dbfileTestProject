@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.test2.exception.EmptyUserTable;
 import com.example.test2.exception.FailFileOpen;
 import com.example.test2.exception.WrongFileExtension;
+import com.example.test2.response.ExceptionCodeType;
 import com.example.test2.response.ExceptionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,9 +43,9 @@ public class UploadController {
             return ResponseEntity.ok(userTotalResultDTO);
 
         }catch(FailFileOpen e1){
-            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("FAIL_FILE_OPEN",e1.getMessage()));
+            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse(ExceptionCodeType.FAIL_FILE_OPEN,e1.getMessage()));
         }catch(WrongFileExtension e2){
-            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("WRONG_FILE_EXTENSION",e2.getMessage()));
+            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse(ExceptionCodeType.WRONG_FILE_EXTENSION,e2.getMessage()));
         }
 
     }
@@ -55,7 +56,7 @@ public class UploadController {
             List<UserDTO> userDTOList = userService.findAll();
             return ResponseEntity.ok(userDTOList);
         }catch(EmptyUserTable e1){
-            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("EMPTY_USER_TABLE",e1.getMessage()));
+            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse(ExceptionCodeType.EMPTY_USER_TABLE,e1.getMessage()));
         }
 
     }

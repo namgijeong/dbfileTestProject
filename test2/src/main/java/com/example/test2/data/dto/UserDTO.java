@@ -132,6 +132,52 @@ public class UserDTO {
     /*DTO 필드가 null인지 검사해서 잘못됬다면 어느 필드가 잘못됬는지 알려준다*/
     public static void checkUserDTOField(UserDTO userDTO) throws WrongFieldExceptions{
         List<String> WrongFieldList = new ArrayList();
+
+        for (Field field : userDTO.getClass().getDeclaredFields()){
+            field.setAccessible(true);
+
+            try{
+                if (!field.getName().equals("desc") && field.get(userDTO) == null){
+                    WrongFieldList.add(field.getName()+ "를 사용자가 입력하지 않았습니다." );
+                } else{
+                    //id는 모두 대문자여야 한다.
+                    if (field.getName().equals("id")){
+                        boolean isUpperString = Utility.isStringUpperCase((String)field.get(userDTO));
+                        if (!isUpperString){
+                            WrongFieldList.add("id가 모두 대문자가 아닙니다.");
+                        }
+                    }
+
+                    //패스워드는 모두 숫자형태여야 한다.
+                    if (field.getName().equals("pwd")){
+                        boolean isNumberString = Utility.isStringNumber((String)field.get(userDTO));
+                        if (!isNumberString){
+                            WrongFieldList.add("pwd가 모두 숫자가 아닙니다.");
+                        }
+                    }
+
+                    //레벨은 글자 하나이고 대문자여야한다.
+                    if (field.getName().equals("level")){
+                        boolean isCharUpperString = Utility.isStringUpperChar((String)field.get(userDTO));
+                        if (!isCharUpperString){
+                            WrongFieldList.add("level은 글자 하나여야 하고 대문자여야 합니다.");
+                        }
+                    }
+                }
+            }catch(IllegalAccessException e){
+                WrongFieldList.add(field.getName()+ "필드를 접근할 수 없습니다." );
+
+            }catch(NullPointerException e){
+                WrongFieldList.add(field.getName()+ "null 객체 접근하였습니다." );
+            }
+
+        }
+
+        if(!WrongFieldList.isEmpty()){
+            throw new WrongFieldExceptions(WrongFieldList);
+        }
+
+
         /*
         if(userDTO.getId() == null){
             WrongFieldList.add("id 필드를 사용자가 입력하지 않았습니다.");
@@ -150,26 +196,6 @@ public class UserDTO {
         }
          */
 
-        for(Field field : userDTO.getClass().getDeclaredFields()){
-            field.setAccessible(true);
-
-            try{
-                if(!field.getName().equals("desc") && field.get(userDTO) == null){
-                    WrongFieldList.add(field.getName()+ "를 사용자가 입력하지 않았습니다." );
-                }
-            }catch(IllegalAccessException e){
-
-                WrongFieldList.add(field.getName()+ "필드를 접근할 수 없습니다." );
-            }catch(NullPointerException e){
-                WrongFieldList.add(field.getName()+ "null 객체 접근하였습니다." );
-            }
-
-        }
-
-        if(!WrongFieldList.isEmpty()){
-            throw new WrongFieldExceptions(WrongFieldList);
-        }
-        //return WrongFieldList;
     }
 
 }

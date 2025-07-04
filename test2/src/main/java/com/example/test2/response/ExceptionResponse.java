@@ -10,6 +10,6 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public class ExceptionResponse {
-    private final String exceptionCode;
+    private final ExceptionCodeType exceptionCode;
     private final String exceptionMessage;
 }

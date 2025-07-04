@@ -116,7 +116,11 @@
                 response.userResultDTOList.forEach(userResultDTO => {
                     if(userResultDTO.successFlag == 0){
                         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
-                        responseSpaceText += `<h5>원인 : ${userResultDTO.exceptionMessage}</h5> `;
+                        //원인들이 많을 경우 분리
+                        const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
+                        for(const exceptionMessagePart of exceptionMessageParts){
+                            responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
+                        }
 
                     } else{}
                 });
