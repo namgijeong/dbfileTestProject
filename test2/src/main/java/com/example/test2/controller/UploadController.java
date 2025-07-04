@@ -38,14 +38,15 @@ public class UploadController {
 
         try{
             UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
+
             return ResponseEntity.ok(userTotalResultDTO);
+
         }catch(FailFileOpen e1){
             return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("FAIL_FILE_OPEN",e1.getMessage()));
         }catch(WrongFileExtension e2){
             return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("WRONG_FILE_EXTENSION",e2.getMessage()));
         }
 
-        //return userTotalResultDTO;
     }
 
     @PostMapping("/fullSelect")
@@ -57,6 +58,5 @@ public class UploadController {
             return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse("EMPTY_USER_TABLE",e1.getMessage()));
         }
 
-        //return userDTOList;
     }
 }

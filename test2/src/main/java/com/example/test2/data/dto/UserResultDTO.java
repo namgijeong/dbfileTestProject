@@ -16,18 +16,23 @@ public class UserResultDTO {
     private int failLine;
     /*실패했다면 그 줄 내용이 무엇인지*/
     private String failText;
+    /*exception 메세지*/
+    private String exceptionMessage;
 
     private UserResultDTO(Builder builder){
         this.successFlag = builder.successFlag;
         this.successLine = builder.successLine;
         this.failLine = builder.failLine;
         this.failText = builder.failText;
+        this.exceptionMessage = builder.exceptionMessage;
     }
+
     public static class Builder{
         private int successFlag;
         private int successLine;
         private int failLine;
         private String failText;
+        private String exceptionMessage;
 
         public Builder successFlag(int successFlag){
             this.successFlag = successFlag;
@@ -46,6 +51,11 @@ public class UserResultDTO {
 
         public Builder failText(String failText){
             this.failText = failText;
+            return this;
+        }
+
+        public Builder exceptionMessage(String exceptionMessage){
+            this.exceptionMessage = exceptionMessage;
             return this;
         }
 
