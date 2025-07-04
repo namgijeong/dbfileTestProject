@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import com.example.test2.data.dto.UserDTO;
-import com.example.test2.data.entity.User;
+import lombok.extern.slf4j.Slf4j;
+
 import com.example.test2.exception.StringTokenException;
-import com.example.test2.exception.WrongDateTimeStringFormat;
 import com.example.test2.exception.WrongFieldException;
 
+@Slf4j
 public class Utility {
 
     public static String[] checkStringCount(String[] parts) throws StringTokenException {
@@ -18,16 +18,20 @@ public class Utility {
             for (int i = 0; i < parts.length; i++){
                 if(parts[i].trim().equals("")){
                     parts[i] = null;
+                    log.info("parts"+i+"null로 변했습니다.");
                 }
                 else{
                     parts[i] = parts[i].trim();
+                    log.info("parts"+i+"공백으로 변했습니다.");
                 }
             }
 
+            log.info("토큰 개수 : "+parts.length);
             return parts;
         }
         //잘못된 토큰 개수인 경우
         else{
+            log.info("토큰 개수 : "+parts.length);
             throw new StringTokenException("/로 구분한 칼럼 개수가 잘못되었습니다.");
         }
     }
@@ -62,6 +66,8 @@ public class Utility {
             LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
             return localDateTime;
         }catch(DateTimeParseException e){
+            throw new WrongFieldException("날짜 문자열을 yyyy-MM-dd HH:mm:ss 형태로 입력해주세요.");
+        }catch(NullPointerException e){
             throw new WrongFieldException("날짜 문자열을 yyyy-MM-dd HH:mm:ss 형태로 입력해주세요.");
         }
 

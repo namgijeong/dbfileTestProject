@@ -46,17 +46,15 @@ public class UserServiceImpl implements UserService {
         System.out.println(originalFileName);
 
         if (originalFileName != null && originalFileName.matches("^.+\\.(dbfile)$")){
-            //System.out.println("유효한 파일");
             log.info("유효한 파일");
-            int count = 0;
-            int successCount = 0;
-            String line;
-            List<UserResultDTO> userResultDTOList = new ArrayList<>();
-            UserTotalResultDTO userTotalResultDTO = null;
 
             try (BufferedReader reader = new BufferedReader(
                          new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))){
-
+                int count = 0;
+                int successCount = 0;
+                String line;
+                List<UserResultDTO> userResultDTOList = new ArrayList<>();
+                UserTotalResultDTO userTotalResultDTO = null;
                 /*
                     파일 한줄씩 읽어라.
                     각 한줄마다 / 기준으로 분리하라.
@@ -94,7 +92,7 @@ public class UserServiceImpl implements UserService {
                         UserDTO userDTO = new UserDTO(clearParts);
 
                         //DTO를 검사하는데 desc를 제외한 필드 부분이 null이면 exception 내자
-
+                        UserDTO.checkUserDTOField(userDTO);
 
                         User user = UserDTO.makeUserDTOToUser(userDTO);
                         userDAO.insert(user);
@@ -106,7 +104,8 @@ public class UserServiceImpl implements UserService {
 
                         successCount++;
 
-                    } catch(Exception e){ // 개별 라인에서 오류 발생해도 다음 줄로 계속
+                    } catch(Exception e){ // 개별 라인에서 오류 발생해도 다음 줄로
+                        log.info("exception 종류 : "+e.getClass().getName());
                         log.info(e.getMessage());
                         log.info("라인 오류: " + line);
 
@@ -132,19 +131,15 @@ public class UserServiceImpl implements UserService {
 
             } catch (IOException e2){
                 e2.printStackTrace();
-                //System.out.println("파일이 안열림");
+
                 log.info("파일 열기 실패");
                 throw new FailFileOpen("파일 열기 실패");
-                //return null;
             }
 
         } else{
-            //System.out.println("잘못된 파일");
             log.info("잘못된 파일 확장자");
             throw new WrongFileExtension("잘못된 파일 확장자");
 
-
-            //return null;
         }
     }
 

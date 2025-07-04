@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.test2.data.entity.User;
-import com.example.test2.exception.WrongDateTimeStringFormat;
 import com.example.test2.exception.WrongFieldException;
 import com.example.test2.exception.WrongFieldExceptions;
 import com.example.test2.utility.Utility;
@@ -131,7 +130,7 @@ public class UserDTO {
     }
 
     /*DTO 필드가 null인지 검사해서 잘못됬다면 어느 필드가 잘못됬는지 알려준다*/
-    public static List<String> checkUserDTOField(UserDTO userDTO) throws WrongFieldExceptions{
+    public static void checkUserDTOField(UserDTO userDTO) throws WrongFieldExceptions{
         List<String> WrongFieldList = new ArrayList();
         /*
         if(userDTO.getId() == null){
@@ -153,11 +152,24 @@ public class UserDTO {
 
         for(Field field : userDTO.getClass().getDeclaredFields()){
             field.setAccessible(true);
-            WrongFieldList.add(field.getName()+ "를 사용자가 입력하지 않았습니다." );
-            throw new WrongFieldExceptions(WrongFieldList);
+
+            try{
+                if(!field.getName().equals("desc") && field.get(userDTO) == null){
+                    WrongFieldList.add(field.getName()+ "를 사용자가 입력하지 않았습니다." );
+                }
+            }catch(IllegalAccessException e){
+
+                WrongFieldList.add(field.getName()+ "필드를 접근할 수 없습니다." );
+            }catch(NullPointerException e){
+                WrongFieldList.add(field.getName()+ "null 객체 접근하였습니다." );
+            }
+
         }
 
-        return WrongFieldList;
+        if(!WrongFieldList.isEmpty()){
+            throw new WrongFieldExceptions(WrongFieldList);
+        }
+        //return WrongFieldList;
     }
 
 }
