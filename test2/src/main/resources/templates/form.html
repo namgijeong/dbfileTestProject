@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>남기정</title>
+    <title>남기정_파일올리기</title>
     <link href="/css/form.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -120,10 +120,10 @@
                     if(userResultDTO.successFlag == 0){
                         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
                         //원인들이 많을 경우 분리
-                        const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
-                        for(const exceptionMessagePart of exceptionMessageParts){
-                            responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
-                        }
+                        // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
+                        // for(const exceptionMessagePart of exceptionMessageParts){
+                        //     responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
+                        // }
 
                     } else{}
                 });

@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
                                             .failLine(count)
                                             .failText(line)
                                             .successFlag(0)
-                                            .exceptionMessage(e.getMessage())
+//                                            .exceptionMessage(e.getMessage())
                                             .build();
 
                     } finally{

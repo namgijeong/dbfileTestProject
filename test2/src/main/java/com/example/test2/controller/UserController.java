@@ -14,10 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 
-    @GetMapping("/")
+    @GetMapping("/file")
     public String showForm(){
         return "form";
     }
 
-
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
+    }
 }
