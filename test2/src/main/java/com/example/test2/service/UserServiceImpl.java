@@ -7,11 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-import com.example.test2.exception.EmptyUserTable;
-import com.example.test2.exception.FailFileOpen;
-import com.example.test2.exception.WrongFileExtension;
+import com.example.test2.exception.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     /*아이디를 가지고 user 레코드를 찾는다.*/
     @Override
-    public UserDTO findUserById(String id) {
+    public UserDTO findUserById(String id){
         User user = userDAO.select(id);
         return new UserDTO(user);
     }
@@ -55,15 +54,15 @@ public class UserServiceImpl implements UserService {
                 String line;
                 List<UserResultDTO> userResultDTOList = new ArrayList<>();
                 UserTotalResultDTO userTotalResultDTO = null;
+
                 /*
                     파일 한줄씩 읽어라.
                     각 한줄마다 / 기준으로 분리하라.
                     형식을 바꾸고 DTO에 집어넣은 후, 엔티티 컬럼에 맞게 변화해라.
                  */
-
-                while ((line = reader.readLine()) != null) {
-                    //System.out.println("읽은 줄:" +line);
+                while ((line = reader.readLine()) != null){
                     log.info("읽은 줄:" +line);
+
                     UserResultDTO userResultDTO = null;
                     count++;
 
@@ -72,27 +71,15 @@ public class UserServiceImpl implements UserService {
                         String[] parts = line.split("/");
 
                         //각 문자열 파트 개수가 맞는지 검사
-                        String[] clearParts = Utility.checkStringCount(parts);
+                        boolean isStringLengthValid = Utility.checkStringCount(parts);
+                        if(!isStringLengthValid){
+                            throw new StringTokenException("/로 구분한 칼럼 개수가 잘못되었습니다.");
+                        }
 
-                        //공백이면 null로 만들기
-                        //String[] clearParts = Utility.makeEmptyStringNull(parts);
-                        //LocalDateTime localDateTime = Utility.makeStringToLocalDateTime(clearParts[5]);
-
-                        //vo로 할당하기
-//                        UserDTO userDTO = new UserDTO.Builder()
-//                                            .id(clearParts[0])
-//                                            .pwd(clearParts[1])
-//                                            .name(clearParts[2])
-//                                            .level(clearParts[3])
-//                                            .desc(clearParts[4])
-//                                            .regDate(localDateTime)
-//                                            .build();
-                        //User user = Utility.makeUserDTOToUser(userDTO);
-
-                        UserDTO userDTO = new UserDTO(clearParts);
-
-                        //DTO를 검사하는데 desc를 제외한 필드 부분이 null이면 exception 내자
-                        UserDTO.checkUserDTOField(userDTO);
+                        //토큰이 공백이면 null로 만들어준다.
+                        String[] clearParts = Utility.makeEmptyStringNull(parts);
+                        //이미 여기서 생성할때 멤버변수에 집어넣는 값이 잘못되면 예외처리가 생김
+                        UserDTO userDTO =  new UserDTO(clearParts);
 
                         User user = UserDTO.makeUserDTOToUser(userDTO);
                         userDAO.insert(user);
@@ -147,9 +134,11 @@ public class UserServiceImpl implements UserService {
 
     /*db table에 있는 user 레코드를 모두 조회한다.*/
     @Override
-    public List<UserDTO> findAll() throws EmptyUserTable {
+    public List<UserDTO> findAll(){
         List<User> userList = userDAO.selectAll();
-        List<UserDTO> userDTOList = new ArrayList<>();
+
+        /*
+        //List<UserDTO> userDTOList = new ArrayList<>();
 
         if(userList.isEmpty()){
             throw new EmptyUserTable("현재 아무데이터도 테이블에 있지 않습니다.");
@@ -161,6 +150,10 @@ public class UserServiceImpl implements UserService {
             }
             return userDTOList;
         }
+         */
+
+        List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
+        return userDTOList;
 
     }
 

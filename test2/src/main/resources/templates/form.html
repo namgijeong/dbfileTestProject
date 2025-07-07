@@ -35,7 +35,7 @@
         formData.append('file', file);
 
         $.ajax({
-            url: '/upload/toTable',
+            url: '/upload/insertTable',
             method: 'POST',
             data: formData,              // 일반 데이터나 FormData 객체
             processData: false,          // 파일 업로드 시 false
@@ -61,7 +61,7 @@
         event.preventDefault();
 
         $.ajax({
-            url: '/upload/fullSelect',
+            url: '/upload/selectFullUsers',
             method: 'POST',
             success: function (response) {
                 makeTableHtml(response);
@@ -137,23 +137,22 @@
         let resultSpace = document.getElementById('result');
         let resultSpaceText = '';
 
-        //현재 테이블에 아무런 레코드도 저장되어있지 않을때
-        if (response.exceptionCode == "EMPTY_USER_TABLE"){
-            resultSpaceText += `<h1>현재 DB에 아무 정보도 존재하지 않습니다.</h1>`
+        resultSpaceText += '<table>';
+
+        resultSpaceText += `<tr>`;
+        resultSpaceText += `<th> ID </th>`;
+        resultSpaceText += `<th> PWD </th>`;
+        resultSpaceText += `<th> NAME </th>`;
+        resultSpaceText += `<th> LEVEL </th>`;
+        resultSpaceText += `<th> DESC </th>`;
+        resultSpaceText += `<th> REG_DATE </th>`;
+        resultSpaceText += `</tr>`;
+
+        if(response.length === 0){
+            resultSpaceText += `</table>`;
+            resultSpaceText += `<h1>회원 정보가 비어 있습니다.</h1>`;
         }
-        //테이블에 하나의 레코드라도 있으면
         else{
-            resultSpaceText += '<table>';
-
-            resultSpaceText += `<tr>`;
-            resultSpaceText += `<th> ID </th>`;
-            resultSpaceText += `<th> PWD </th>`;
-            resultSpaceText += `<th> NAME </th>`;
-            resultSpaceText += `<th> LEVEL </th>`;
-            resultSpaceText += `<th> DESC </th>`;
-            resultSpaceText += `<th> REG_DATE </th>`;
-            resultSpaceText += `</tr>`;
-
             response.forEach(userDTO => {
                 console.log("배열 하나: " + userDTO+'\n');
                 console.log('내용 : '+ userDTO.id+'\n');

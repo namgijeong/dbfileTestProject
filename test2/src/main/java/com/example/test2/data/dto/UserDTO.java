@@ -17,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Getter
-@Setter
 @ToString
 public class UserDTO {
     private String id;
@@ -34,14 +33,14 @@ public class UserDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
-    private UserDTO(Builder builder){
-        this.id = builder.id;
-        this.pwd = builder.pwd;
-        this.name = builder.name;
-        this.level = builder.level;
-        this.desc = builder.desc;
-        this.regDate = builder.regDate;
-    }
+    //    private UserDTO(Builder builder){
+//        this.id = builder.id;
+//        this.pwd = builder.pwd;
+//        this.name = builder.name;
+//        this.level = builder.level;
+//        this.desc = builder.desc;
+//        this.regDate = builder.regDate;
+//    }
 
     public UserDTO(UserDtoBase user) {
         this.id = user.getId();
@@ -53,69 +52,148 @@ public class UserDTO {
     }
 
     public UserDTO(String[] parts) throws WrongFieldException {
-        //desc 칼럼 없을때
+        /*
+            desc 칼럼 없을때
+            만약 desc 칼럼 없고 regdate 있어서 토큰이 5개여도 각각 넣는 검사때 걸린다.
+         */
+        //
         if (parts.length == 5) {
-            this.id = parts[0];
-            this.pwd = parts[1];
-            this.name = parts[2];
-            this.level = parts[3];
-            this.regDate = Utility.makeStringToLocalDateTime(parts[4]);
+            setId(parts[0]);
+            setPwd(parts[1]);
+            setName(parts[2]);
+            setLevel(parts[3]);
+            setRegDate(parts[4]);
 
-        //desc 칼럼 있을때
-        }else{
-            this.id = parts[0];
-            this.pwd = parts[1];
-            this.name = parts[2];
-            this.level = parts[3];
-            this.desc = parts[4];
-            this.regDate = Utility.makeStringToLocalDateTime(parts[5]);
+//            this.pwd = parts[1];
+//            this.name = parts[2];
+//            this.level = parts[3];
+//            this.regDate = Utility.makeStringToLocalDateTime(parts[4]);
+
+        } else{  //desc 칼럼 있을때
+            setId(parts[0]);
+            setPwd(parts[1]);
+            setName(parts[2]);
+            setLevel(parts[3]);
+            setDesc(parts[4]);
+            setRegDate(parts[5]);
+
+//            this.id = parts[0];
+//            this.pwd = parts[1];
+//            this.name = parts[2];
+//            this.level = parts[3];
+//            this.desc = parts[4];
+//            this.regDate = Utility.makeStringToLocalDateTime(parts[5]);
+
         }
 
     }
 
-    public static class Builder{
-        private String id;
-        private String pwd;
-        private String name;
-        private String level;
-        private String desc;
-        private LocalDateTime regDate;
+//    public static class Builder{
+//        private String id;
+//        private String pwd;
+//        private String name;
+//        private String level;
+//        private String desc;
+//        private LocalDateTime regDate;
+//
+//        public Builder id(String id){
+//            this.id = id;
+//            return this;
+//        }
+//
+//        public Builder pwd(String pwd){
+//            this.pwd = pwd;
+//            return this;
+//        }
+//
+//        public Builder name(String name){
+//            this.name = name;
+//            return this;
+//        }
+//
+//        public Builder level(String level){
+//            this.level = level;
+//            return this;
+//        }
+//
+//        public Builder desc(String desc){
+//            this.desc = desc;
+//            return this;
+//        }
+//
+//        public Builder regDate(LocalDateTime regDate){
+//            this.regDate = regDate;
+//            return this;
+//        }
+//
+//        public UserDTO build(){
+//            return new UserDTO(this);
+//        }
+//    }
 
-        public Builder id(String id){
-            this.id = id;
-            return this;
+    //직접적으로 멤버변수에 넣기전에 검사해서 exception 발생
+    public void setId(String id) throws WrongFieldException{
+        boolean isUpperString = false;
+
+        try{
+            isUpperString = Utility.isStringUpperCase(id);
+        } catch(NullPointerException e){
+            throw new WrongFieldException("id 필드를 입력안했습니다.");
         }
 
-        public Builder pwd(String pwd){
-            this.pwd = pwd;
-            return this;
+        if (!isUpperString){
+            throw new WrongFieldException("id가 모두 대문자가 아닙니다.");
         }
-
-        public Builder name(String name){
-            this.name = name;
-            return this;
-        }
-
-        public Builder level(String level){
-            this.level = level;
-            return this;
-        }
-
-        public Builder desc(String desc){
-            this.desc = desc;
-            return this;
-        }
-
-        public Builder regDate(LocalDateTime regDate){
-            this.regDate = regDate;
-            return this;
-        }
-
-        public UserDTO build(){
-            return new UserDTO(this);
-        }
+        this.id = id;
     }
 
+    public void setPwd(String pwd) throws WrongFieldException{
+        boolean isNumberString = false;
+
+        try{
+            isNumberString = Utility.isStringNumber(pwd);
+        } catch(NullPointerException e){
+            throw new WrongFieldException("pwd 필드를 입력안했습니다.");
+        }
+
+        if (!isNumberString){
+            throw new WrongFieldException("pwd가 모두 숫자가 아닙니다.");
+        }
+        this.pwd = pwd;
+    }
+
+    public void setName(String name) throws WrongFieldException{
+        if(name == null){
+            throw new WrongFieldException("name 필드를 입력안했습니다.");
+        }
+        this.name = name;
+    }
+
+    public void setLevel(String level) throws WrongFieldException{
+        boolean isCharUpperString = false;
+        try{
+            isCharUpperString = Utility.isStringUpperChar(level);
+        } catch(NullPointerException e){
+            throw new WrongFieldException("name 필드를 입력안했습니다.");
+        }
+
+        if (!isCharUpperString){
+            throw new WrongFieldException("level은 글자 하나여야 하고 대문자여야 합니다.");
+        }
+        this.level = level;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setRegDate(String regDate) throws WrongFieldException{
+        boolean isStringLocalDateTimeFormat = Utility.isStringLocalDateTimeFormat(regDate);
+        if (!isStringLocalDateTimeFormat){
+            throw new WrongFieldException("날짜 문자열을 yyyy-MM-dd HH:mm:ss 형태로 입력해주세요.");
+        }
+        this.regDate = Utility.makeStringToLocalDateTime(regDate);
+    }
 
     /*DTO를 entity로 변환*/
     public static User makeUserDTOToUser(UserDTO userDTO){
@@ -130,6 +208,7 @@ public class UserDTO {
     }
 
     /*DTO 필드가 null인지 검사해서 잘못됬다면 어느 필드가 잘못됬는지 알려준다*/
+    /*
     public static void checkUserDTOField(UserDTO userDTO) throws WrongFieldExceptions{
         List<String> WrongFieldList = new ArrayList();
 
@@ -177,25 +256,7 @@ public class UserDTO {
             throw new WrongFieldExceptions(WrongFieldList);
         }
 
-
-        /*
-        if(userDTO.getId() == null){
-            WrongFieldList.add("id 필드를 사용자가 입력하지 않았습니다.");
-        }
-        if(userDTO.getPwd() == null){
-            WrongFieldList.add("pwd 필드가 사용자가 입력하지 않았습니다.");
-        }
-        if(userDTO.getName() == null){
-            WrongFieldList.add("name 필드가 사용자가 입력하지 않았습니다.");
-        }
-        if(userDTO.getLevel() == null){
-            WrongFieldList.add("level 필드가 사용자가 입력하지 않았습니다.");
-        }
-        if(userDTO.getRegDate() == null){
-            WrongFieldList.add("reg_date 필드가 사용자가 입력하지 않았습니다.");
-        }
-         */
-
     }
+    */
 
 }
