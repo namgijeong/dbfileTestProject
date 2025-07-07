@@ -92,9 +92,9 @@ public class UserServiceImpl implements UserService {
                         successCount++;
 
                     } catch(Exception e){ // 개별 라인에서 오류 발생해도 다음 줄로
-                        log.info("exception 종류 : "+e.getClass().getName());
-                        log.info(e.getMessage());
-                        log.info("라인 오류: " + line);
+                        log.warn("exception 종류 : "+e.getClass().getName());
+                        log.warn(e.getMessage());
+                        log.warn("라인 오류: " + line);
 
 
                         userResultDTO = new UserResultDTO.Builder()
@@ -121,12 +121,12 @@ public class UserServiceImpl implements UserService {
             } catch (IOException e2){
                 e2.printStackTrace();
 
-                log.info("파일 열기 실패");
+                log.warn("파일 열기 실패");
                 throw new FailFileOpen("파일 열기 실패");
             }
 
         } else{
-            log.info("잘못된 파일 확장자");
+            log.warn("잘못된 파일 확장자");
             throw new WrongFileExtension("잘못된 파일 확장자");
 
         }

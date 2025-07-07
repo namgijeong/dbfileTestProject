@@ -80,25 +80,29 @@
         let responseSpace = document.getElementById('responseDiv');
         let responseSpaceText = '';
 
-        //파일읽기 리더가 실패했을때
-        if (response.exceptionCode == "FAIL_FILE_OPEN") {
-            console.log("파일 열기 실패");
-            responseSpaceText += `<h1>파일 읽기 실패하였습니다.</h1>`;
-            responseSpaceText += `<h1>다시 재시도 해주세요.</h1>`;
-            responseSpace.innerHTML = responseSpaceText;
+        /*
+            boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
+            getXxx()가 아니라 isXxx()가 자동으로 인식
+            따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
+         */
+        if (response.normal == false){ // 비정상적 플래그면
+            if (response.exceptionCode == "FAIL_FILE_OPEN") { //파일읽기 리더가 실패했을때
+                console.log("파일 열기 실패");
+                responseSpaceText += `<h1>파일 읽기 실패하였습니다.</h1>`;
+                responseSpaceText += `<h1>다시 재시도 해주세요.</h1>`;
+                responseSpace.innerHTML = responseSpaceText;
 
-        //사용자가 잘못된 파일 확장자를 올렸을때
-        }else if(response.exceptionCode == "WRONG_FILE_EXTENSION"){
-            console.log("사용자가 잘못된 파일 올림");
-            responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
-            responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;
-            responseSpace.innerHTML = responseSpaceText;
+            } else if (response.exceptionCode == "WRONG_FILE_EXTENSION"){  //사용자가 잘못된 파일 확장자를 올렸을때
+                console.log("사용자가 잘못된 파일 올림");
+                responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
+                responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;
+                responseSpace.innerHTML = responseSpaceText;
 
-        } else{
-            //전체 성공
-            if (response.totalCount == response.successCount){
+            }
+        } else{ // 정상적인 플래그면
+            if (response.content.totalCount == response.content.successCount){  //전체 성공
                 responseSpaceText += `<h3>▼ 전체 성공</h3>`;
-                responseSpaceText += `<h3>레코드 건수  ${response.successCount}건 입력 성공</h3>`;
+                responseSpaceText += `<h3>레코드 건수  ${response.content.successCount}건 입력 성공</h3>`;
                 responseSpaceText += `<button id="findAllButton">조회버튼</button>`;
 
                 //조회하기 결과 표가 붙을 자리
@@ -108,12 +112,11 @@
                 document.getElementById("findAllButton").addEventListener('click',function(event){
                     ajaxSelectAll(event);
                 });
-                //일부 실패
-            } else{
+            } else{ //일부 실패
                 responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
-                responseSpaceText += `<h3>성공  ${response.successCount}건, 실패 ${response.totalCount - response.successCount}건 </h3>`;
+                responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
                 responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
-                response.userResultDTOList.forEach(userResultDTO => {
+                response.content.userResultDTOList.forEach(userResultDTO => {
                     if(userResultDTO.successFlag == 0){
                         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
                         //원인들이 많을 경우 분리
