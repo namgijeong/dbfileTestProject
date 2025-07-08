@@ -3,11 +3,12 @@ package com.example.test2.data.dao;
 import java.util.List;
 
 import com.example.test2.data.entity.User;
+import com.example.test2.exception.UserNotFound;
 
 public interface UserDAO {
 
-    /*아이디를 가지고 user 레코드 찾기*/
-    User select(String id);
+    /*아이디와 비번을 가지고 user 레코드 찾기*/
+    boolean select(String id, String pwd);
     /*User를 db table에 insert 하기 */
     void insert(User user);
     /*db table에 있는 user 레코드를 모두 불러오기*/

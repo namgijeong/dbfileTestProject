@@ -32,11 +32,11 @@ public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
 
     /*아이디를 가지고 user 레코드를 찾는다.*/
-    @Override
-    public UserDTO findUserById(String id){
-        User user = userDAO.select(id);
-        return new UserDTO(user);
-    }
+//    @Override
+//    public UserDTO findUserById(String id){
+//        User user = userDAO.select(id);
+//        return new UserDTO(user);
+//    }
 
     /*업로드 된 파일을 가지고 db table에 저장한다.*/
     @Override
@@ -160,6 +160,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteAll() {
         userDAO.deleteAll();
+    }
+
+    @Override
+    public boolean userLogin(String id, String pwd) {
+        boolean loginOk =  userDAO.select(id, pwd);
+        return loginOk;
+        /*
+        try{
+            userDAO.select(id, pwd);
+            return true;
+        } catch(UserNotFound e){
+            return false;
+        }
+        */
     }
 
 

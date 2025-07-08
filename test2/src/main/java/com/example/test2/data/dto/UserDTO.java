@@ -42,6 +42,8 @@ public class UserDTO {
 //        this.regDate = builder.regDate;
 //    }
 
+    public UserDTO() {}
+
     public UserDTO(UserDtoBase user) {
         this.id = user.getId();
         this.pwd = user.getPwd();

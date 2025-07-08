@@ -4,6 +4,22 @@
     box-sizing: border-box;
 }
 
+#checkDiv{
+    margin:auto;
+    margin-top:100px;
+
+    width:500px;
+    height:100px;
+    text-align:center;
+}
+#checkDiv h1{
+    margin: auto;
+    width:500px;
+    height:100px;
+
+    text-align:center;
+}
+
 #loginForm{
     margin:auto;
     margin-top:100px;

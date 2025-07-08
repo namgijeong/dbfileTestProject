@@ -151,12 +151,11 @@
         resultSpaceText += `<th> REG_DATE </th>`;
         resultSpaceText += `</tr>`;
 
-        if(response.length === 0){
+        if(response.content.length === 0){
             resultSpaceText += `</table>`;
             resultSpaceText += `<h1>회원 정보가 비어 있습니다.</h1>`;
-        }
-        else{
-            response.forEach(userDTO => {
+        } else{
+            response.content.forEach(userDTO => {
                 console.log("배열 하나: " + userDTO+'\n');
                 console.log('내용 : '+ userDTO.id+'\n');
                 console.log('내용: '+ userDTO.pwd+'\n');

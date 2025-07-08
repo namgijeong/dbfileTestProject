@@ -56,9 +56,10 @@ public class UploadController {
 
     @PostMapping("/selectFullUsers")
     public ResponseEntity<?> fullSelect(){
-
         List<UserDTO> userDTOList = userService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(userDTOList);
+
+        NormalResponse<List<UserDTO>> response = NormalResponse.makeNormalResponse(userDTOList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 }
