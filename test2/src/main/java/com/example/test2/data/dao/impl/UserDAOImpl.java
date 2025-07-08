@@ -3,9 +3,12 @@ package com.example.test2.data.dao.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.data.dao.UserDAO;
 import com.example.test2.data.entity.User;
@@ -13,6 +16,7 @@ import com.example.test2.data.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserDAOImpl implements UserDAO {
 
     private final UserRepository userRepository;
@@ -47,5 +51,15 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void deleteAll() {
         userRepository.deleteAll();
+    }
+
+    @Override
+    public List<User> select10Users(int pageNumber) {
+        //페이지는 0부터 시작
+        Page<User> userPage= userRepository.findAllByOrderByRegDateDesc(PageRequest.of(pageNumber-1, 10));
+        log.info("paging jpa 결과 : "+userPage.getContent());
+        List<User> userList = userPage.getContent();
+
+        return userList;
     }
 }

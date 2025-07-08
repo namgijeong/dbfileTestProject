@@ -176,5 +176,13 @@ public class UserServiceImpl implements UserService {
         */
     }
 
+    @Override
+    public List<UserDTO> select10Users(int pageNumber) {
+        List<User> userList =  userDAO.select10Users(pageNumber);
+
+        List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
+        return userDTOList;
+    }
+
 
 }

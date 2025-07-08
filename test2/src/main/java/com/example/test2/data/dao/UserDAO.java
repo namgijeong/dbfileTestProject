@@ -15,5 +15,5 @@ public interface UserDAO {
     /*파일을 올리고 나서 새 파일을 올릴때 insert전 테이블 내용 강제 지우기*/
     void deleteAll();
     /*시간 최신순 10개만 user 정보 출력*/
-    
+    List<User> select10Users(int pageNumber);
 }

@@ -17,7 +17,10 @@
             <th> DESC </th>
             <th> REG_DATE </th>
         </tr>
-        <tr th:each="userDTO : ${userDTOList}">
+        <tr th:if="${#lists.isEmpty(userDTOList)}">
+            <td colspan="6">회원 정보가 없습니다.</td>
+        </tr>
+        <tr th:each="userDTO : ${userDTOList}" th:if="${!#lists.isEmpty(userDTOList)}">
             <td th:text="${userDTO.id}"></td>
             <td th:text="${userDTO.pwd}"></td>
             <td th:text="${userDTO.name}"></td>

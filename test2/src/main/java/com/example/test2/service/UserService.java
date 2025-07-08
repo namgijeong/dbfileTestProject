@@ -20,4 +20,6 @@ public interface UserService {
     public void deleteAll();
     /*user 로그인을 수행한다.*/
     public boolean userLogin(String id, String pwd);
+    /*등록 최신순 user 10명을 찾는다.*/
+    public List<UserDTO> select10Users(int pageNumber);
 }

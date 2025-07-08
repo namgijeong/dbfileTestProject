@@ -48,7 +48,7 @@ public class UserController {
 
     @GetMapping("/loginOk")
     public String loginOk(HttpSession session, Model model){
-        List<UserDTO> userDTOList = userService.findAll();
+        List<UserDTO> userDTOList = userService.select10Users(1);
         model.addAttribute("userDTOList", userDTOList);
         for(UserDTO userDTO : userDTOList){
             log.info("회원 DTO : "+userDTO.toString());
