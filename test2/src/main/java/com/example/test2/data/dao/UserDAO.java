@@ -3,7 +3,6 @@ package com.example.test2.data.dao;
 import java.util.List;
 
 import com.example.test2.data.entity.User;
-import com.example.test2.exception.UserNotFound;
 
 public interface UserDAO {
 

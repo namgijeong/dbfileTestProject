@@ -3,7 +3,6 @@ package com.example.test2.data.dao.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import com.example.test2.data.dao.UserDAO;
 import com.example.test2.data.entity.User;
 import com.example.test2.data.repository.UserRepository;
-import com.example.test2.exception.UserNotFound;
 
 @Component
 @RequiredArgsConstructor
