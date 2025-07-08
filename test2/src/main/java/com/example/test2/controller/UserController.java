@@ -1,8 +1,11 @@
 package com.example.test2.controller;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -44,7 +47,12 @@ public class UserController {
     }
 
     @GetMapping("/loginOk")
-    public String loginOk(HttpSession session){
+    public String loginOk(HttpSession session, Model model){
+        List<UserDTO> userDTOList = userService.findAll();
+        model.addAttribute("userDTOList", userDTOList);
+        for(UserDTO userDTO : userDTOList){
+            log.info("회원 DTO : "+userDTO.toString());
+        }
         return "loginOk";
     }
 }

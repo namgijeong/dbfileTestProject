@@ -17,13 +17,13 @@
             <th> DESC </th>
             <th> REG_DATE </th>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <tr th:each="userDTO : ${userDTOList}">
+            <td th:text="${userDTO.id}"></td>
+            <td th:text="${userDTO.pwd}"></td>
+            <td th:text="${userDTO.name}"></td>
+            <td th:text="${userDTO.level}"></td>
+            <td th:text="${userDTO.desc}"></td>
+            <td name="regDate" th:data-name="${userDTO.regDate}"></td>
         </tr>
     </table>
 </div>
@@ -43,4 +43,20 @@
     <button id="next">></button>
 </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="/js/utility.js"></script>
+<script>
+    // DOM이 완전히 로드되고 파싱 완료된 시점에 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM 준비 완료!');
+        let regDates = document.getElementsByName("regDate");
+        for (regDate of regDates){
+            let originalRegDate = regDate.dataset.name;
+            console.log("originalRegDate : "+originalRegDate);
+            console.log("type originalRegDate : "+ typeof(originalRegDate));
+            let completeRegDate = makeLocalDateTimeToString(originalRegDate);
+            regDate.textContent = completeRegDate;
+        }
+    });
+</script>
 </html>
