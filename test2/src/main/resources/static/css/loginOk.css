@@ -37,8 +37,13 @@ td:nth-child(6){
 
 
 #pagingArea{
+    /*inline-block은 block처럼 박스이지만 inline처럼 내용 크기에 맞는 width*/
+    /*display:inline-block;*/
+
     margin: auto;
-    width: 500px;
+
+    /*width: 500px;*/
+    width: fit-content;
     height: 100px;
 
     display: flex;
@@ -50,6 +55,8 @@ td:nth-child(6){
 
     margin:auto;
     margin-top:20px;
+    margin-left:20px;
+
     width: 30px;
     height: 30px;
 

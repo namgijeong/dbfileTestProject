@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.service.UserService;
 import com.example.test2.data.dto.UserDTO;
+import com.example.test2.data.dto.UserPagingResultDTO;
 
 @Controller
 @RequestMapping("/user/*")
@@ -40,19 +41,28 @@ public class UserController {
         boolean userLoginOk = userService.userLogin(idInput, pwdInput);
         if (userLoginOk){
             session.setAttribute("loginId", idInput);
-            return "redirect:/user/loginOk";
+            return "redirect:/user/loginOk?pageNumber=1";
         }
         redirectAttributes.addFlashAttribute("loginAgain", true);
         return "redirect:/user/login";
     }
 
+    /*
+        @SessionAttribute로 한번에 세션에있는값을 가져올 수 있다.
+        쿠키에 있는 JSESSIONID를 가지고 세션을 검색하고, 그 세션안에 name에 넣는 키를 이용해서 값을 꺼내온다.
+        로그인하지않은 사용자(JSESSIONID를 가지고있지않은 사용자)도 이용할 수 있으므로 required = false로 해둔다.
+     */
     @GetMapping("/loginOk")
-    public String loginOk(HttpSession session, Model model){
-        List<UserDTO> userDTOList = userService.select10Users(1);
-        model.addAttribute("userDTOList", userDTOList);
-        for(UserDTO userDTO : userDTOList){
-            log.info("회원 DTO : "+userDTO.toString());
+    public String loginOk(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber, Model model){
+        if(loginId == null){
+            log.warn("비정상적인 접근!");
+            return "redirect:/user/login";
         }
+        UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
+        //UserPagingResultDTO userPagingResultDTO = userService.select10Users((long)pageNumber);
+        model.addAttribute("userPagingResultDTO", userPagingResultDTO);
+        log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
+
         return "loginOk";
     }
 }

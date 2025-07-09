@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+import com.example.test2.data.dto.*;
 import com.example.test2.exception.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.data.dao.UserDAO;
-import com.example.test2.data.dto.UserDTO;
-import com.example.test2.data.dto.UserResultDTO;
 import com.example.test2.data.entity.User;
-import com.example.test2.data.dto.UserTotalResultDTO;
 import com.example.test2.utility.Utility;
 
 @Service
@@ -136,52 +134,43 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> findAll(){
         List<User> userList = userDAO.selectAll();
-
-        /*
-        //List<UserDTO> userDTOList = new ArrayList<>();
-
-        if(userList.isEmpty()){
-            throw new EmptyUserTable("현재 아무데이터도 테이블에 있지 않습니다.");
-        }
-        else{
-            for (User user : userList){
-                UserDTO userDTO = new UserDTO(user);
-                userDTOList.add(userDTO);
-            }
-            return userDTOList;
-        }
-         */
-
         List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
         return userDTOList;
 
     }
 
+    /*db table에 있는 user 레코드를 모두 지운다.*/
     @Override
     public void deleteAll() {
         userDAO.deleteAll();
     }
 
+    /*user 로그인을 수행한다.*/
     @Override
     public boolean userLogin(String id, String pwd) {
         boolean loginOk =  userDAO.select(id, pwd);
         return loginOk;
-        /*
-        try{
-            userDAO.select(id, pwd);
-            return true;
-        } catch(UserNotFound e){
-            return false;
-        }
-        */
     }
 
+    /*
+        등록 최신순 user 10명을 찾는다.
+        등록된 전체 유저 개수를 세서 페이징 버튼들 블록 처리
+    */
     @Override
-    public List<UserDTO> select10Users(int pageNumber) {
+    public UserPagingResultDTO select10Users(long pageNumber) {
+        //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.
         List<User> userList =  userDAO.select10Users(pageNumber);
-
         List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
-        return userDTOList;
+
+        //총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
+        Long totalUsers = userDAO.countUsers();
+        ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
+
+        UserPagingResultDTO userPagingResultDTO = UserPagingResultDTO.builder()
+                                                .userDTOList(userDTOList)
+                                                .buttonBlockDTO(buttonBlockDTO)
+                                                .build();
+        return userPagingResultDTO;
     }
 
 

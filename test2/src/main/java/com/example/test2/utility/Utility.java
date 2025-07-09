@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import com.example.test2.data.dto.ButtonBlockDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.exception.StringTokenException;
@@ -137,6 +138,62 @@ public class Utility {
             return true;
         }
         return false;
+    }
+
+    /*하단 버튼 페이징 숫자 계산해서 ButtonBlockDTO 만들기*/
+    public static ButtonBlockDTO makeButtonBlockDTO(long currentPageNumber, long totalCount){
+        log.info("currentPageNumber : "+currentPageNumber);
+        log.info("totalCount : "+totalCount);
+        //한 페이지당 게시글 10개
+        long totalPageNumber = (long)Math.ceil((double)totalCount / 10);
+        log.info("totalPageNumber : "+totalPageNumber);
+        //한 블록당 버튼은 10개씩 보여주기
+        long totalBlockNumber = (long)Math.ceil((double)totalPageNumber / 10);
+        log.info("totalBlockNumber : "+totalBlockNumber);
+        //10 페이지는 1블록에 속한다.
+        long currentBlockNumber = (long)Math.ceil((double)currentPageNumber / 10);
+        log.info("currentBlockNumber : "+currentBlockNumber);
+        long currentBlockFirstNumber = ((currentBlockNumber - 1) * 10) + 1;
+        log.info("currentBlockFirstNumber : "+currentBlockFirstNumber);
+        long currentBlockLastNumber = ((currentBlockNumber - 1) * 10) + 10;
+        log.info("currentBlockLastNumber : "+currentBlockLastNumber);
+
+        //만약 총 게시글 페이지 보다 많게 계산되면 안된다.
+        if (currentBlockLastNumber > totalPageNumber){
+            currentBlockLastNumber = totalPageNumber;
+        }
+
+        boolean previousBlock = false;
+        boolean nextBlock = false;
+        long previousBlockPageNumber = 0L;
+        long nextBlockPageNumber = 0L;
+        if (currentBlockNumber > 1){
+            previousBlock = true;
+            previousBlockPageNumber = currentBlockFirstNumber - 1;
+
+        } else{
+            previousBlock = false;
+        }
+
+        if (currentBlockNumber < totalBlockNumber){
+            nextBlock = true;
+            nextBlockPageNumber = currentBlockLastNumber + 1;
+        } else{
+            nextBlock = false;
+        }
+
+        ButtonBlockDTO buttonBlockDTO = ButtonBlockDTO.builder()
+                .currentPageNumber(currentPageNumber)
+                .currentBlockNumber(currentBlockNumber)
+                .currentBlockFirstNumber(currentBlockFirstNumber)
+                .currentBlockLastNumber(currentBlockLastNumber)
+                .previousBlock(previousBlock)
+                .previousBlockPageNumber(previousBlockPageNumber)
+                .nextBlock(nextBlock)
+                .nextBlockPageNumber(nextBlockPageNumber)
+                .build();
+
+        return buttonBlockDTO;
     }
 
 }

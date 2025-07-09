@@ -48,18 +48,27 @@ public class UserDAOImpl implements UserDAO {
         return userList;
     }
 
+    /*파일을 올리고 나서 새 파일을 올릴때 insert전 테이블 내용 강제 지우기*/
     @Override
     public void deleteAll() {
         userRepository.deleteAll();
     }
 
+    /*시간 최신순 10개만 user 정보 출력*/
     @Override
-    public List<User> select10Users(int pageNumber) {
+    public List<User> select10Users(Long pageNumber) {
         //페이지는 0부터 시작
-        Page<User> userPage= userRepository.findAllByOrderByRegDateDesc(PageRequest.of(pageNumber-1, 10));
+        Page<User> userPage= userRepository.findAllByOrderByRegDateDesc(PageRequest.of((int)(pageNumber-1), 10));
         log.info("paging jpa 결과 : "+userPage.getContent());
         List<User> userList = userPage.getContent();
 
         return userList;
+    }
+
+    /*전체 회원정보 개수 불러오기 */
+    @Override
+    public long countUsers() {
+        long count = userRepository.count();
+        return count;
     }
 }

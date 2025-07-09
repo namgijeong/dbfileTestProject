@@ -2,6 +2,7 @@ package com.example.test2.service;
 
 import java.util.List;
 
+import com.example.test2.data.dto.UserPagingResultDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.test2.data.dto.UserDTO;
@@ -20,6 +21,10 @@ public interface UserService {
     public void deleteAll();
     /*user 로그인을 수행한다.*/
     public boolean userLogin(String id, String pwd);
-    /*등록 최신순 user 10명을 찾는다.*/
-    public List<UserDTO> select10Users(int pageNumber);
+    /*
+        등록 최신순 user 10명을 찾는다.
+        등록된 전체 유저 개수를 세서 페이징 버튼들 블록 처리
+    */
+    public UserPagingResultDTO select10Users(long pageNumber);
+
 }

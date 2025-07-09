@@ -17,34 +17,32 @@
             <th> DESC </th>
             <th> REG_DATE </th>
         </tr>
-        <tr th:if="${#lists.isEmpty(userDTOList)}">
+        <tr th:if="${#lists.isEmpty(userPagingResultDTO.userDTOList)}">
             <td colspan="6">회원 정보가 없습니다.</td>
         </tr>
-        <tr th:each="userDTO : ${userDTOList}" th:if="${!#lists.isEmpty(userDTOList)}">
+        <tr th:each="userDTO : ${userPagingResultDTO.userDTOList}" th:if="${!#lists.isEmpty(userPagingResultDTO.userDTOList)}">
             <td th:text="${userDTO.id}"></td>
             <td th:text="${userDTO.pwd}"></td>
             <td th:text="${userDTO.name}"></td>
             <td th:text="${userDTO.level}"></td>
-            <td th:text="${userDTO.desc}"></td>
+            <td name="desc" th:data-name="${userDTO.desc}"></td>
             <td name="regDate" th:data-name="${userDTO.regDate}"></td>
         </tr>
     </table>
 </div>
 
 <div id="pagingArea">
-    <button id="previous"><</button>
-    <button>1</button>
-    <button>2</button>
-    <button>3</button>
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button>7</button>
-    <button>8</button>
-    <button>9</button>
-    <button>10</button>
-    <button id="next">></button>
+    <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
+        <button id="previous" name="pagingButton"><</button>
+    </th:block>
+    <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
+        <button name="pagingButton" th:data-name="${i}" th:text="${i}"></button>
+    </th:block>
+    <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
+        <button id="next" name="pagingButton">></button>
+    </th:block>
 </div>
+
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="/js/utility.js"></script>
@@ -52,14 +50,46 @@
     // DOM이 완전히 로드되고 파싱 완료된 시점에 실행
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM 준비 완료!');
+
         let regDates = document.getElementsByName("regDate");
         for (regDate of regDates){
             let originalRegDate = regDate.dataset.name;
             console.log("originalRegDate : "+originalRegDate);
+
             console.log("type originalRegDate : "+ typeof(originalRegDate));
             let completeRegDate = makeLocalDateTimeToString(originalRegDate);
             regDate.textContent = completeRegDate;
         }
+
+        let descs = document.getElementsByName("desc");
+        for (desc of descs){
+            let descText = desc.dataset.name;
+            console.log("descText : "+descText);
+            console.log("type descText : "+typeof(descText));
+
+            if(descText === undefined){
+                desc.textContent = "";
+            }
+            else{
+                desc.textContent = descText;
+            }
+        }
+
+        //페이징 버튼 이벤트 걸기
+        let buttons = document.getElementsByName("pagingButton");
+        for(button of buttons){
+            button.addEventListener('click', function(e){
+                handleButtonsNumber(e);
+            });
+        }
+
+        //페이징 버튼 번호들 처리
+        function handleButtonsNumber(e){
+            //현재 있는 몇번째 페이지 정보 가져오기
+            let clickedNumber = e.target.dataset.name;
+
+        }
+
     });
 </script>
 </html>
