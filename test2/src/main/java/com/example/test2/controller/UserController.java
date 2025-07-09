@@ -2,8 +2,11 @@ package com.example.test2.controller;
 
 import java.util.List;
 
+import com.example.test2.response.NormalResponse;
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +44,7 @@ public class UserController {
         boolean userLoginOk = userService.userLogin(idInput, pwdInput);
         if (userLoginOk){
             session.setAttribute("loginId", idInput);
-            return "redirect:/user/loginOk?pageNumber=1";
+            return "redirect:/user/loginOk/page?pageNumber=1";
         }
         redirectAttributes.addFlashAttribute("loginAgain", true);
         return "redirect:/user/login";
@@ -52,17 +55,34 @@ public class UserController {
         쿠키에 있는 JSESSIONID를 가지고 세션을 검색하고, 그 세션안에 name에 넣는 키를 이용해서 값을 꺼내온다.
         로그인하지않은 사용자(JSESSIONID를 가지고있지않은 사용자)도 이용할 수 있으므로 required = false로 해둔다.
      */
-    @GetMapping("/loginOk")
-    public String loginOk(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber, Model model){
+    @GetMapping("/loginOk/page")
+    public String loginOkPage(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber, Model model){
         if(loginId == null){
             log.warn("비정상적인 접근!");
             return "redirect:/user/login";
         }
-        UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
-        //UserPagingResultDTO userPagingResultDTO = userService.select10Users((long)pageNumber);
+        //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
+        UserPagingResultDTO userPagingResultDTO = userService.select10Users((long)pageNumber);
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
         return "loginOk";
+    }
+
+    /*
+        버튼을 클릭했을시 ajax로 해당 페이지 내용 반환
+     */
+    @GetMapping("/loginOk/ajax")
+    public ResponseEntity<?> loginOkAjax(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber, Model model){
+        if(loginId == null){
+            log.warn("비정상적인 접근!");
+            //return "redirect:/user/login";
+        }
+        //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
+        UserPagingResultDTO userPagingResultDTO = userService.select10Users((long)pageNumber);
+        log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
+
+        NormalResponse<UserPagingResultDTO> response = NormalResponse.makeNormalResponse(userPagingResultDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

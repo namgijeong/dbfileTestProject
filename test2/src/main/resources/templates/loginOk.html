@@ -33,13 +33,13 @@
 
 <div id="pagingArea">
     <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
-        <button id="previous" name="pagingButton"><</button>
+        <button id="previous" name="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
     </th:block>
     <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
         <button name="pagingButton" th:data-name="${i}" th:text="${i}"></button>
     </th:block>
     <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
-        <button id="next" name="pagingButton">></button>
+        <button id="next" name="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
     </th:block>
 </div>
 
@@ -87,6 +87,32 @@
         function handleButtonsNumber(e){
             //현재 있는 몇번째 페이지 정보 가져오기
             let clickedNumber = e.target.dataset.name;
+
+            //페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
+            $.ajax({
+                url: '/user/loginOk/ajax?pageNumber='+clickedNumber,
+                method: 'GET',
+                success: function (response) {
+                    console.log("response.content.buttonBlockDTO : "+response.content.buttonBlockDTO);
+                    console.log("response.content.userDTOList : "+response.content.userDTOList);
+                    response.content.userDTOList.forEach(userDTO => {
+                        console.log("배열 하나: " + userDTO + '\n');
+                        console.log('내용 : ' + userDTO.id + '\n');
+                        console.log('내용: ' + userDTO.pwd + '\n');
+                        console.log('내용: ' + userDTO.name + '\n');
+                        console.log('내용: ' + userDTO.level + '\n');
+                        console.log('내용: ' + userDTO.desc + '\n');
+
+                        //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
+                        console.log('내용: ' + userDTO.reg_date + '\n');
+                    });
+
+                    //makeTableHtml(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('실패:', error);
+                }
+            });
 
         }
 
