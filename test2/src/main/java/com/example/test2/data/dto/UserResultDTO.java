@@ -19,7 +19,7 @@ public class UserResultDTO {
     /*exception 메세지*/
     private String exceptionMessage;
 
-    private UserResultDTO(Builder builder){
+    private UserResultDTO(Builder builder) {
         this.successFlag = builder.successFlag;
         this.successLine = builder.successLine;
         this.failLine = builder.failLine;
@@ -27,39 +27,39 @@ public class UserResultDTO {
         this.exceptionMessage = builder.exceptionMessage;
     }
 
-    public static class Builder{
+    public static class Builder {
         private int successFlag;
         private int successLine;
         private int failLine;
         private String failText;
         private String exceptionMessage;
 
-        public Builder successFlag(int successFlag){
+        public Builder successFlag(int successFlag) {
             this.successFlag = successFlag;
             return this;
         }
 
-        public Builder successLine(int successLine){
+        public Builder successLine(int successLine) {
             this.successLine = successLine;
             return this;
         }
 
-        public Builder failLine(int failLine){
+        public Builder failLine(int failLine) {
             this.failLine = failLine;
             return this;
         }
 
-        public Builder failText(String failText){
+        public Builder failText(String failText) {
             this.failText = failText;
             return this;
         }
 
-        public Builder exceptionMessage(String exceptionMessage){
+        public Builder exceptionMessage(String exceptionMessage) {
             this.exceptionMessage = exceptionMessage;
             return this;
         }
 
-        public UserResultDTO build(){
+        public UserResultDTO build() {
             return new UserResultDTO(this);
         }
     }

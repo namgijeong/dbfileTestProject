@@ -2,11 +2,7 @@ package com.example.test2.controller;
 
 import java.util.List;
 
-import com.example.test2.exception.FailFileOpen;
-import com.example.test2.exception.WrongFileExtension;
-import com.example.test2.response.ExceptionCodeType;
-import com.example.test2.response.ExceptionResponse;
-import com.example.test2.response.NormalResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.test2.data.dto.UserDTO;
 import com.example.test2.service.UserService;
 import com.example.test2.data.dto.UserTotalResultDTO;
+import com.example.test2.exception.FailFileOpen;
+import com.example.test2.exception.WrongFileExtension;
+import com.example.test2.response.ExceptionCodeType;
+import com.example.test2.response.ExceptionResponse;
+import com.example.test2.response.NormalResponse;
 
 @RestController
 @RequestMapping("/upload/*")
@@ -31,7 +32,7 @@ public class UploadController {
 
 
     @PostMapping("/insertTable")
-    public ResponseEntity<?> toTable(MultipartFile file){
+    public ResponseEntity<?> insertToTable(MultipartFile file) {
         userService.deleteAll();
 
         UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
@@ -55,7 +56,7 @@ public class UploadController {
     }
 
     @PostMapping("/selectFullUsers")
-    public ResponseEntity<?> fullSelect(){
+    public ResponseEntity<?> fullSelect() {
         List<UserDTO> userDTOList = userService.findAll();
 
         NormalResponse<List<UserDTO>> response = NormalResponse.makeNormalResponse(userDTOList);

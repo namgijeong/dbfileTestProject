@@ -27,7 +27,7 @@ public class Utility {
         컬럼이 not null인데 정상 db insert되는 것을 방지
         내용이 있는경우 공백만 제거한다.
      */
-    public static String[] makeEmptyStringNull(String[] parts){
+    public static String[] makeEmptyStringNull(String[] parts) {
         for (int i = 0; i < parts.length; i++){
             if(parts[i].trim().equals("")){
                 parts[i] = null;
@@ -85,7 +85,7 @@ public class Utility {
     }
 
 
-    public static boolean isStringUpperCase(String str) throws NullPointerException{
+    public static boolean isStringUpperCase(String str) throws NullPointerException {
         try{
             char[] chars = str.toCharArray();
             for (char c : chars){
@@ -102,7 +102,7 @@ public class Utility {
 
     }
 
-    public static boolean isStringNumber(String str) throws NullPointerException{
+    public static boolean isStringNumber(String str) throws NullPointerException {
         try{
             char[] chars = str.toCharArray();
             for (char c : chars){
@@ -119,7 +119,7 @@ public class Utility {
 
     }
 
-    public static boolean isStringUpperChar(String str) throws NullPointerException{
+    public static boolean isStringUpperChar(String str) throws NullPointerException {
         try{
             char[] chars = str.toCharArray();
             if (chars.length == 1 && Character.isUpperCase(chars[0])){
@@ -133,7 +133,7 @@ public class Utility {
 
     }
 
-    public static boolean isStringLocalDateTimeFormat(String str){
+    public static boolean isStringLocalDateTimeFormat(String str) {
         if (str.matches("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")){
             return true;
         }
@@ -141,7 +141,7 @@ public class Utility {
     }
 
     /*하단 버튼 페이징 숫자 계산해서 ButtonBlockDTO 만들기*/
-    public static ButtonBlockDTO makeButtonBlockDTO(long currentPageNumber, long totalCount){
+    public static ButtonBlockDTO makeButtonBlockDTO(long currentPageNumber, long totalCount) {
         log.info("currentPageNumber : "+currentPageNumber);
         log.info("totalCount : "+totalCount);
         //한 페이지당 게시글 10개
@@ -159,7 +159,7 @@ public class Utility {
         log.info("currentBlockLastNumber : "+currentBlockLastNumber);
 
         //만약 총 게시글 페이지 보다 많게 계산되면 안된다.
-        if (currentBlockLastNumber > totalPageNumber){
+        if (currentBlockLastNumber > totalPageNumber) {
             currentBlockLastNumber = totalPageNumber;
         }
 
@@ -167,18 +167,18 @@ public class Utility {
         boolean nextBlock = false;
         long previousBlockPageNumber = 0L;
         long nextBlockPageNumber = 0L;
-        if (currentBlockNumber > 1){
+        if (currentBlockNumber > 1) {
             previousBlock = true;
             previousBlockPageNumber = currentBlockFirstNumber - 1;
 
-        } else{
+        } else {
             previousBlock = false;
         }
 
-        if (currentBlockNumber < totalBlockNumber){
+        if (currentBlockNumber < totalBlockNumber) {
             nextBlock = true;
             nextBlockPageNumber = currentBlockLastNumber + 1;
-        } else{
+        } else {
             nextBlock = false;
         }
 

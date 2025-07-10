@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-import com.example.test2.data.dto.*;
-import com.example.test2.exception.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.test2.data.dao.UserDAO;
 import com.example.test2.data.entity.User;
 import com.example.test2.utility.Utility;
+import com.example.test2.data.dto.*;
+import com.example.test2.exception.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,15 +37,15 @@ public class UserServiceImpl implements UserService {
 
     /*업로드 된 파일을 가지고 db table에 저장한다.*/
     @Override
-    public UserTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension{
+    public UserTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension {
         String originalFileName = file.getOriginalFilename();
         System.out.println(originalFileName);
 
-        if (originalFileName != null && originalFileName.matches("^.+\\.(dbfile)$")){
+        if (originalFileName != null && originalFileName.matches("^.+\\.(dbfile)$")) {
             log.info("유효한 파일");
 
             try (BufferedReader reader = new BufferedReader(
-                         new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))){
+                         new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
                 int count = 0;
                 int successCount = 0;
                 String line;
@@ -58,19 +57,19 @@ public class UserServiceImpl implements UserService {
                     각 한줄마다 / 기준으로 분리하라.
                     형식을 바꾸고 DTO에 집어넣은 후, 엔티티 컬럼에 맞게 변화해라.
                  */
-                while ((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     log.info("읽은 줄:" +line);
 
                     UserResultDTO userResultDTO = null;
                     count++;
 
-                    try{
+                    try {
                         //슬래시 단위로 나누기
                         String[] parts = line.split("/");
 
                         //각 문자열 파트 개수가 맞는지 검사
                         boolean isStringLengthValid = Utility.checkStringCount(parts);
-                        if(!isStringLengthValid){
+                        if (!isStringLengthValid) {
                             throw new StringTokenException("/로 구분한 칼럼 개수가 잘못되었습니다.");
                         }
 
@@ -89,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
                         successCount++;
 
-                    } catch(Exception e){ // 개별 라인에서 오류 발생해도 다음 줄로
+                    } catch(Exception e) { // 개별 라인에서 오류 발생해도 다음 줄로
                         log.warn("exception 종류 : "+e.getClass().getName());
                         log.warn(e.getMessage());
                         log.warn("라인 오류: " + line);
@@ -102,7 +101,7 @@ public class UserServiceImpl implements UserService {
 //                                            .exceptionMessage(e.getMessage())
                                             .build();
 
-                    } finally{
+                    } finally {
                         userResultDTOList.add(userResultDTO);
 
                     }
@@ -116,14 +115,14 @@ public class UserServiceImpl implements UserService {
 
                 return userTotalResultDTO;
 
-            } catch (IOException e2){
+            } catch(IOException e2) {
                 e2.printStackTrace();
 
                 log.warn("파일 열기 실패");
                 throw new FailFileOpen("파일 열기 실패");
             }
 
-        } else{
+        } else {
             log.warn("잘못된 파일 확장자");
             throw new WrongFileExtension("잘못된 파일 확장자");
 
@@ -132,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
     /*db table에 있는 user 레코드를 모두 조회한다.*/
     @Override
-    public List<UserDTO> findAll(){
+    public List<UserDTO> findAll() {
         List<User> userList = userDAO.selectAll();
         List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
         return userDTOList;

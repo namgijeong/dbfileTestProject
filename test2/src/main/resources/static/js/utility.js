@@ -1,5 +1,5 @@
 /*
-       파일 문자열을 자바스크립트 객체 Date로 변환한다.
+       ajax json format 응답일때 자바스크립트 객체 Date로 변환한다.
        @param string 문자열
        @return Date 객체
     */
@@ -58,7 +58,7 @@ function makeRegDate(date){
 }
 
 /*
-    자바 객체 LocalDateTime의 각각 연/월/일 부분을 분리 후, 한글을 붙인다.
+    ajax json이 아닌 자바 객체 응답일때 LocalDateTime의 각각 연/월/일 부분을 분리 후, 한글을 붙인다.
     @param 2021-01-03T10:00 형식의 LocalDateTime
     @return string 문자열
  */

@@ -2,7 +2,6 @@ package com.example.test2.controller;
 
 import java.util.List;
 
-import com.example.test2.response.NormalResponse;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.test2.service.UserService;
 import com.example.test2.data.dto.UserDTO;
 import com.example.test2.data.dto.UserPagingResultDTO;
+import com.example.test2.response.NormalResponse;
 
 @Controller
 @RequestMapping("/user/*")
@@ -62,7 +62,7 @@ public class UserController {
             return "redirect:/user/login";
         }
         //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
-        UserPagingResultDTO userPagingResultDTO = userService.select10Users((long)pageNumber);
+        UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
@@ -79,7 +79,7 @@ public class UserController {
             //return "redirect:/user/login";
         }
         //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
-        UserPagingResultDTO userPagingResultDTO = userService.select10Users((long)pageNumber);
+        UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
         NormalResponse<UserPagingResultDTO> response = NormalResponse.makeNormalResponse(userPagingResultDTO);

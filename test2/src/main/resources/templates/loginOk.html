@@ -8,7 +8,7 @@
 <body>
 <!--<h1> 로그인 성공 </h1>-->
 <div id="userResults">
-    <table>
+    <table id="userResultsTable">
         <tr>
             <th> ID </th>
             <th> PWD </th>
@@ -17,17 +17,24 @@
             <th> DESC </th>
             <th> REG_DATE </th>
         </tr>
-        <tr th:if="${#lists.isEmpty(userPagingResultDTO.userDTOList)}">
-            <td colspan="6">회원 정보가 없습니다.</td>
-        </tr>
-        <tr th:each="userDTO : ${userPagingResultDTO.userDTOList}" th:if="${!#lists.isEmpty(userPagingResultDTO.userDTOList)}">
-            <td th:text="${userDTO.id}"></td>
-            <td th:text="${userDTO.pwd}"></td>
-            <td th:text="${userDTO.name}"></td>
-            <td th:text="${userDTO.level}"></td>
-            <td name="desc" th:data-name="${userDTO.desc}"></td>
-            <td name="regDate" th:data-name="${userDTO.regDate}"></td>
-        </tr>
+
+        <th:block th:if="${#lists.isEmpty(userPagingResultDTO.userDTOList)}">
+            <tr>
+                <td colspan="6">회원 정보가 없습니다.</td>
+            </tr>
+        </th:block>
+
+        <th:block th:each="userDTO : ${userPagingResultDTO.userDTOList}" th:if="${!#lists.isEmpty(userPagingResultDTO.userDTOList)}">
+            <tr>
+                <td th:text="${userDTO.id}"></td>
+                <td th:text="${userDTO.pwd}"></td>
+                <td th:text="${userDTO.name}"></td>
+                <td th:text="${userDTO.level}"></td>
+                <td name="desc" th:data-name="${userDTO.desc}"></td>
+                <td name="regDate" th:data-name="${userDTO.regDate}"></td>
+            </tr>
+        </th:block>
+
     </table>
 </div>
 
@@ -46,7 +53,7 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="/js/utility.js"></script>
-<script>
+<script th:inline="javascript">
     // DOM이 완전히 로드되고 파싱 완료된 시점에 실행
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM 준비 완료!');
@@ -55,8 +62,8 @@
         for (regDate of regDates){
             let originalRegDate = regDate.dataset.name;
             console.log("originalRegDate : "+originalRegDate);
-
             console.log("type originalRegDate : "+ typeof(originalRegDate));
+
             let completeRegDate = makeLocalDateTimeToString(originalRegDate);
             regDate.textContent = completeRegDate;
         }
@@ -76,46 +83,119 @@
         }
 
         //페이징 버튼 이벤트 걸기
-        let buttons = document.getElementsByName("pagingButton");
-        for(button of buttons){
-            button.addEventListener('click', function(e){
-                handleButtonsNumber(e);
-            });
-        }
+        // let buttons = document.getElementsByName("pagingButton");
+        // for(button of buttons){
+        //     button.addEventListener('click', function(e){
+        //         handleButtonsNumber(e);
+        //     });
+        // }
 
-        //페이징 버튼 번호들 처리
-        function handleButtonsNumber(e){
-            //현재 있는 몇번째 페이지 정보 가져오기
-            let clickedNumber = e.target.dataset.name;
-
-            //페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
-            $.ajax({
-                url: '/user/loginOk/ajax?pageNumber='+clickedNumber,
-                method: 'GET',
-                success: function (response) {
-                    console.log("response.content.buttonBlockDTO : "+response.content.buttonBlockDTO);
-                    console.log("response.content.userDTOList : "+response.content.userDTOList);
-                    response.content.userDTOList.forEach(userDTO => {
-                        console.log("배열 하나: " + userDTO + '\n');
-                        console.log('내용 : ' + userDTO.id + '\n');
-                        console.log('내용: ' + userDTO.pwd + '\n');
-                        console.log('내용: ' + userDTO.name + '\n');
-                        console.log('내용: ' + userDTO.level + '\n');
-                        console.log('내용: ' + userDTO.desc + '\n');
-
-                        //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
-                        console.log('내용: ' + userDTO.reg_date + '\n');
-                    });
-
-                    //makeTableHtml(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error('실패:', error);
-                }
-            });
-
-        }
+        //이벤트 위임
+        let pagingArea = document.getElementById("pagingArea");
+        pagingArea.addEventListener('click', function(e){
+            handleButtonsNumber(e);
+        });
 
     });
+
+    //페이징 버튼 번호들 처리
+    function handleButtonsNumber(e) {
+        //현재 있는 몇번째 페이지 정보 가져오기
+        //직접클릭 e.target
+        let clickedNumber = e.target.dataset.name;
+        //이벤트 리스너 바인딩  e.currentTarget
+        //let clickedNumber = e.currentTarget.children[0].dataset.name;
+
+        console.log("clickedNumber: "+clickedNumber);
+        console.log("클릭된 대상 : "+e.target);
+        console.log("클릭된 대상 클래스 이름 : "+e.target.classList);
+        //이벤트 위임시 진짜 자식 요소 내부일때만
+        if (e.target.matches(".pagingButton")) {
+            console.log("안들어오나");
+            pagingAjax(clickedNumber);
+        }
+
+
+    }
+
+    //페이징 통신 ajax
+    function pagingAjax(clickedNumber) {
+        //페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
+        $.ajax({
+            url: '/user/loginOk/ajax?pageNumber=' + clickedNumber,
+            method: 'GET',
+            success: function (response) {
+                console.log("response.content.buttonBlockDTO : " + response.content.buttonBlockDTO);
+                console.log("response.content.userDTOList : " + response.content.userDTOList);
+
+                makePagingTable(response.content.userDTOList);
+                makePagingButton(response.content.buttonBlockDTO);
+            },
+            error: function (xhr, status, error) {
+                console.error('실패:', error);
+            }
+        });
+    }
+    //페이징 테이블 내용 동적 html 생성
+    function makePagingTable(response) {
+        let userResultsTable = document.getElementById("userResultsTable");
+        let responseText = '';
+
+        responseText += `<tr>`;
+        responseText += `<th> ID </th>`;
+        responseText += `<th> PWD </th>`;
+        responseText += `<th> NAME </th>`;
+        responseText += `<th> LEVEL </th>`;
+        responseText += `<th> DESC </th>`;
+        responseText += `<th> REG_DATE </th>`;
+        responseText += `</tr>`;
+
+        response.forEach(userDTO => {
+            console.log("배열 하나: " + userDTO + '\n');
+            console.log('내용 : ' + userDTO.id + '\n');
+            console.log('내용: ' + userDTO.pwd + '\n');
+            console.log('내용: ' + userDTO.name + '\n');
+            console.log('내용: ' + userDTO.level + '\n');
+            console.log('내용: ' + userDTO.desc + '\n');
+
+            //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
+            console.log('내용: ' + userDTO.reg_date + '\n');
+            const date = parseDate(userDTO.reg_date);
+            let regDateText = makeRegDate(date);
+
+            responseText += `<tr>`;
+            responseText += `<td>${userDTO.id}</td>`;
+            responseText += `<td>${userDTO.pwd}</td>`;
+            responseText += `<td>${userDTO.name}</td>`;
+            responseText += `<td>${userDTO.level}</td>`;
+            responseText += `<td>${userDTO.desc}</td>`;
+            responseText += `<td>${regDateText}</td>`;
+            responseText += `</tr>`;
+
+        });
+
+        userResultsTable.innerHTML = responseText;
+    }
+
+    //페이징 버튼 내용 동적 html 생성
+    function makePagingButton(response) {
+        let pagingArea = document.getElementById("pagingArea");
+        let responseText = '';
+
+        if (response.previousBlock) {
+            responseText += `<button id="previous" name="pagingButton" data-name="${response.previousBlockPageNumber}"><</button>`;
+        }
+        for(let i = response.currentBlockFirstNumber; i <= response.currentBlockLastNumber; i++) {
+            responseText += `<button name="pagingButton" data-name="${i}">${i}</button>`;
+        }
+        if (response.nextBlock) {
+            responseText += ` <button id="next" name="pagingButton" data-name="${response.nextBlockPageNumber}">></button>`;
+        }
+
+        pagingArea.innerHTML = responseText;
+
+    }
+
+
 </script>
 </html>

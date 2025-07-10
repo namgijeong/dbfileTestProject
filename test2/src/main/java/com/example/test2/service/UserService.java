@@ -2,13 +2,13 @@ package com.example.test2.service;
 
 import java.util.List;
 
-import com.example.test2.data.dto.UserPagingResultDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.test2.data.dto.UserDTO;
 import com.example.test2.data.dto.UserTotalResultDTO;
 import com.example.test2.exception.FailFileOpen;
 import com.example.test2.exception.WrongFileExtension;
+import com.example.test2.data.dto.UserPagingResultDTO;
 
 public interface UserService {
     /*아이디를 가지고 user 레코드를 찾는다.*/

@@ -66,25 +66,13 @@ public class UserDTO {
             setLevel(parts[3]);
             setRegDate(parts[4]);
 
-//            this.pwd = parts[1];
-//            this.name = parts[2];
-//            this.level = parts[3];
-//            this.regDate = Utility.makeStringToLocalDateTime(parts[4]);
-
-        } else{  //desc 칼럼 있을때
+        } else {  //desc 칼럼 있을때
             setId(parts[0]);
             setPwd(parts[1]);
             setName(parts[2]);
             setLevel(parts[3]);
             setDesc(parts[4]);
             setRegDate(parts[5]);
-
-//            this.id = parts[0];
-//            this.pwd = parts[1];
-//            this.name = parts[2];
-//            this.level = parts[3];
-//            this.desc = parts[4];
-//            this.regDate = Utility.makeStringToLocalDateTime(parts[5]);
 
         }
 
@@ -134,52 +122,52 @@ public class UserDTO {
 //    }
 
     //직접적으로 멤버변수에 넣기전에 검사해서 exception 발생
-    public void setId(String id) throws WrongFieldException{
+    public void setId(String id) throws WrongFieldException {
         boolean isUpperString = false;
 
-        try{
+        try {
             isUpperString = Utility.isStringUpperCase(id);
-        } catch(NullPointerException e){
+        } catch(NullPointerException e) {
             throw new WrongFieldException("id 필드를 입력안했습니다.");
         }
 
-        if (!isUpperString){
+        if (!isUpperString) {
             throw new WrongFieldException("id가 모두 대문자가 아닙니다.");
         }
         this.id = id;
     }
 
-    public void setPwd(String pwd) throws WrongFieldException{
+    public void setPwd(String pwd) throws WrongFieldException {
         boolean isNumberString = false;
 
-        try{
+        try {
             isNumberString = Utility.isStringNumber(pwd);
-        } catch(NullPointerException e){
+        } catch(NullPointerException e) {
             throw new WrongFieldException("pwd 필드를 입력안했습니다.");
         }
 
-        if (!isNumberString){
+        if (!isNumberString) {
             throw new WrongFieldException("pwd가 모두 숫자가 아닙니다.");
         }
         this.pwd = pwd;
     }
 
-    public void setName(String name) throws WrongFieldException{
-        if(name == null){
+    public void setName(String name) throws WrongFieldException {
+        if (name == null) {
             throw new WrongFieldException("name 필드를 입력안했습니다.");
         }
         this.name = name;
     }
 
-    public void setLevel(String level) throws WrongFieldException{
+    public void setLevel(String level) throws WrongFieldException {
         boolean isCharUpperString = false;
-        try{
+        try {
             isCharUpperString = Utility.isStringUpperChar(level);
-        } catch(NullPointerException e){
+        } catch(NullPointerException e) {
             throw new WrongFieldException("name 필드를 입력안했습니다.");
         }
 
-        if (!isCharUpperString){
+        if (!isCharUpperString) {
             throw new WrongFieldException("level은 글자 하나여야 하고 대문자여야 합니다.");
         }
         this.level = level;
@@ -189,16 +177,16 @@ public class UserDTO {
         this.desc = desc;
     }
 
-    public void setRegDate(String regDate) throws WrongFieldException{
+    public void setRegDate(String regDate) throws WrongFieldException {
         boolean isStringLocalDateTimeFormat = Utility.isStringLocalDateTimeFormat(regDate);
-        if (!isStringLocalDateTimeFormat){
+        if (!isStringLocalDateTimeFormat) {
             throw new WrongFieldException("날짜 문자열을 yyyy-MM-dd HH:mm:ss 형태로 입력해주세요.");
         }
         this.regDate = Utility.makeStringToLocalDateTime(regDate);
     }
 
     /*DTO를 entity로 변환*/
-    public static User makeUserDTOToUser(UserDTO userDTO){
+    public static User makeUserDTOToUser(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setPwd(userDTO.getPwd());
