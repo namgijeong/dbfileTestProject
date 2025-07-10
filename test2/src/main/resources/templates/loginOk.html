@@ -30,8 +30,8 @@
                 <td th:text="${userDTO.pwd}"></td>
                 <td th:text="${userDTO.name}"></td>
                 <td th:text="${userDTO.level}"></td>
-                <td name="desc" th:data-name="${userDTO.desc}"></td>
-                <td name="regDate" th:data-name="${userDTO.regDate}"></td>
+                <td class="desc" th:data-name="${userDTO.desc}"></td>
+                <td class="regDate" th:data-name="${userDTO.regDate}"></td>
             </tr>
         </th:block>
 
@@ -40,13 +40,13 @@
 
 <div id="pagingArea">
     <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
-        <button id="previous" name="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
+        <button id="previous" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
     </th:block>
     <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
-        <button name="pagingButton" th:data-name="${i}" th:text="${i}"></button>
+        <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
     </th:block>
     <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
-        <button id="next" name="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
+        <button id="next" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
     </th:block>
 </div>
 
@@ -58,7 +58,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM 준비 완료!');
 
-        let regDates = document.getElementsByName("regDate");
+        let regDates = document.getElementsByClassName("regDate");
         for (regDate of regDates){
             let originalRegDate = regDate.dataset.name;
             console.log("originalRegDate : "+originalRegDate);
@@ -68,7 +68,7 @@
             regDate.textContent = completeRegDate;
         }
 
-        let descs = document.getElementsByName("desc");
+        let descs = document.getElementsByClassName("desc");
         for (desc of descs){
             let descText = desc.dataset.name;
             console.log("descText : "+descText);
@@ -107,15 +107,18 @@
         //let clickedNumber = e.currentTarget.children[0].dataset.name;
 
         console.log("clickedNumber: "+clickedNumber);
-        console.log("클릭된 대상 : "+e.target);
+        //console.log("클릭된 대상 : "+e.target);
         console.log("클릭된 대상 클래스 이름 : "+e.target.classList);
+        //const item = e.target.closest(".pagingButton");
+        //console.log("item : "+item);
+        //console.log("closest className : "+item.className);
         //이벤트 위임시 진짜 자식 요소 내부일때만
         if (e.target.matches(".pagingButton")) {
             console.log("안들어오나");
             pagingAjax(clickedNumber);
         }
 
-
+        //pagingAjax(clickedNumber);
     }
 
     //페이징 통신 ajax
@@ -183,13 +186,13 @@
         let responseText = '';
 
         if (response.previousBlock) {
-            responseText += `<button id="previous" name="pagingButton" data-name="${response.previousBlockPageNumber}"><</button>`;
+            responseText += `<button id="previous" class="pagingButton" data-name="${response.previousBlockPageNumber}"><</button>`;
         }
         for(let i = response.currentBlockFirstNumber; i <= response.currentBlockLastNumber; i++) {
-            responseText += `<button name="pagingButton" data-name="${i}">${i}</button>`;
+            responseText += `<button class="pagingButton" data-name="${i}">${i}</button>`;
         }
         if (response.nextBlock) {
-            responseText += ` <button id="next" name="pagingButton" data-name="${response.nextBlockPageNumber}">></button>`;
+            responseText += ` <button id="next" class="pagingButton" data-name="${response.nextBlockPageNumber}">></button>`;
         }
 
         pagingArea.innerHTML = responseText;
