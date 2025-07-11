@@ -3,7 +3,7 @@
        @param string 문자열
        @return Date 객체
     */
-function parseDate(dateString){
+function parseDate(dateString) {
     const [datePart, timePart] = dateString.split(" ");
     const [year, month, day] = datePart.split("-");
     const [hour, minute, second] = timePart.split(":");
@@ -33,23 +33,21 @@ function parseDate(dateString){
     @param Date 객체
     @return string 문자열
  */
-function makeRegDate(date){
+function makeRegDate(date) {
     let regDateText = '';
     regDateText += date.getFullYear()+"년";
     regDateText += (date.getMonth()+1)+"월";
     regDateText += (date.getDate())+"일    ";
 
-    if(parseInt(date.getHours()) < 10){
+    if (parseInt(date.getHours()) < 10) {
         regDateText += "0"+(date.getHours())+"시";
-    }
-    else{
+    } else {
         regDateText += (date.getHours())+"시";
     }
 
-    if(parseInt(date.getMinutes()) < 10){
+    if (parseInt(date.getMinutes()) < 10) {
         regDateText += "0"+(date.getMinutes())+"분";
-    }
-    else{
+    } else {
         regDateText += (date.getMinutes())+"분";
     }
 
@@ -62,7 +60,7 @@ function makeRegDate(date){
     @param 2021-01-03T10:00 형식의 LocalDateTime
     @return string 문자열
  */
-function makeLocalDateTimeToString(localDateTime){
+function makeLocalDateTimeToString(localDateTime) {
     const date = new Date(localDateTime);
     let regDateText = makeRegDate(date);
     return regDateText;

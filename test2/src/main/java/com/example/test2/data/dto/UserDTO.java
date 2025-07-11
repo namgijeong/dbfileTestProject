@@ -58,7 +58,6 @@ public class UserDTO {
             desc 칼럼 없을때
             만약 desc 칼럼 없고 regdate 있어서 토큰이 5개여도 각각 넣는 검사때 걸린다.
          */
-        //
         if (parts.length == 5) {
             setId(parts[0]);
             setPwd(parts[1]);
@@ -124,10 +123,9 @@ public class UserDTO {
     //직접적으로 멤버변수에 넣기전에 검사해서 exception 발생
     public void setId(String id) throws WrongFieldException {
         boolean isUpperString = false;
-
         try {
             isUpperString = Utility.isStringUpperCase(id);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new WrongFieldException("id 필드를 입력안했습니다.");
         }
 
@@ -139,10 +137,9 @@ public class UserDTO {
 
     public void setPwd(String pwd) throws WrongFieldException {
         boolean isNumberString = false;
-
         try {
             isNumberString = Utility.isStringNumber(pwd);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new WrongFieldException("pwd 필드를 입력안했습니다.");
         }
 
@@ -163,7 +160,7 @@ public class UserDTO {
         boolean isCharUpperString = false;
         try {
             isCharUpperString = Utility.isStringUpperChar(level);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new WrongFieldException("name 필드를 입력안했습니다.");
         }
 

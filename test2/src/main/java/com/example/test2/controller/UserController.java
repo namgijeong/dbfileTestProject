@@ -28,7 +28,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/file")
-    public String showForm(){
+    public String showForm() {
         return "form";
     }
 
@@ -42,7 +42,7 @@ public class UserController {
     public String loginCheck(@RequestParam String idInput, @RequestParam String pwdInput, HttpSession session, RedirectAttributes redirectAttributes) {
         log.info("넘어온 값 : "+idInput+ ", "+pwdInput);
         boolean userLoginOk = userService.userLogin(idInput, pwdInput);
-        if (userLoginOk){
+        if (userLoginOk) {
             session.setAttribute("loginId", idInput);
 
             //ajax시 url이 pageNumber = 1 로 계속 보여져서 일부러 숨겼다.
@@ -62,7 +62,7 @@ public class UserController {
      */
     @GetMapping("/loginOk/page")
     public String loginOkPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
-        if(loginId == null){
+        if (loginId == null) {
             log.warn("비정상적인 접근!");
             return "redirect:/user/login";
         }
@@ -78,8 +78,8 @@ public class UserController {
         버튼을 클릭했을시 ajax로 해당 페이지 내용 반환
      */
     @GetMapping("/loginOk/ajax")
-    public ResponseEntity<?> loginOkAjax(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber, Model model) {
-        if(loginId == null){
+    public ResponseEntity<?> loginOkAjax(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
+        if (loginId == null) {
             log.warn("비정상적인 접근!");
             //return "redirect:/user/login";
         }

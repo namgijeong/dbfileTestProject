@@ -28,7 +28,7 @@
     /*
         업로드한 파일을 ajax로 보낸 후 DB table에 추가
      */
-    function ajaxSubmit(event){
+    function ajaxSubmit(event) {
         event.preventDefault();
 
         const formData = new FormData();
@@ -58,13 +58,13 @@
        전체성공시 조회하기 버튼을 클릭하면 작동
        db table에 있는 모든 user 정보 가져옴
     */
-    function ajaxSelectAll(event){
+    function ajaxSelectAll(event) {
         event.preventDefault();
 
         $.ajax({
             url: '/upload/selectFullUsers',
             method: 'POST',
-            success: function (response) {
+            success: function(response) {
                 makeTableHtml(response);
             },
             error: function(xhr, status, error) {
@@ -86,22 +86,22 @@
             getXxx()가 아니라 isXxx()가 자동으로 인식
             따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
          */
-        if (response.normal == false){ // 비정상적 플래그면
+        if (response.normal == false) { // 비정상적 플래그면
             if (response.exceptionCode == "FAIL_FILE_OPEN") { //파일읽기 리더가 실패했을때
                 console.log("파일 열기 실패");
                 responseSpaceText += `<h1>파일 읽기 실패하였습니다.</h1>`;
                 responseSpaceText += `<h1>다시 재시도 해주세요.</h1>`;
                 responseSpace.innerHTML = responseSpaceText;
 
-            } else if (response.exceptionCode == "WRONG_FILE_EXTENSION"){  //사용자가 잘못된 파일 확장자를 올렸을때
+            } else if (response.exceptionCode == "WRONG_FILE_EXTENSION") {  //사용자가 잘못된 파일 확장자를 올렸을때
                 console.log("사용자가 잘못된 파일 올림");
                 responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
                 responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;
                 responseSpace.innerHTML = responseSpaceText;
 
             }
-        } else{ // 정상적인 플래그면
-            if (response.content.totalCount == response.content.successCount){  //전체 성공
+        } else { // 정상적인 플래그면
+            if (response.content.totalCount == response.content.successCount) {  //전체 성공
                 responseSpaceText += `<h3>▼ 전체 성공</h3>`;
                 responseSpaceText += `<h3>레코드 건수  ${response.content.successCount}건 입력 성공</h3>`;
                 responseSpaceText += `<button id="findAllButton">조회버튼</button>`;
@@ -113,12 +113,12 @@
                 document.getElementById("findAllButton").addEventListener('click',function(event){
                     ajaxSelectAll(event);
                 });
-            } else{ //일부 실패
+            } else { //일부 실패
                 responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
                 responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
                 responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
                 response.content.userResultDTOList.forEach(userResultDTO => {
-                    if(userResultDTO.successFlag == 0){
+                    if (userResultDTO.successFlag == 0) {
                         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
                         //원인들이 많을 경우 분리
                         // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
@@ -126,7 +126,7 @@
                         //     responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
                         // }
 
-                    } else{}
+                    } else {}
                 });
                 responseSpace.innerHTML = responseSpaceText;
             }
@@ -137,7 +137,7 @@
     /*
         DB table에 있는 레코드 각각을 HTML로 동적 생성
      */
-    function makeTableHtml(response){
+    function makeTableHtml(response) {
         let resultSpace = document.getElementById('result');
         let resultSpaceText = '';
 
@@ -152,10 +152,10 @@
         resultSpaceText += `<th> REG_DATE </th>`;
         resultSpaceText += `</tr>`;
 
-        if(response.content.length === 0){
+        if (response.content.length === 0) {
             resultSpaceText += `</table>`;
             resultSpaceText += `<h1>회원 정보가 비어 있습니다.</h1>`;
-        } else{
+        } else {
             response.content.forEach(userDTO => {
                 console.log("배열 하나: " + userDTO+'\n');
                 console.log('내용 : '+ userDTO.id+'\n');

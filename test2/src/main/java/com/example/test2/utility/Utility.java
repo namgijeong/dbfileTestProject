@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import com.example.test2.data.dto.ButtonBlockDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.exception.StringTokenException;
 import com.example.test2.exception.WrongFieldException;
+import com.example.test2.data.dto.ButtonBlockDTO;
 
 @Slf4j
 public class Utility {
@@ -28,11 +28,10 @@ public class Utility {
         내용이 있는경우 공백만 제거한다.
      */
     public static String[] makeEmptyStringNull(String[] parts) {
-        for (int i = 0; i < parts.length; i++){
-            if(parts[i].trim().equals("")){
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].trim().equals("")) {
                 parts[i] = null;
-            }
-            else{
+            } else {
                 parts[i] = parts[i].trim();
             }
         }
@@ -72,13 +71,13 @@ public class Utility {
     public static LocalDateTime makeStringToLocalDateTime(String date) throws WrongFieldException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        try{
+        try {
             LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
             return localDateTime;
-        }catch(DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             throw new WrongFieldException("날짜 문자열을 yyyy-MM-dd HH:mm:ss 형태로 입력해주세요.");
         //  / / / / / 이런 형태일때 날짜 형식 문자열이 아예 없을때 parse를 시도하면 null pointer exception이 뜬다.
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             throw new WrongFieldException("날짜 문자열을 yyyy-MM-dd HH:mm:ss 형태로 입력해주세요.");
         }
 
@@ -86,55 +85,55 @@ public class Utility {
 
 
     public static boolean isStringUpperCase(String str) throws NullPointerException {
-        try{
+        try {
             char[] chars = str.toCharArray();
-            for (char c : chars){
-                if (!Character.isUpperCase(c)){
+            for (char c : chars) {
+                if (!Character.isUpperCase(c)) {
                     return false;
                 }
             }
 
             return true;
 
-        } catch(NullPointerException e){
+        } catch (NullPointerException e) {
             throw new NullPointerException();
         }
 
     }
 
     public static boolean isStringNumber(String str) throws NullPointerException {
-        try{
+        try {
             char[] chars = str.toCharArray();
-            for (char c : chars){
-                if (!Character.isDigit(c)){
+            for (char c : chars) {
+                if (!Character.isDigit(c)) {
                     return false;
                 }
             }
 
             return true;
 
-        } catch(NullPointerException e){
+        } catch (NullPointerException e) {
             throw new NullPointerException();
         }
 
     }
 
     public static boolean isStringUpperChar(String str) throws NullPointerException {
-        try{
+        try {
             char[] chars = str.toCharArray();
-            if (chars.length == 1 && Character.isUpperCase(chars[0])){
+            if (chars.length == 1 && Character.isUpperCase(chars[0])) {
                 return true;
             }
             return false;
 
-        } catch(NullPointerException e){
+        } catch (NullPointerException e) {
             throw new NullPointerException();
         }
 
     }
 
     public static boolean isStringLocalDateTimeFormat(String str) {
-        if (str.matches("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")){
+        if (str.matches("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")) {
             return true;
         }
         return false;

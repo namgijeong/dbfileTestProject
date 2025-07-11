@@ -2,7 +2,6 @@ package com.example.test2.controller;
 
 import java.util.List;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +40,7 @@ public class UploadController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
         /*
-        try{
+        try {
             UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
 
             return ResponseEntity.ok(userTotalResultDTO);

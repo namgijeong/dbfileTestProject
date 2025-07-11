@@ -26,10 +26,10 @@ public class UserDAOImpl implements UserDAO {
     public boolean select(String id, String pwd) {
         Optional<User> optionalUser = userRepository.findByIdAndPwd(id, pwd);
         //User user;
-        if(optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
             //user = optionalUser.get();
             return true;
-        } else{
+        } else {
             //throw new UserNotFound("로그인 실패");
             return false;
         }

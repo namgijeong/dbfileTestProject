@@ -59,7 +59,7 @@
         console.log('DOM 준비 완료!');
 
         let regDates = document.getElementsByClassName("regDate");
-        for (regDate of regDates){
+        for (regDate of regDates) {
             let originalRegDate = regDate.dataset.name;
             console.log("originalRegDate : "+originalRegDate);
             console.log("type originalRegDate : "+ typeof(originalRegDate));
@@ -69,15 +69,14 @@
         }
 
         let descs = document.getElementsByClassName("desc");
-        for (desc of descs){
+        for (desc of descs) {
             let descText = desc.dataset.name;
             console.log("descText : "+descText);
             console.log("type descText : "+typeof(descText));
 
-            if(descText === undefined){
+            if (descText === undefined) {
                 desc.textContent = "";
-            }
-            else{
+            } else {
                 desc.textContent = descText;
             }
         }
@@ -92,7 +91,7 @@
 
         //이벤트 위임
         let pagingArea = document.getElementById("pagingArea");
-        pagingArea.addEventListener('click', function(e){
+        pagingArea.addEventListener('click', function(e) {
             handleButtonsNumber(e);
         });
 
@@ -182,7 +181,7 @@
         if (response.previousBlock) {
             responseText += `<button id="previous" class="pagingButton" data-name="${response.previousBlockPageNumber}"><</button>`;
         }
-        for(let i = response.currentBlockFirstNumber; i <= response.currentBlockLastNumber; i++) {
+        for (let i = response.currentBlockFirstNumber; i <= response.currentBlockLastNumber; i++) {
             responseText += `<button class="pagingButton" data-name="${i}">${i}</button>`;
         }
         if (response.nextBlock) {
