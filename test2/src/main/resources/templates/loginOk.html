@@ -103,22 +103,15 @@
         //현재 있는 몇번째 페이지 정보 가져오기
         //직접클릭 e.target
         let clickedNumber = e.target.dataset.name;
-        //이벤트 리스너 바인딩  e.currentTarget
-        //let clickedNumber = e.currentTarget.children[0].dataset.name;
 
         console.log("clickedNumber: "+clickedNumber);
-        //console.log("클릭된 대상 : "+e.target);
         console.log("클릭된 대상 클래스 이름 : "+e.target.classList);
-        //const item = e.target.closest(".pagingButton");
-        //console.log("item : "+item);
-        //console.log("closest className : "+item.className);
+
         //이벤트 위임시 진짜 자식 요소 내부일때만
         if (e.target.matches(".pagingButton")) {
-            console.log("안들어오나");
             pagingAjax(clickedNumber);
         }
 
-        //pagingAjax(clickedNumber);
     }
 
     //페이징 통신 ajax
@@ -133,6 +126,7 @@
 
                 makePagingTable(response.content.userDTOList);
                 makePagingButton(response.content.buttonBlockDTO);
+                makeCurrentButtonBlur(clickedNumber);
             },
             error: function (xhr, status, error) {
                 console.error('실패:', error);
@@ -199,6 +193,12 @@
 
     }
 
+    //현재 페이지인 버튼은 흐리게 조정
+    function makeCurrentButtonBlur(clickedNumber) {
+        let clickedButton = document.querySelector(`[data-name="${clickedNumber}"]`);
+        clickedButton.style.backgroundColor = "darksalmon";
+        clickedButton.style.border = "1px solid darksalmon";
+    }
 
 </script>
 </html>
