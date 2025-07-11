@@ -95,6 +95,10 @@
             handleButtonsNumber(e);
         });
 
+        //첫 페이지 진입시 기본이 1번 페이지이므로 1번 버튼을 흐리게
+        makeCurrentButtonBlur([[${pageNumber}]]);
+        //makeCurrentButtonBlur(1);
+
     });
 
     //페이징 버튼 번호들 처리
@@ -132,6 +136,7 @@
             }
         });
     }
+
     //페이징 테이블 내용 동적 html 생성
     function makePagingTable(response) {
         let userResultsTable = document.getElementById("userResultsTable");
@@ -185,7 +190,7 @@
             responseText += `<button class="pagingButton" data-name="${i}">${i}</button>`;
         }
         if (response.nextBlock) {
-            responseText += ` <button id="next" class="pagingButton" data-name="${response.nextBlockPageNumber}">></button>`;
+            responseText += `<button id="next" class="pagingButton" data-name="${response.nextBlockPageNumber}">></button>`;
         }
 
         pagingArea.innerHTML = responseText;
@@ -195,8 +200,18 @@
     //현재 페이지인 버튼은 흐리게 조정
     function makeCurrentButtonBlur(clickedNumber) {
         let clickedButton = document.querySelector(`[data-name="${clickedNumber}"]`);
+
+        /*
         clickedButton.style.backgroundColor = "darksalmon";
         clickedButton.style.border = "1px solid darksalmon";
+        */
+
+        let buttons = document.querySelectorAll("button");
+        buttons.forEach(button => {
+           button.classList.remove('buttonClicked');
+        });
+        clickedButton.classList.add('buttonClicked');
+
     }
 
 </script>

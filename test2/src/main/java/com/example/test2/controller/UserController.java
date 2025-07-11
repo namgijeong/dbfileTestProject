@@ -1,5 +1,6 @@
 package com.example.test2.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -59,6 +60,8 @@ public class UserController {
         @SessionAttribute로 한번에 세션에있는값을 가져올 수 있다.
         쿠키에 있는 JSESSIONID를 가지고 세션을 검색하고, 그 세션안에 name에 넣는 키를 이용해서 값을 꺼내온다.
         로그인하지않은 사용자(JSESSIONID를 가지고있지않은 사용자)도 이용할 수 있으므로 required = false로 해둔다.
+        required = true 세션에 해당 속성이 없으면 예외(HttpSessionRequiredException) 발생
+        required = false일 경우 세션에 해당 속성이 없으면 null로 주입
      */
     @GetMapping("/loginOk/page")
     public String loginOkPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
@@ -69,6 +72,7 @@ public class UserController {
         //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
+        model.addAttribute("pageNumber", pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
         return "loginOk";
@@ -82,6 +86,9 @@ public class UserController {
         if (loginId == null) {
             log.warn("비정상적인 접근!");
             //return "redirect:/user/login";
+            String redirectUrl = "redirect:/user/login";
+            log.warn("redirectUrl :  "+ redirectUrl);
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
         }
         //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
