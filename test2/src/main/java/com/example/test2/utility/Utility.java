@@ -13,6 +13,12 @@ import com.example.test2.data.dto.ButtonBlockDTO;
 @Slf4j
 public class Utility {
 
+    /**
+     * 토큰 갯수를 세서 사용자가 알맞게 입력했는지 검사
+     *
+     * @param parts 토큰 문자열
+     * @return 토큰 갯수
+     */
     public static boolean checkStringCount(String[] parts) {
         log.info("/로 자른 토큰 개수 : "+parts.length);
         //desc를 제외해서 유효한 토큰 개수인 경우
@@ -22,10 +28,13 @@ public class Utility {
         return false;
     }
 
-    /*
-        문자열 각 부분이 공백으로 이루어진 빈 문자열일때 null로 처리
-        컬럼이 not null인데 정상 db insert되는 것을 방지
-        내용이 있는경우 공백만 제거한다.
+    /**
+     *문자열 각 부분이 공백으로 이루어진 빈 문자열일때 null로 처리
+     *컬럼이 not null인데 정상 db insert되는 것을 방지
+     *내용이 있는경우 공백만 제거한다.
+     *
+     * @param parts 토큰 문자열
+     * @return String[] 정제한 토큰 문자열
      */
     public static String[] makeEmptyStringNull(String[] parts) {
         for (int i = 0; i < parts.length; i++) {
@@ -62,12 +71,16 @@ public class Utility {
     }
      */
 
-    /*
+
+    /**
      * String을 LocalDateTime으로 바꿔야한다.
      * 이때 String이어도 형식이 맞아야해서
      * 사전에 공백을 제거했었다.
-     * 실패하면 이 자체로 DateTimeParseException e 날린다
-     * */
+     *
+     * @param date 문자열 형식 yyyy-MM-dd HH:mm:ss
+     * @return LocalDateTime
+     * @throws WrongFieldException
+     */
     public static LocalDateTime makeStringToLocalDateTime(String date) throws WrongFieldException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -83,7 +96,13 @@ public class Utility {
 
     }
 
-
+    /**
+     *문자열을 이루는 모든 글자가 대문자이면 true를 반환
+     *
+     * @param str 문자열
+     * @return Boolean 모두 대문자이면 true
+     * @throws NullPointerException
+     */
     public static boolean isStringUpperCase(String str) throws NullPointerException {
         try {
             char[] chars = str.toCharArray();
@@ -101,6 +120,13 @@ public class Utility {
 
     }
 
+    /**
+     *문자열을 이루는 모든 글자가 숫자형식이면 true를 반환
+     *
+     * @param str 문자열
+     * @return Boolean 모두 숫자형식이면 true
+     * @throws NullPointerException
+     */
     public static boolean isStringNumber(String str) throws NullPointerException {
         try {
             char[] chars = str.toCharArray();
@@ -118,6 +144,13 @@ public class Utility {
 
     }
 
+    /**
+     * 문자열이 한글자이면서 대문자이면 true를 반환
+     *
+     * @param str 문자열
+     * @return Boolean 한글자이면서 대문자여야 true
+     * @throws NullPointerException
+     */
     public static boolean isStringUpperChar(String str) throws NullPointerException {
         try {
             char[] chars = str.toCharArray();
@@ -132,6 +165,11 @@ public class Utility {
 
     }
 
+    /**
+     * 문자열이 공백없이 yyyy-MM-dd HH:mm:ss 정확한 형식인지 검사
+     * @param str 문자열
+     * @return boolean 정확한 형식이면 true
+     */
     public static boolean isStringLocalDateTimeFormat(String str) {
         if (str.matches("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")) {
             return true;
@@ -139,7 +177,13 @@ public class Utility {
         return false;
     }
 
-    /*하단 버튼 페이징 숫자 계산해서 ButtonBlockDTO 만들기*/
+
+    /**
+     * 하단 버튼 페이징 숫자 계산해서 ButtonBlockDTO 만들기
+     * @param currentPageNumber 현재 페이지넘버
+     * @param totalCount 총 게시물 갯수
+     * @return ButtonBlockDTO 페이징 버튼 정보
+     */
     public static ButtonBlockDTO makeButtonBlockDTO(long currentPageNumber, long totalCount) {
         log.info("currentPageNumber : "+currentPageNumber);
         log.info("totalCount : "+totalCount);

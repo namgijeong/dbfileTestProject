@@ -44,6 +44,10 @@ public class UserDTO {
 
     public UserDTO() {}
 
+    /**
+     * entity를 dto로 변환한다.
+     * @param "UserDtoBase를 상속한 Entity" 객체
+     */
     public UserDTO(UserDtoBase user) {
         this.id = user.getId();
         this.pwd = user.getPwd();
@@ -53,6 +57,14 @@ public class UserDTO {
         this.regDate = user.getRegDate();
     }
 
+    /**
+     * 각 토큰을 검사해서 dto에 매핑한다.
+     * 각 멤버변수마다 setter함수로 넣는다.
+     * 직접적으로 멤버변수에 넣기전에 검사해서 exception 발생
+     *
+     * @param "토큰 형식의 문자열"
+     * @throws WrongFieldException
+     */
     public UserDTO(String[] parts) throws WrongFieldException {
         /*
             desc 칼럼 없을때
@@ -120,7 +132,6 @@ public class UserDTO {
 //        }
 //    }
 
-    //직접적으로 멤버변수에 넣기전에 검사해서 exception 발생
     public void setId(String id) throws WrongFieldException {
         boolean isUpperString = false;
         try {
@@ -182,7 +193,12 @@ public class UserDTO {
         this.regDate = Utility.makeStringToLocalDateTime(regDate);
     }
 
-    /*DTO를 entity로 변환*/
+
+    /**
+     * UserDTO를 User entity로 반환한다.
+     * @param "UserDTO"
+     * @return User entity
+     */
     public static User makeUserDTOToUser(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());

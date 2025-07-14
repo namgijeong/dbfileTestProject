@@ -29,7 +29,12 @@ public class UploadController {
 
     private final UserService userService;
 
-
+    /**
+     * 파일을 업로드하여 db table에 자동으로 레코드를 추가
+     *
+     * @param  "파일형태" ".dbfile" 확장자 파일
+     * @return UserTotalResultDTO가 들어있는  ResponseEntity
+     */
     @PostMapping("/insertTable")
     public ResponseEntity<?> insertToTable(MultipartFile file) {
         userService.deleteAll();
@@ -54,6 +59,10 @@ public class UploadController {
 
     }
 
+    /**
+     * db table에 있는 모든 user 레코드들을 가져온다.
+     * @return UserDTO가 들어있는 ResponseEntity
+     */
     @PostMapping("/selectFullUsers")
     public ResponseEntity<?> fullSelect() {
         List<UserDTO> userDTOList = userService.findAll();

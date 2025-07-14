@@ -121,7 +121,7 @@
     function pagingAjax(clickedNumber) {
         //페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
         $.ajax({
-            url: '/user/loginOk/ajax?pageNumber=' + clickedNumber,
+            url: '/user/userList/ajax?pageNumber=' + clickedNumber,
             method: 'GET',
             success: function (response) {
                 console.log("response.content.buttonBlockDTO : " + response.content.buttonBlockDTO);

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.test2.response.ResponseBase;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,14 +30,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
 
-    /*아이디를 가지고 user 레코드를 찾는다.*/
-//    @Override
-//    public UserDTO findUserById(String id){
-//        User user = userDAO.select(id);
-//        return new UserDTO(user);
-//    }
-
-    /*업로드 된 파일을 가지고 db table에 저장한다.*/
+    /**
+     * 업로드 된 파일을 가지고 db table에 저장한다.
+     * @param file 업로드 한 파일
+     * @return UserTotalResultDTO
+     * @throws FailFileOpen
+     * @throws WrongFileExtension
+     */
     @Override
     public UserTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension {
         String originalFileName = file.getOriginalFilename();
@@ -129,32 +130,60 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    /*db table에 있는 user 레코드를 모두 조회한다.*/
+
+    /**
+     * db table에 있는 user 레코드를 모두 조회한다.
+     * @return List<UserDTO>
+     */
     @Override
     public List<UserDTO> findAll() {
+
+        ResponseBase<String> succ = new ResponseBase<>(true, "success");
+        ResponseBase<ErrorRes> fail = new ResponseBase<>(true, new ErrorRes(1,"error"));
+
+
+
         List<User> userList = userDAO.selectAll();
         List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
         return userDTOList;
 
     }
 
-    /*db table에 있는 user 레코드를 모두 지운다.*/
+    @AllArgsConstructor
+    public static class ErrorRes {
+        private int code;
+        private String message;
+    }
+
+
+    /**
+     * db table에 있는 user 레코드를 모두 지운다.
+     */
     @Override
     public void deleteAll() {
         userDAO.deleteAll();
     }
 
-    /*user 로그인을 수행한다.*/
+
+    /**
+     * user 로그인을 수행한다.
+     * @param id
+     * @param pwd
+     * @return boolean id,password 맞으면 true
+     */
     @Override
     public boolean userLogin(String id, String pwd) {
         boolean loginOk =  userDAO.select(id, pwd);
         return loginOk;
     }
 
-    /*
-        등록 최신순 user 10명을 찾는다.
-        등록된 전체 유저 개수를 세서 페이징 버튼들 블록 처리
-    */
+
+    /**
+     * 등록 최신순 user 10명을 찾는다.
+     * 등록된 전체 유저 개수를 세서 페이징 버튼들 정보도 넘겨준다.
+     * @param pageNumber 페이지 번호
+     * @return UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
+     */
     @Override
     public UserPagingResultDTO select10Users(long pageNumber) {
         //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.

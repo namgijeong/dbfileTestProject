@@ -13,7 +13,7 @@ public class NormalResponse<T> extends BaseResponse {
         this.content = content;
     }
 
-    //ExceptionResponse를 직접 new 하는것보다는 return 하는것이 좋다고 하셨다.
+    //ExceptionResponse를 직접 new 하는*것보다는 return 하는것이 좋다고 하셨다.
     public static <T> NormalResponse<T> makeNormalResponse(T content) {
         return new NormalResponse<>(content);
     }

@@ -11,8 +11,6 @@ import com.example.test2.exception.WrongFileExtension;
 import com.example.test2.data.dto.UserPagingResultDTO;
 
 public interface UserService {
-    /*아이디를 가지고 user 레코드를 찾는다.*/
-//    public UserDTO findUserById(String id);
     /*업로드 된 파일을 가지고 db table에 저장한다.*/
     public UserTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension;
     /*db table에 있는 user 레코드를 모두 조회한다.*/

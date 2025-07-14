@@ -28,29 +28,44 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * 파일 올리기 화면으로 이동한다.
+     * @return 파일 올리기 화면을 반환한다.
+     */
     @GetMapping("/file")
     public String showForm() {
         return "form";
     }
 
+    /**
+     * 로그인 화면으로 이동한다.
+     * @return 로그인 화면을 반환한다.
+     */
     @GetMapping("/login")
     public String showLoginForm() {
         return "login";
     }
 
+    /**
+     * id, password가 맞으면 유저리스트 화면으로 이동, 틀리면 다시 로그인 페이지로 이동
+     * @param id
+     * @param pwd
+     * @param session
+     * @param redirectAttributes
+     * @return redirect 할 주소
+     */
     @PostMapping("/loginCheck")
     //form 이나 url 파라미터로 넘어온 값은 @RequestBody가 아니다.
-    public String loginCheck(@RequestParam String idInput, @RequestParam String pwdInput, HttpSession session, RedirectAttributes redirectAttributes) {
-        log.info("넘어온 값 : "+idInput+ ", "+pwdInput);
-        boolean userLoginOk = userService.userLogin(idInput, pwdInput);
+    public String checkLogin(@RequestParam String id, @RequestParam String pwd, HttpSession session, RedirectAttributes redirectAttributes) {
+        log.info("넘어온 값 : "+id+ ", "+pwd);
+        boolean userLoginOk = userService.userLogin(id, pwd);
         if (userLoginOk) {
-            session.setAttribute("loginId", idInput);
+            session.setAttribute("loginId", id);
 
             //ajax시 url이 pageNumber = 1 로 계속 보여져서 일부러 숨겼다.
             redirectAttributes.addFlashAttribute("pageNumber", 1);
-            return "redirect:/user/loginOk/page";
+            return "redirect:/user/userList/page";
 
-            //return "redirect:/user/loginOk/page?pageNumber=1";
         }
         redirectAttributes.addFlashAttribute("loginAgain", true);
         return "redirect:/user/login";
@@ -63,8 +78,16 @@ public class UserController {
         required = true 세션에 해당 속성이 없으면 예외(HttpSessionRequiredException) 발생
         required = false일 경우 세션에 해당 속성이 없으면 null로 주입
      */
-    @GetMapping("/loginOk/page")
-    public String loginOkPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
+
+    /**
+     *
+     * @param loginId 세션에서 가져온 로그인 아이디
+     * @param pageNumber 유저리스트에서 볼 페이지 번호
+     * @param model 화면 객체
+     * @return user 목록 화면으로 이동
+     */
+    @GetMapping("/userList/page")
+    public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
         if (loginId == null) {
             log.warn("비정상적인 접근!");
             return "redirect:/user/login";
@@ -81,8 +104,15 @@ public class UserController {
     /*
         버튼을 클릭했을시 ajax로 해당 페이지 내용 반환
      */
-    @GetMapping("/loginOk/ajax")
-    public ResponseEntity<?> loginOkAjax(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
+
+    /**
+     *
+     * @param loginId 세션에서 가져온 로그인 아이디
+     * @param pageNumber 유저리스트에서 볼 페이지 번호
+     * @return user list를 담은 ResponseEntity
+     */
+    @GetMapping("/userList/ajax")
+    public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
         if (loginId == null) {
             log.warn("비정상적인 접근!");
             //return "redirect:/user/login";
