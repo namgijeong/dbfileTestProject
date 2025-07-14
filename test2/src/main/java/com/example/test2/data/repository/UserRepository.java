@@ -13,6 +13,7 @@ import com.example.test2.data.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByIdAndPwd(String id, String pwd);
+    Optional<User> findByPwd(String pwd);
     Page<User> findAllByOrderByRegDateDesc(Pageable pageable);
     long count();
 }

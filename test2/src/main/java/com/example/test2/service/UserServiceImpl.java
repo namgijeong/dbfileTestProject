@@ -160,9 +160,33 @@ public class UserServiceImpl implements UserService {
      * @return boolean id,password 맞으면 true
      */
     @Override
-    public boolean userLogin(String id, String pwd) {
-        boolean loginOk =  userDAO.select(id, pwd);
-        return loginOk;
+    public UserResultDTO userLogin(String id, String pwd) {
+        User user =  userDAO.select(id, pwd);
+        UserResultDTO userResultDTO = null;
+        if (user == null) {
+            userResultDTO = new UserResultDTO.Builder()
+                    .successFlag(0)
+                    .exceptionMessage("아이디랑 비밀번호 모두 틀렸습니다.")
+                    .build();
+        } else {
+            if (!user.getId().equals(id)){
+                userResultDTO = new UserResultDTO.Builder()
+                        .successFlag(0)
+                        .exceptionMessage("아이디가 틀렸습니다.")
+                        .build();
+            } else if (!user.getPwd().equals(pwd)){
+                userResultDTO = new UserResultDTO.Builder()
+                        .successFlag(0)
+                        .exceptionMessage("비밀번호가 틀렸습니다.")
+                        .build();
+            } else {
+                userResultDTO = new UserResultDTO.Builder()
+                        .successFlag(1)
+                        .build();
+            }
+        }
+
+        return userResultDTO;
     }
 
 

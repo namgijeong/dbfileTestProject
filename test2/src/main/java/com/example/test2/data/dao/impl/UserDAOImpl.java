@@ -23,16 +23,26 @@ public class UserDAOImpl implements UserDAO {
 
     /*로그인 성공여부*/
     @Override
-    public boolean select(String id, String pwd) {
+    public User select(String id, String pwd) {
         Optional<User> optionalUser = userRepository.findByIdAndPwd(id, pwd);
-        //User user;
-        if (optionalUser.isPresent()) {
-            //user = optionalUser.get();
-            return true;
+        User user = null;
+        if (optionalUser.isPresent()) { // 아이디랑 비번 둘다 맞으면
+            user = optionalUser.get();
+
         } else {
-            //throw new UserNotFound("로그인 실패");
-            return false;
+
+            Optional<User> optionalUser2 = userRepository.findById(id);
+            if (optionalUser2.isPresent()) {  //아이디만 맞으면
+                user = optionalUser2.get();
+            } else {
+                Optional<User> optionalUser3 = userRepository.findByPwd(pwd);
+                if (optionalUser3.isPresent()) {
+                    user = optionalUser3.get(); //비밀번호만 맞으면
+                }
+            }
+
         }
+        return user;
     }
 
     /*User를 db table에 insert 하기 */

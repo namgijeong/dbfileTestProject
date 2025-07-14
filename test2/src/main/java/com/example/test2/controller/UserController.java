@@ -46,7 +46,7 @@ public class UserController {
      */
     @GetMapping("/userList/page")
     //public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
-    public String goUserListPage(@ModelAttribute("pageNumber") int pageNumber, Model model) {
+    public String goUserListPage(@RequestParam("pageNumber") int pageNumber, Model model) {
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
         model.addAttribute("pageNumber", pageNumber);
