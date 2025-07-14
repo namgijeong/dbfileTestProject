@@ -1,5 +1,6 @@
 package com.example.test2.controller;
 
+import com.example.test2.data.dto.LoginUserDTO;
 import com.example.test2.data.dto.UserDTO;
 import com.example.test2.data.dto.UserPagingResultDTO;
 import com.example.test2.data.dto.UserResultDTO;
@@ -64,9 +65,9 @@ public class LoginController {
      * @return UserResultDTO
      */
     @PostMapping("/loginCheck")
-    public ResponseEntity<?> checkLogin(@RequestBody UserDTO userDTO, HttpSession session) {
-        String id = userDTO.getId();
-        String pwd = userDTO.getPwd();
+    public ResponseEntity<?> checkLogin(@RequestBody LoginUserDTO loginUserDTO, HttpSession session) {
+        String id = loginUserDTO.getId();
+        String pwd = loginUserDTO.getPwd();
         log.info("넘어온 값 : "+id+ ", "+pwd);
         UserResultDTO userLoginOk = userService.userLogin(id, pwd);
         if (userLoginOk.getSuccessFlag() == 1) {
