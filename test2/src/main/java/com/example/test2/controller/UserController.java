@@ -28,48 +28,9 @@ public class UserController {
 
     private final UserService userService;
 
-    /**
-     * 파일 올리기 화면으로 이동한다.
-     * @return 파일 올리기 화면을 반환한다.
-     */
-    @GetMapping("/file")
-    public String showForm() {
-        return "form";
-    }
 
-    /**
-     * 로그인 화면으로 이동한다.
-     * @return 로그인 화면을 반환한다.
-     */
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }
 
-    /**
-     * id, password가 맞으면 유저리스트 화면으로 이동, 틀리면 다시 로그인 페이지로 이동
-     * @param id
-     * @param pwd
-     * @param session
-     * @param redirectAttributes
-     * @return redirect 할 주소
-     */
-    @PostMapping("/loginCheck")
-    //form 이나 url 파라미터로 넘어온 값은 @RequestBody가 아니다.
-    public String checkLogin(@RequestParam String id, @RequestParam String pwd, HttpSession session, RedirectAttributes redirectAttributes) {
-        log.info("넘어온 값 : "+id+ ", "+pwd);
-        boolean userLoginOk = userService.userLogin(id, pwd);
-        if (userLoginOk) {
-            session.setAttribute("loginId", id);
 
-            //ajax시 url이 pageNumber = 1 로 계속 보여져서 일부러 숨겼다.
-            redirectAttributes.addFlashAttribute("pageNumber", 1);
-            return "redirect:/user/userList/page";
-
-        }
-        redirectAttributes.addFlashAttribute("loginAgain", true);
-        return "redirect:/user/login";
-    }
 
     /*
         @SessionAttribute로 한번에 세션에있는값을 가져올 수 있다.
@@ -80,18 +41,22 @@ public class UserController {
      */
 
     /**
+     * 로그인 성공시 유저리스트 관련한 페이지로 이동한다.
      *
-     * @param loginId 세션에서 가져온 로그인 아이디
      * @param pageNumber 유저리스트에서 볼 페이지 번호
      * @param model 화면 객체
      * @return user 목록 화면으로 이동
      */
     @GetMapping("/userList/page")
-    public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
+    //public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
+    public String goUserListPage(@ModelAttribute("pageNumber") int pageNumber, Model model) {
+        /*
         if (loginId == null) {
             log.warn("비정상적인 접근!");
-            return "redirect:/user/login";
+            return "redirect:/login/login";
         }
+         */
+
         //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
@@ -101,25 +66,26 @@ public class UserController {
         return "loginOk";
     }
 
-    /*
-        버튼을 클릭했을시 ajax로 해당 페이지 내용 반환
-     */
 
     /**
+     * 버튼을 클릭했을시 ajax로 해당 페이지 내용 반환
      *
-     * @param loginId 세션에서 가져온 로그인 아이디
      * @param pageNumber 유저리스트에서 볼 페이지 번호
      * @return user list를 담은 ResponseEntity
      */
     @GetMapping("/userList/ajax")
-    public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
+    //public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
+    public ResponseEntity<?> ExchangeUserList(@RequestParam int pageNumber) {
+        /*
         if (loginId == null) {
             log.warn("비정상적인 접근!");
-            //return "redirect:/user/login";
-            String redirectUrl = "redirect:/user/login";
+
+            String redirectUrl = "redirect:/login/login";
             log.warn("redirectUrl :  "+ redirectUrl);
             return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
         }
+         */
+
         //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());

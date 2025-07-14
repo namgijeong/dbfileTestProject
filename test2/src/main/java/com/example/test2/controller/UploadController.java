@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,15 @@ import com.example.test2.response.NormalResponse;
 public class UploadController {
 
     private final UserService userService;
+
+    /**
+     * 파일 올리기 화면으로 이동한다.
+     * @return 파일 올리기 화면을 반환한다.
+     */
+    @GetMapping("/file")
+    public String showForm() {
+        return "form";
+    }
 
     /**
      * 파일을 업로드하여 db table에 자동으로 레코드를 추가
