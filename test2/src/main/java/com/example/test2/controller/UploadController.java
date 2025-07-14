@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,13 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.test2.data.dto.UserDTO;
 import com.example.test2.service.UserService;
 import com.example.test2.data.dto.UserTotalResultDTO;
-import com.example.test2.exception.FailFileOpen;
-import com.example.test2.exception.WrongFileExtension;
-import com.example.test2.response.ExceptionCodeType;
-import com.example.test2.response.ExceptionResponse;
 import com.example.test2.response.NormalResponse;
+import com.example.test2.response.ResponseBase;
 
-@RestController
+@Controller
 @RequestMapping("/upload/*")
 @RequiredArgsConstructor
 @Slf4j
@@ -51,8 +49,11 @@ public class UploadController {
 
         UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
 
-        NormalResponse<UserTotalResultDTO> response = NormalResponse.makeNormalResponse(userTotalResultDTO);
+        ResponseBase<UserTotalResultDTO> response = ResponseBase.makeResponseBase(true, userTotalResultDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        //NormalResponse<UserTotalResultDTO> response = NormalResponse.makeNormalResponse(userTotalResultDTO);
+        //return ResponseEntity.status(HttpStatus.OK).body(response);
 
         /*
         try {
@@ -77,8 +78,11 @@ public class UploadController {
     public ResponseEntity<?> fullSelect() {
         List<UserDTO> userDTOList = userService.findAll();
 
-        NormalResponse<List<UserDTO>> response = NormalResponse.makeNormalResponse(userDTOList);
+        ResponseBase<List<UserDTO>> response = ResponseBase.makeResponseBase(true, userDTOList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+
+//        NormalResponse<List<UserDTO>> response = NormalResponse.makeNormalResponse(userDTOList);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 }

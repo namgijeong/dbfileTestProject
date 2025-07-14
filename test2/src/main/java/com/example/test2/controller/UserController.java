@@ -3,6 +3,7 @@ package com.example.test2.controller;
 import java.net.URI;
 import java.util.List;
 
+import com.example.test2.response.ResponseBase;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,6 @@ public class UserController {
 
     private final UserService userService;
 
-
-
-
-
     /*
         @SessionAttribute로 한번에 세션에있는값을 가져올 수 있다.
         쿠키에 있는 JSESSIONID를 가지고 세션을 검색하고, 그 세션안에 name에 넣는 키를 이용해서 값을 꺼내온다.
@@ -50,14 +47,6 @@ public class UserController {
     @GetMapping("/userList/page")
     //public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
     public String goUserListPage(@ModelAttribute("pageNumber") int pageNumber, Model model) {
-        /*
-        if (loginId == null) {
-            log.warn("비정상적인 접근!");
-            return "redirect:/login/login";
-        }
-         */
-
-        //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
         model.addAttribute("pageNumber", pageNumber);
@@ -69,28 +58,18 @@ public class UserController {
 
     /**
      * 버튼을 클릭했을시 ajax로 해당 페이지 내용 반환
-     *
      * @param pageNumber 유저리스트에서 볼 페이지 번호
      * @return user list를 담은 ResponseEntity
      */
     @GetMapping("/userList/ajax")
     //public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
     public ResponseEntity<?> ExchangeUserList(@RequestParam int pageNumber) {
-        /*
-        if (loginId == null) {
-            log.warn("비정상적인 접근!");
-
-            String redirectUrl = "redirect:/login/login";
-            log.warn("redirectUrl :  "+ redirectUrl);
-            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
-        }
-         */
-
-        //UserPagingResultDTO userPagingResultDTO = userService.select10Users(11L);
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
-        NormalResponse<UserPagingResultDTO> response = NormalResponse.makeNormalResponse(userPagingResultDTO);
+        ResponseBase<UserPagingResultDTO> response = ResponseBase.makeResponseBase(true, userPagingResultDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+//        NormalResponse<UserPagingResultDTO> response = NormalResponse.makeNormalResponse(userPagingResultDTO);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.test2.response;
 
+import com.example.test2.exception.ExceptionCodeType;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 

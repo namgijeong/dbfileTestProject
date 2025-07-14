@@ -87,13 +87,13 @@
             따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
          */
         if (response.normal == false) { // 비정상적 플래그면
-            if (response.exceptionCode == "FAIL_FILE_OPEN") { //파일읽기 리더가 실패했을때
+            if (response.content.exceptionCode == "FAIL_FILE_OPEN") { //파일읽기 리더가 실패했을때
                 console.log("파일 열기 실패");
                 responseSpaceText += `<h1>파일 읽기 실패하였습니다.</h1>`;
                 responseSpaceText += `<h1>다시 재시도 해주세요.</h1>`;
                 responseSpace.innerHTML = responseSpaceText;
 
-            } else if (response.exceptionCode == "WRONG_FILE_EXTENSION") {  //사용자가 잘못된 파일 확장자를 올렸을때
+            } else if (response.content.exceptionCode == "WRONG_FILE_EXTENSION") {  //사용자가 잘못된 파일 확장자를 올렸을때
                 console.log("사용자가 잘못된 파일 올림");
                 responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
                 responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;

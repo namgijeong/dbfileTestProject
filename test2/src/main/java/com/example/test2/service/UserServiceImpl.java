@@ -137,22 +137,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDTO> findAll() {
-
-        ResponseBase<String> succ = new ResponseBase<>(true, "success");
-        ResponseBase<ErrorRes> fail = new ResponseBase<>(true, new ErrorRes(1,"error"));
-
-
-
         List<User> userList = userDAO.selectAll();
         List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
         return userDTOList;
 
-    }
-
-    @AllArgsConstructor
-    public static class ErrorRes {
-        private int code;
-        private String message;
     }
 
 
