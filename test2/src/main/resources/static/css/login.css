@@ -12,7 +12,7 @@
     height:100px;
     text-align:center;
 }
-#checkDiv h1{
+#checkDiv h3{
     margin: auto;
     width:500px;
     height:100px;
@@ -51,11 +51,11 @@
     border-bottom: 1px solid tomato;
 }
 #idFail, #pwdFail{
-    height:50px !important;
+    height:auto !important;
     color:red !important;
 }
 .failShow{
-    display: flex !important;
+    display: block !important;
 }
 .failHidden{
     display: none !important;
