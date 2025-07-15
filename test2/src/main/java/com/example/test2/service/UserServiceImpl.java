@@ -167,11 +167,14 @@ public class UserServiceImpl implements UserService {
 
         if (user == null) {
             userResultDTO.setExceptionMessage("아이디랑 비밀번호 모두 틀렸습니다.");
+            userResultDTO.setFailText("all");
         } else {
             if (!user.getId().equals(id)){
                 userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
+                userResultDTO.setFailText("id");
             } else if (!user.getPwd().equals(pwd)){
                 userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
+                userResultDTO.setFailText("pwd");
             } else {
                 userResultDTO.setSuccessFlag(1);
             }

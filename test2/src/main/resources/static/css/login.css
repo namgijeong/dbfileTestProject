@@ -18,6 +18,7 @@
     height:100px;
 
     text-align:center;
+    color:red;
 }
 
 #loginForm{
@@ -25,8 +26,15 @@
     margin-top:100px;
 
     width: 500px;
-    height: 300px;
+    height: auto;
+
     text-align: center;
+    border: 1px solid tomato;
+}
+
+#loginDiv{
+    width:100%;
+    height:fit-content;
 
     border: 1px solid tomato;
 }
@@ -37,8 +45,20 @@
 
     width:500px;
     height:100px;
+}
 
+#loginForm > div {
     border-bottom: 1px solid tomato;
+}
+#idFail, #pwdFail{
+    height:50px !important;
+    color:red !important;
+}
+.failShow{
+    display: flex !important;
+}
+.failHidden{
+    display: none !important;
 }
 #loginForm div div{
     width:100px;
@@ -59,6 +79,7 @@
 
     margin:auto;
     margin-top:20px;
+    margin-bottom:20px;
     width: 80px;
     height: 50px;
     text-align: center;

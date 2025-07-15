@@ -12,9 +12,30 @@
 
     <!--<form id="loginForm" action="/login/loginCheck" method="post">-->
     <form id="loginForm">
+<!--        <div id="loginDiv">-->
+<!--            <div>-->
+<!--                <div>ID</div>-->
+<!--                <input name="id" id="id" type="text" placeholder="아이디 입력"/>-->
+<!--            </div>-->
+
+<!--            <div id="idFail">-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--                <div>PWD</div>-->
+<!--                <input name="pwd" id="pwd" type="password" placeholder="비밀번호 입력"/>-->
+<!--            </div>-->
+
+<!--            <div id="pwdFail">-->
+<!--            </div>-->
+<!--        </div>-->
+
         <div>
             <div>ID</div>
             <input name="id" id="id" type="text" placeholder="아이디 입력"/>
+        </div>
+
+        <div id="idFail" class="failHidden">
         </div>
 
         <div>
@@ -22,11 +43,13 @@
             <input name="pwd" id="pwd" type="password" placeholder="비밀번호 입력"/>
         </div>
 
+        <div id="pwdFail" class="failHidden">
+        </div>
+
         <button type="submit">로그인</button>
     </form>
 
     <div id="checkDiv">
-
     </div>
 
 </body>
@@ -61,36 +84,7 @@
              */
             if (response.ok) {
                 const loginAnswer  = await response.json();
-
-                let checkDiv = document.getElementById("checkDiv");
-                let responseText = '';
-
-                //body에 error code가 존재할때- valid에 걸렸을때
-                /*
-                    boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
-                    getXxx()가 아니라 isXxx()가 자동으로 인식
-                    따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
-                */
-                if (loginAnswer.normal == false) {
-                    if (loginAnswer.content.exceptionCode == "FAIL_LOGIN_VALID") {
-                        responseText += `<h1>로그인을 다시 시도해주세요.</h1>`;
-                        for (exceptionMessage of loginAnswer.content.exceptionMessage) {
-                            responseText += `<h1>${exceptionMessage}</h1>`;
-                        }
-
-                    }
-
-                } else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 일치하지 않을때
-                    console.log("loginAnswer : "+loginAnswer.content);
-                    if (loginAnswer.content.successFlag == 1) { // 아이디랑 비번이 맞다.
-                        window.location.href = "/user/userList/page?pageNumber=1";
-                    } else { // 아이디나 비번에서 문제가 있다.
-                        responseText += `<h1>로그인을 다시 시도해주세요.</h1>`;
-                        responseText += `<h1>${loginAnswer.content.exceptionMessage}</h1>`;
-                    }
-                }
-                checkDiv.innerHTML = responseText;
-
+                makeHtml(loginAnswer);
             } else {
                 const errorMessage = await response.json();
                 console.log("errorMessage : "+errorMessage);
@@ -100,8 +94,61 @@
             console.log("err : "+err);
         })
 
+    }
 
+    function makeHtml(loginAnswer){
+        let checkDiv = document.getElementById("checkDiv");
+        let idFail = document.getElementById("idFail");
+        let pwdFail = document.getElementById("pwdFail");
+        let responseText = '';
+        let failText = '';
 
+        //기존 결과를 지운다.
+        idFail.classList.add("failHidden");
+        idFail.classList.remove("failShow");
+        idFail.innerHTML = "";
+        pwdFail.classList.add("failHidden");
+        pwdFail.classList.remove("failShow");
+        pwdFail.innerHTML = "";
+        checkDiv.innerHTML = "";
+
+        /*
+            boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
+            getXxx()가 아니라 isXxx()가 자동으로 인식
+            따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
+        */
+        if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
+            if (loginAnswer.content.exceptionCode == "FAIL_LOGIN_VALID") {
+                responseText += `<h1>로그인을 다시 시도해주세요.</h1>`;
+                for (exceptionMessage of loginAnswer.content.exceptionMessage) {
+                    responseText += `<h1>${exceptionMessage}</h1>`;
+                }
+
+            }
+
+        } else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 일치하지 않을때
+            console.log("loginAnswer : "+loginAnswer.content);
+            if (loginAnswer.content.successFlag == 1) {  //아이디랑 비번이 맞다.
+                window.location.href = "/user/userList/page?pageNumber=1";
+            } else { // 아이디나 비번에서 문제가 있다.
+                responseText += `<h1>로그인을 다시 시도해주세요.</h1>`;
+                if (loginAnswer.content.failText == "id") {  //아이디가 일치하지 않을때
+                    failText  += `<h3>${loginAnswer.content.exceptionMessage}</h3>`;
+                    idFail.classList.remove("failHidden");
+                    idFail.classList.add("failShow");
+                    idFail.innerHTML = failText;
+                } else if (loginAnswer.content.failText == "pwd"){ //비밀번호가 일치하지 않을때
+                    failText  += `<h3>${loginAnswer.content.exceptionMessage}</h3>`;
+                    pwdFail.classList.remove("failHidden");
+                    pwdFail.classList.add("failShow");
+                    pwdFail.innerHTML = failText;
+                } else { //아이디, 비번 둘 다 틀렸을때
+                    responseText += `<h1>${loginAnswer.content.exceptionMessage}</h1>`;
+                }
+
+            }
+        }
+        checkDiv.innerHTML = responseText;
     }
 </script>
 </html>
