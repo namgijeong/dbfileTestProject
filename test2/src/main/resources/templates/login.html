@@ -12,45 +12,36 @@
 
     <!--<form id="loginForm" action="/login/loginCheck" method="post">-->
     <form id="loginForm">
-<!--        <div id="loginDiv">-->
-<!--            <div>-->
-<!--                <div>ID</div>-->
-<!--                <input name="id" id="id" type="text" placeholder="아이디 입력"/>-->
-<!--            </div>-->
+        <div>
+            <div>
+                <div>ID</div>
+                <input name="id" id="id" type="text" placeholder="아이디 입력"/>
+            </div>
 
-<!--            <div id="idFail">-->
-<!--            </div>-->
+            <div id="idFail" class="failHidden">
+            </div>
+        </div>
 
-<!--            <div>-->
-<!--                <div>PWD</div>-->
-<!--                <input name="pwd" id="pwd" type="password" placeholder="비밀번호 입력"/>-->
-<!--            </div>-->
-
-<!--            <div id="pwdFail">-->
-<!--            </div>-->
-<!--        </div>-->
 
         <div>
-            <div>ID</div>
-            <input name="id" id="id" type="text" placeholder="아이디 입력"/>
+            <div>
+                <div>PWD</div>
+                <input name="pwd" id="pwd" type="password" placeholder="비밀번호 입력"/>
+            </div>
+
+            <div id="pwdFail" class="failHidden">
+            </div>
         </div>
 
-        <div id="idFail" class="failHidden">
-        </div>
 
         <div>
-            <div>PWD</div>
-            <input name="pwd" id="pwd" type="password" placeholder="비밀번호 입력"/>
+            <button type="submit">로그인</button>
+
+            <div id="checkDiv" class="failHidden">
+            </div>
         </div>
 
-        <div id="pwdFail" class="failHidden">
-        </div>
-
-        <button type="submit">로그인</button>
     </form>
-
-    <div id="checkDiv">
-    </div>
 
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
@@ -111,6 +102,8 @@
         pwdFail.classList.add("failHidden");
         pwdFail.classList.remove("failShow");
         pwdFail.innerHTML = "";
+        checkDiv.classList.add("failHidden");
+        checkDiv.classList.remove("failShow");
         checkDiv.innerHTML = "";
 
         /*
@@ -120,6 +113,8 @@
         */
         if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
             if (loginAnswer.content.exceptionCode == "FAIL_LOGIN_VALID") {
+                checkDiv.classList.remove("failHidden");
+                checkDiv.classList.add("failShow");
                 responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
                 for (userResultDTO of loginAnswer.content.exceptionMessage) {
                     if (userResultDTO.failText == "id") {
@@ -143,6 +138,8 @@
             if (loginAnswer.content.successFlag == 1) {  //아이디랑 비번이 맞다.
                 window.location.href = "/user/userList/page?pageNumber=1";
             } else { // 아이디나 비번에서 문제가 있다.
+                checkDiv.classList.remove("failHidden");
+                checkDiv.classList.add("failShow");
                 responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
                 if (loginAnswer.content.failText == "id") {  //아이디가 일치하지 않을때
                     idFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;

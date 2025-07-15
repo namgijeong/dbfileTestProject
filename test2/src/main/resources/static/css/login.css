@@ -6,16 +6,15 @@
 
 #checkDiv{
     margin:auto;
-    margin-top:100px;
 
     width:500px;
-    height:100px;
+    height:auto;
     text-align:center;
 }
 #checkDiv h3{
     margin: auto;
     width:500px;
-    height:100px;
+    height:auto;
 
     text-align:center;
     color:red;
@@ -30,15 +29,11 @@
 
     text-align: center;
     border: 1px solid tomato;
+    border-bottom: none;
 }
 
-#loginDiv{
-    width:100%;
-    height:fit-content;
 
-    border: 1px solid tomato;
-}
-#loginForm div{
+#loginForm div div{
     display:flex;
     justify-content: center;
     align-items: center;
@@ -50,7 +45,9 @@
 #loginForm > div {
     border-bottom: 1px solid tomato;
 }
-#idFail, #pwdFail{
+#idFail, #pwdFail, #checkDiv{
+    margin-bottom:20px;
+
     height:auto !important;
     color:red !important;
 }
@@ -60,7 +57,7 @@
 .failHidden{
     display: none !important;
 }
-#loginForm div div{
+#loginForm div div div{
     width:100px;
 }
 
