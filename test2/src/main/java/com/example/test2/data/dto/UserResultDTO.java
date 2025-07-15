@@ -19,6 +19,8 @@ public class UserResultDTO {
     /*exception 메세지*/
     private String exceptionMessage;
 
+    public UserResultDTO() {}
+
     private UserResultDTO(Builder builder) {
         this.successFlag = builder.successFlag;
         this.successLine = builder.successLine;

@@ -33,15 +33,6 @@ public class UserDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
-    //    private UserDTO(Builder builder){
-//        this.id = builder.id;
-//        this.pwd = builder.pwd;
-//        this.name = builder.name;
-//        this.level = builder.level;
-//        this.desc = builder.desc;
-//        this.regDate = builder.regDate;
-//    }
-
     public UserDTO() {}
 
     /**
@@ -89,48 +80,6 @@ public class UserDTO {
 
     }
 
-//    public static class Builder{
-//        private String id;
-//        private String pwd;
-//        private String name;
-//        private String level;
-//        private String desc;
-//        private LocalDateTime regDate;
-//
-//        public Builder id(String id){
-//            this.id = id;
-//            return this;
-//        }
-//
-//        public Builder pwd(String pwd){
-//            this.pwd = pwd;
-//            return this;
-//        }
-//
-//        public Builder name(String name){
-//            this.name = name;
-//            return this;
-//        }
-//
-//        public Builder level(String level){
-//            this.level = level;
-//            return this;
-//        }
-//
-//        public Builder desc(String desc){
-//            this.desc = desc;
-//            return this;
-//        }
-//
-//        public Builder regDate(LocalDateTime regDate){
-//            this.regDate = regDate;
-//            return this;
-//        }
-//
-//        public UserDTO build(){
-//            return new UserDTO(this);
-//        }
-//    }
 
     public void setId(String id) throws WrongFieldException {
         boolean isUpperString = false;
@@ -148,14 +97,17 @@ public class UserDTO {
 
     public void setPwd(String pwd) throws WrongFieldException {
         boolean isNumberString = false;
-        try {
-            isNumberString = Utility.isStringNumber(pwd);
-        } catch (NullPointerException e) {
+//        try {
+//            isNumberString = Utility.isStringNumber(pwd);
+//        } catch (NullPointerException e) {
+//            throw new WrongFieldException("pwd 필드를 입력안했습니다.");
+//        }
+//
+//        if (!isNumberString) {
+//            throw new WrongFieldException("pwd가 모두 숫자가 아닙니다.");
+//        }
+        if (pwd == null) {
             throw new WrongFieldException("pwd 필드를 입력안했습니다.");
-        }
-
-        if (!isNumberString) {
-            throw new WrongFieldException("pwd가 모두 숫자가 아닙니다.");
         }
         this.pwd = pwd;
     }
@@ -172,7 +124,7 @@ public class UserDTO {
         try {
             isCharUpperString = Utility.isStringUpperChar(level);
         } catch (NullPointerException e) {
-            throw new WrongFieldException("name 필드를 입력안했습니다.");
+            throw new WrongFieldException("level 필드를 입력안했습니다.");
         }
 
         if (!isCharUpperString) {

@@ -7,6 +7,7 @@ import com.example.test2.data.dto.UserResultDTO;
 import com.example.test2.response.ResponseBase;
 import com.example.test2.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -65,7 +66,7 @@ public class LoginController {
      * @return UserResultDTO
      */
     @PostMapping("/loginCheck")
-    public ResponseEntity<?> checkLogin(@RequestBody LoginUserDTO loginUserDTO, HttpSession session) {
+    public ResponseEntity<?> checkLogin(@RequestBody @Valid LoginUserDTO loginUserDTO, HttpSession session) {
         String id = loginUserDTO.getId();
         String pwd = loginUserDTO.getPwd();
         log.info("넘어온 값 : "+id+ ", "+pwd);
