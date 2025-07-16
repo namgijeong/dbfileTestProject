@@ -128,6 +128,15 @@
                 makePagingTable(response.content.userDTOList);
                 makePagingButton(response.content.buttonBlockDTO);
                 makeCurrentButtonBlur(clickedNumber);
+
+                /*
+                    사용자 입장에서 눈속임용
+                    페이지 리로드 없이, 서버 통신없이 url 이름만 바꾸기(뒤로가기 기록 남기지 않음)
+                    state : 그 URL과 연결된 상태 데이터
+                    title : 페이지 제목
+                    url : 주소창에 표시될 URL
+                 */
+                window.history.replaceState(null, "", "/user/userList/ajax?pageNumber=" + clickedNumber);
             },
             error: function (xhr, status, error) {
                 console.error('실패:', error);
