@@ -30,7 +30,6 @@ public class UserDAOImpl implements UserDAO {
             user = optionalUser.get();
 
         } else {
-
             Optional<User> optionalUser2 = userRepository.findById(id);
             if (optionalUser2.isPresent()) {  //아이디만 맞으면
                 user = optionalUser2.get();

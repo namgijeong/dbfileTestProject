@@ -1,25 +1,18 @@
 package com.example.test2.controller;
 
-import java.net.URI;
-import java.util.List;
-
 import com.example.test2.response.ResponseBase;
-import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.service.UserService;
-import com.example.test2.data.dto.UserDTO;
 import com.example.test2.data.dto.UserPagingResultDTO;
-import com.example.test2.response.NormalResponse;
 
 @Controller
 @RequestMapping("/user/*")

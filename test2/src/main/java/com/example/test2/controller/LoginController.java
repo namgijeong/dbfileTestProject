@@ -61,9 +61,9 @@ public class LoginController {
     /**
      * id, password가 맞으면 유저리스트 화면으로 이동, 틀리면 다시 로그인 페이지로 이동
      *
-     * @param "UserDTO"
+     * @param "LoginUserDTO"
      * @param session
-     * @return UserResultDTO
+     * @return UserResultDTO를 담은 ResponseBase
      */
     @PostMapping("/loginCheck")
     public ResponseEntity<?> checkLogin(@RequestBody @Valid LoginUserDTO loginUserDTO, HttpSession session) {

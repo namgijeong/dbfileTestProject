@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.test2.data.dto.UserDTO;
 import com.example.test2.service.UserService;
 import com.example.test2.data.dto.UserTotalResultDTO;
-import com.example.test2.response.NormalResponse;
 import com.example.test2.response.ResponseBase;
 
 @Controller
@@ -51,19 +49,6 @@ public class UploadController {
 
         ResponseBase<UserTotalResultDTO> response = ResponseBase.makeResponseBase(true, userTotalResultDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-
-        /*
-        try {
-            UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
-
-            return ResponseEntity.ok(userTotalResultDTO);
-
-        } catch(FailFileOpen e1) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse(ExceptionCodeType.FAIL_FILE_OPEN,""));
-        } catch(WrongFileExtension e2) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ExceptionResponse(ExceptionCodeType.WRONG_FILE_EXTENSION,""));
-        }
-        */
 
     }
 
