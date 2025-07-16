@@ -130,13 +130,7 @@
 
                 }
 
-            }
-
-        } else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 일치하지 않을때
-            console.log("loginAnswer : "+loginAnswer.content);
-            if (loginAnswer.content.successFlag == 1) {  //아이디랑 비번이 맞다.
-                window.location.href = "/user/userList/page?pageNumber=1";
-            } else { // 아이디나 비번에서 문제가 있다.
+            } else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
                 showMessageTag(checkDiv);
                 responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
                 if (loginAnswer.content.failText == "id") {  //아이디가 일치하지 않을때
@@ -148,9 +142,32 @@
                 } else { //아이디, 비번 둘 다 틀렸을때
                     responseText += `<h3>${loginAnswer.content.exceptionMessage}</h3>`;
                 }
-
             }
+
+        } else { //아이디랑 비번이 맞다.
+            window.location.href = "/user/userList/page?pageNumber=1";
         }
+
+        // else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
+        //     console.log("loginAnswer : "+loginAnswer.content);
+        //     if (loginAnswer.content.successFlag == 1) {  //아이디랑 비번이 맞다.
+        //         window.location.href = "/user/userList/page?pageNumber=1";
+        //     } else { // 아이디나 비번에서 문제가 있다.
+        //         showMessageTag(checkDiv);
+        //         responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
+        //         if (loginAnswer.content.failText == "id") {  //아이디가 일치하지 않을때
+        //             idFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
+        //             showMessageTag(idFail);
+        //         } else if (loginAnswer.content.failText == "pwd"){ //비밀번호가 일치하지 않을때
+        //             pwdFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
+        //             showMessageTag(pwdFail);
+        //         } else { //아이디, 비번 둘 다 틀렸을때
+        //             responseText += `<h3>${loginAnswer.content.exceptionMessage}</h3>`;
+        //         }
+        //
+        //     }
+        // }
+
         idFail.innerHTML = idFailText;
         pwdFail.innerHTML = pwdFailText;
         checkDiv.innerHTML = responseText;

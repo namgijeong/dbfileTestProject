@@ -74,9 +74,14 @@ public class LoginController {
         if (userLoginOk.getSuccessFlag() == 1) {
             session.setAttribute("loginId", id);
 
+            ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(true, userLoginOk);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(false, userLoginOk);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
-        ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(true, userLoginOk);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+//        ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(true, userLoginOk);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
