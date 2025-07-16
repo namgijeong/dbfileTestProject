@@ -52,9 +52,6 @@ public class UploadController {
         ResponseBase<UserTotalResultDTO> response = ResponseBase.makeResponseBase(true, userTotalResultDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
-        //NormalResponse<UserTotalResultDTO> response = NormalResponse.makeNormalResponse(userTotalResultDTO);
-        //return ResponseEntity.status(HttpStatus.OK).body(response);
-
         /*
         try {
             UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
@@ -80,9 +77,6 @@ public class UploadController {
 
         ResponseBase<List<UserDTO>> response = ResponseBase.makeResponseBase(true, userDTOList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-
-//        NormalResponse<List<UserDTO>> response = NormalResponse.makeNormalResponse(userDTOList);
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 }

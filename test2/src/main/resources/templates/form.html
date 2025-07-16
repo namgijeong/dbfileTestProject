@@ -19,14 +19,18 @@
 <script src="/js/utility.js"></script>
 
 <script>
-    // DOM이 완전히 로드되고 파싱 완료된 시점에 실행
+    /**
+     *  DOM이 완전히 로드되고 파싱 완료된 시점에 이벤트를 단다.
+     */
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM 준비 완료!');
         document.getElementById("fileForm").addEventListener('submit',ajaxSubmit);
     });
 
-    /*
-        업로드한 파일을 ajax로 보낸 후 DB table에 추가
+
+    /**
+     * 업로드한 파일을 Ajax로 보낸 후 DB table에 추가
+     * @param event 이벤트 객체
      */
     function ajaxSubmit(event) {
         event.preventDefault();
@@ -54,10 +58,12 @@
         });
     }
 
-    /*
-       전체성공시 조회하기 버튼을 클릭하면 작동
-       db table에 있는 모든 user 정보 가져옴
-    */
+
+    /**
+     * 전체성공시 조회하기 버튼을 클릭하면 작동
+     * db table에 있는 모든 user 정보 가져옴
+     * @param event 이벤트 객체
+     */
     function ajaxSelectAll(event) {
         event.preventDefault();
 
@@ -74,8 +80,10 @@
 
     }
 
-    /*
-        전체성공/각 줄별로 실패를 HTML로 동적 생성
+
+    /**
+     * 전체성공/각 줄별로 실패를 HTML로 동적 생성
+     * @param response ResponseBase 응답객체
      */
     function makeResultHtml(response) {
         let responseSpace = document.getElementById('responseDiv');
@@ -134,8 +142,10 @@
         }
     }
 
-    /*
-        DB table에 있는 레코드 각각을 HTML로 동적 생성
+
+    /**
+     * DB table에 있는 레코드 각각을 HTML로 동적 생성
+     * @param response UserDTO List
      */
     function makeTableHtml(response) {
         let resultSpace = document.getElementById('result');

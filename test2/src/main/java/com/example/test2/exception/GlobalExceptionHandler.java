@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.test2.response.ExceptionResponse;
 import com.example.test2.response.ResponseBase;
 import com.example.test2.response.ErrorResponse;
 

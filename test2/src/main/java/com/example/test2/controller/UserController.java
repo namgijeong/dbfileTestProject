@@ -69,7 +69,5 @@ public class UserController {
 
         ResponseBase<UserPagingResultDTO> response = ResponseBase.makeResponseBase(true, userPagingResultDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-//        NormalResponse<UserPagingResultDTO> response = NormalResponse.makeNormalResponse(userPagingResultDTO);
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

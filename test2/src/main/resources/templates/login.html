@@ -47,12 +47,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="/js/utility.js"></script>
 <script th:inline="javascript">
-    // DOM이 완전히 로드되고 파싱 완료된 시점에 실행
+
+    /**
+     *  DOM이 완전히 로드되고 파싱 완료된 시점에 이벤트를 단다.
+     */
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM 준비 완료!');
         document.getElementById("loginForm").addEventListener('submit',ajaxSubmit);
     });
-
 
     /**
      *  로그인 로직을 Ajax로 처리한다.
@@ -81,12 +83,18 @@
                 console.log("errorMessage : "+errorMessage);
 
             }
-        }).catch(err => {
-            console.log("err : "+err);
+        }).catch(error => {
+            console.log("error : "+error);
         })
 
     }
 
+    /**
+     * 아이디와 관련한 메시지는 아이디칸 밑에,
+     * 비밀번호와 관련한 메시지는 비밀번호칸 밑에
+     * 메시지가 존재한다면 숨겨져있던 메시지 태그를 보여준다.
+     * @param loginAnswer ResponseBase 응답객체
+     */
     function makeHtml(loginAnswer){
         let checkDiv = document.getElementById("checkDiv");
         let idFail = document.getElementById("idFail");
@@ -96,15 +104,9 @@
         let pwdFailText = '';
 
         //기존 결과를 지운다.
-        idFail.classList.add("failHidden");
-        idFail.classList.remove("failShow");
-        idFail.innerHTML = "";
-        pwdFail.classList.add("failHidden");
-        pwdFail.classList.remove("failShow");
-        pwdFail.innerHTML = "";
-        checkDiv.classList.add("failHidden");
-        checkDiv.classList.remove("failShow");
-        checkDiv.innerHTML = "";
+        hideMessageTag(idFail);
+        hideMessageTag(pwdFail);
+        hideMessageTag(checkDiv);
 
         /*
             boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
@@ -113,18 +115,15 @@
         */
         if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
             if (loginAnswer.content.exceptionCode == "FAIL_LOGIN_VALID") {
-                checkDiv.classList.remove("failHidden");
-                checkDiv.classList.add("failShow");
+                showMessageTag(checkDiv);
                 responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
                 for (userResultDTO of loginAnswer.content.exceptionMessage) {
                     if (userResultDTO.failText == "id") {
                         idFailText += `<h5>${userResultDTO.exceptionMessage}</h5>`;
-                        idFail.classList.remove("failHidden");
-                        idFail.classList.add("failShow");
+                        showMessageTag(idFail);
                     } else if (userResultDTO.failText == "pwd") {
                         pwdFailText += `<h5>${userResultDTO.exceptionMessage}</h5>`;
-                        pwdFail.classList.remove("failHidden");
-                        pwdFail.classList.add("failShow");
+                        showMessageTag(pwdFail);
                     } else {
                         responseText += `<h3>${userResultDTO.exceptionMessage}</h3>`;
                     }
@@ -138,17 +137,14 @@
             if (loginAnswer.content.successFlag == 1) {  //아이디랑 비번이 맞다.
                 window.location.href = "/user/userList/page?pageNumber=1";
             } else { // 아이디나 비번에서 문제가 있다.
-                checkDiv.classList.remove("failHidden");
-                checkDiv.classList.add("failShow");
+                showMessageTag(checkDiv);
                 responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
                 if (loginAnswer.content.failText == "id") {  //아이디가 일치하지 않을때
                     idFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
-                    idFail.classList.remove("failHidden");
-                    idFail.classList.add("failShow");
+                    showMessageTag(idFail);
                 } else if (loginAnswer.content.failText == "pwd"){ //비밀번호가 일치하지 않을때
                     pwdFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
-                    pwdFail.classList.remove("failHidden");
-                    pwdFail.classList.add("failShow");
+                    showMessageTag(pwdFail);
                 } else { //아이디, 비번 둘 다 틀렸을때
                     responseText += `<h3>${loginAnswer.content.exceptionMessage}</h3>`;
                 }
@@ -159,5 +155,25 @@
         pwdFail.innerHTML = pwdFailText;
         checkDiv.innerHTML = responseText;
     }
+
+    /**
+     * 아이디, 비밀번호 관련 exception message가 존재하면
+     * 출력 태그를 display:none 했던것을 display:block으로 보여주기
+     */
+    function showMessageTag(targetTag) {
+        targetTag.classList.remove("failHidden");
+        targetTag.classList.add("failShow");
+    }
+
+    /**
+     * 아이디, 비밀번호 관련 출력 태그를
+     * 다시 display:none으로 초기화
+     */
+    function hideMessageTag(targetTag) {
+        targetTag.classList.add("failHidden");
+        targetTag.classList.remove("failShow");
+        targetTag.innerHTML = "";
+    }
+
 </script>
 </html>

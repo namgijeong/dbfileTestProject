@@ -54,7 +54,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="/js/utility.js"></script>
 <script th:inline="javascript">
-    // DOM이 완전히 로드되고 파싱 완료된 시점에 실행
+
+    /**
+     *  DOM이 완전히 로드되고 파싱 완료된 시점에 이벤트를 단다.
+     */
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM 준비 완료!');
 
@@ -74,34 +77,26 @@
             console.log("descText : "+descText);
             console.log("type descText : "+typeof(descText));
 
-            if (descText === undefined) {
-                desc.textContent = "";
-            } else {
-                desc.textContent = descText;
-            }
+            let cleanText = makeNullToBlank(descText);
+            desc.textContent = cleanText;
         }
 
-        //페이징 버튼 이벤트 걸기
-        // let buttons = document.getElementsByName("pagingButton");
-        // for(button of buttons){
-        //     button.addEventListener('click', function(e){
-        //         handleButtonsNumber(e);
-        //     });
-        // }
-
-        //이벤트 위임
+        //동적 생성된 버튼들에게 이벤트 적용하기 위해 이벤트 위임
         let pagingArea = document.getElementById("pagingArea");
         pagingArea.addEventListener('click', function(e) {
             handleButtonsNumber(e);
         });
 
-        //첫 페이지 진입시 기본이 1번 페이지이므로 1번 버튼을 흐리게
-        makeCurrentButtonBlur([[${pageNumber}]]);
+        //페이지 이동하여 진입시
+        makeCurrentButtonBlur(/*[[${pageNumber}]]*/);
         //makeCurrentButtonBlur(1);
 
     });
 
-    //페이징 버튼 번호들 처리
+    /**
+     * 페이징 버튼 번호들 처리
+     * @param e 이벤트 객체
+     */
     function handleButtonsNumber(e) {
         //현재 있는 몇번째 페이지 정보 가져오기
         //직접클릭 e.target
@@ -117,9 +112,12 @@
 
     }
 
-    //페이징 통신 ajax
+    /**
+     * 페이징 통신 Ajax
+     * 페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
+     * @param clickedNumber 사용자가 클릭한 버튼 숫자
+     */
     function pagingAjax(clickedNumber) {
-        //페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
         $.ajax({
             url: '/user/userList/ajax?pageNumber=' + clickedNumber,
             method: 'GET',
@@ -137,7 +135,10 @@
         });
     }
 
-    //페이징 테이블 내용 동적 html 생성
+    /**
+     * 페이징 테이블 내용 동적 html 생성
+     * @param response UserDTO List
+     */
     function makePagingTable(response) {
         let userResultsTable = document.getElementById("userResultsTable");
         let responseText = '';
@@ -159,6 +160,8 @@
             console.log('내용: ' + userDTO.level + '\n');
             console.log('내용: ' + userDTO.desc + '\n');
 
+            let descText = makeNullToBlank(userDTO.desc);
+
             //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
             console.log('내용: ' + userDTO.reg_date + '\n');
             const date = parseDate(userDTO.reg_date);
@@ -169,7 +172,7 @@
             responseText += `<td>${userDTO.pwd}</td>`;
             responseText += `<td>${userDTO.name}</td>`;
             responseText += `<td>${userDTO.level}</td>`;
-            responseText += `<td>${userDTO.desc}</td>`;
+            responseText += `<td>${descText}</td>`;
             responseText += `<td>${regDateText}</td>`;
             responseText += `</tr>`;
 
@@ -178,7 +181,10 @@
         userResultsTable.innerHTML = responseText;
     }
 
-    //페이징 버튼 내용 동적 html 생성
+    /**
+     * 페이징 버튼 내용 동적 html 생성
+     * @param response ButtonBlockDTO
+     */
     function makePagingButton(response) {
         let pagingArea = document.getElementById("pagingArea");
         let responseText = '';
@@ -197,7 +203,10 @@
 
     }
 
-    //현재 페이지인 버튼은 흐리게 조정
+    /**
+     * 현재 페이지인 버튼은 흐리게 조정
+     * @param clickedNumber 사용자가 클릭한 버튼 숫자
+     */
     function makeCurrentButtonBlur(clickedNumber) {
         let clickedButton = document.querySelector(`[data-name="${clickedNumber}"]`);
 
