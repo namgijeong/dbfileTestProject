@@ -162,28 +162,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResultDTO userLogin(String id, String pwd) {
         User user =  userDAO.select(id, pwd);
-        UserResultDTO userResultDTO = new UserResultDTO();
-//        userResultDTO.setSuccessFlag(0);
-//
-//        if (user == null) {
-//            userResultDTO.setExceptionMessage("아이디랑 비밀번호 모두 틀렸습니다.");
-//            userResultDTO.setFailText("all");
-//        } else {
-//            if (!user.getId().equals(id)){
-//                userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
-//                userResultDTO.setFailText("id");
-//            } else if (!user.getPwd().equals(pwd)){
-//                userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
-//                userResultDTO.setFailText("pwd");
-//            } else {
-//                userResultDTO.setSuccessFlag(1);
-//            }
-//
-//            UserDTO userDTO = new UserDTO(user);
-//            userResultDTO.setUserDTO(userDTO);
-//        }
 
+        UserResultDTO userResultDTO = new UserResultDTO();
         userResultDTO.setSuccessFlag(SuccessField.findSuccessFieldEnum("FAIL"));
+
         if (user == null) {
             userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
             userResultDTO.setLoginField(LoginField.findLoginFieldEnum("ID"));
@@ -194,7 +176,11 @@ public class UserServiceImpl implements UserService {
             } else { //아이디 조회하기 성공 및 비밀번호 같음
                 userResultDTO.setSuccessFlag(SuccessField.findSuccessFieldEnum("SUCCESS"));
             }
+
+            UserDTO userDTO = new UserDTO(user);
+            userResultDTO.setUserDTO(userDTO);
         }
+
         return userResultDTO;
     }
 

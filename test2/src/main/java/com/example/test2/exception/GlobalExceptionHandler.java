@@ -1,7 +1,9 @@
 package com.example.test2.exception;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.test2.data.dto.LoginField;
 import com.example.test2.data.dto.UserResultDTO;
@@ -65,25 +67,42 @@ public class GlobalExceptionHandler {
 
         List<ObjectError> errors = exception.getBindingResult().getAllErrors();
         List<UserResultDTO> errorMessageList = new ArrayList<>();
+
+        //loginField를 이미 맞닥뜨렸는지 판단하기 위해 카운트를 저장
+        Map<LoginField, Integer> loginFieldCountMap = new HashMap<>();
+
+        //loginField 상수 개수만큼 map에 세팅해준다
+        LoginField[] loginFields = LoginField.values();
+        for (LoginField loginField : loginFields) {
+            loginFieldCountMap.put(loginField, 0);
+        }
+
         for (ObjectError error : errors) {
             UserResultDTO userResultDTO = new UserResultDTO();
             if (error instanceof FieldError) {
                 FieldError fieldError = (FieldError) error;
-//                if (fieldError.getField().equals("id")) { //id field @valid가 걸리면
-//                    userResultDTO.setFailText("id");
-//                } else if (fieldError.getField().equals("pwd")) { //pwd field @valid가 걸리면
-//                    userResultDTO.setFailText("pwd");
-//                }
 
-                userResultDTO.setLoginField(LoginField.from(fieldError.getField()));
+                // 아이디나 비밀번호 필드 관련 메시지를 한번도 뽑지 않았다면
+                if (loginFieldCountMap.get(LoginField.findLoginFieldEnum(fieldError.getField())) == 0) {
+                    //카운트 저장
+                    loginFieldCountMap.put(LoginField.findLoginFieldEnum(fieldError.getField()), 1);
+                    //문자열 필드이름대로 enum 세팅
+                    userResultDTO.setLoginField(LoginField.findLoginFieldEnum(fieldError.getField()));
+                    userResultDTO.setExceptionMessage(fieldError.getDefaultMessage());
 
-                userResultDTO.setExceptionMessage(fieldError.getDefaultMessage());
-            } else {
-                userResultDTO.setExceptionMessage(error.getDefaultMessage());
+                    errorMessageList.add(userResultDTO);
+                }
             }
 
-            errorMessageList.add(userResultDTO);
+//            } else { //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
+//                userResultDTO.setExceptionMessage(error.getDefaultMessage());
+//                errorMessageList.add(userResultDTO);
+//            }
+
+
         }
+
+        log.warn("errorMessageList : "+errorMessageList);
         ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
