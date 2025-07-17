@@ -1,5 +1,6 @@
 package com.example.test2.interceptor;
 
+import com.example.test2.data.dto.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -19,7 +20,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String loginUser = (String) request.getSession().getAttribute("loginId");
+        UserDTO loginUser = (UserDTO)request.getSession().getAttribute("loginUser");
         if (loginUser == null) {
             log.warn("로그인을 안한 상태입니다.");
             response.sendRedirect("/login/login");

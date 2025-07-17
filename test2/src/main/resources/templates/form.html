@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>남기정_파일올리기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap" rel="stylesheet">
     <link href="/css/form.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -126,7 +129,7 @@
                 responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
                 responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
                 response.content.userResultDTOList.forEach(userResultDTO => {
-                    if (userResultDTO.successFlag == 0) {
+                    if (userResultDTO.successFlag == "FAIL") {
                         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
                         //원인들이 많을 경우 분리
                         // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");

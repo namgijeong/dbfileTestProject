@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    font-family: "Hahmlet", serif;
 }
 
 #fileForm{
@@ -12,6 +14,7 @@
     height: 120px;
     text-align: center;
 }
+
 #fileForm input{
     display:block;
 
@@ -20,7 +23,16 @@
     width: 200px;
     height: 50px;
     text-align: center;
+
+
 }
+input[type="file"]::file-selector-button{
+    background-color:tomato;
+    color:white;
+    border: 1px solid tomato;
+    border-radius: 5px;
+}
+
 #fileForm button{
     display:block;
 
@@ -28,6 +40,11 @@
     width: 80px;
     height: 50px;
     text-align: center;
+
+    background-color:tomato;
+    color:white;
+    border: 1px solid tomato;
+    border-radius: 5px;
 }
 
 
@@ -65,6 +82,11 @@
     width: 80px;
     height: 50px;
     text-align: center;
+
+    background-color:tomato;
+    color:white;
+    border: 1px solid tomato;
+    border-radius: 5px;
 }
 
 
@@ -72,7 +94,9 @@ table{
     margin:auto;
     border-collapse:collapse;
 }
-
+table tr:nth-child(1){
+    background-color:tomato;
+}
 table th,td{
     width: 100px;
     height: 50px;

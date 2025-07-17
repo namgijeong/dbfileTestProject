@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    font-family: "Hahmlet", serif;
 }
 
 #userResults{
@@ -9,23 +11,32 @@
     margin-top: 100px;
     margin-bottom: 50px;
 
-    width: 1000px;
-    height: 500px;
+    width: 800px;
+    height: auto;
 
     text-align: center;
+
+    border: 3px solid tomato;
+    border-radius:10px;
+    overflow:hidden; /*tr,td 삐져나온 테두리 숨김*/
 }
 
 
 table{
     margin:auto;
+
     border-collapse:collapse;
+    border-style:hidden;  /* 두께 맞추기 위해 border-style 숨김 */
+}
+table tr:nth-child(1){
+    background-color:tomato;
 }
 
 table th,td{
     width: 100px;
     height: 50px;
 
-    border: 1px solid #000;
+    border: 3px solid tomato;
 
     text-align: center;
     vertical-align: middle;

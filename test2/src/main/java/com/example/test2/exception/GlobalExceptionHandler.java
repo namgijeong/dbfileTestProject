@@ -3,6 +3,7 @@ package com.example.test2.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.test2.data.dto.LoginField;
 import com.example.test2.data.dto.UserResultDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(FailFileOpen.class)
     public ResponseEntity<ResponseBase<ErrorResponse>> handleFailFileOpen(FailFileOpen exception) {
-        final ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_FILE_OPEN, ""));
+        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_FILE_OPEN, ""));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(WrongFileExtension.class)
     public ResponseEntity<ResponseBase<ErrorResponse>> handleWrongFileExtension(WrongFileExtension exception) {
         log.warn("파일 오류 글로벌 익셉션에 들어옴 ");
-        final ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.WRONG_FILE_EXTENSION, ""));
+        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.WRONG_FILE_EXTENSION, ""));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -68,11 +69,14 @@ public class GlobalExceptionHandler {
             UserResultDTO userResultDTO = new UserResultDTO();
             if (error instanceof FieldError) {
                 FieldError fieldError = (FieldError) error;
-                if (fieldError.getField().equals("id")) { //id field @valid가 걸리면
-                    userResultDTO.setFailText("id");
-                } else if (fieldError.getField().equals("pwd")) { //pwd field @valid가 걸리면
-                    userResultDTO.setFailText("pwd");
-                }
+//                if (fieldError.getField().equals("id")) { //id field @valid가 걸리면
+//                    userResultDTO.setFailText("id");
+//                } else if (fieldError.getField().equals("pwd")) { //pwd field @valid가 걸리면
+//                    userResultDTO.setFailText("pwd");
+//                }
+
+                userResultDTO.setLoginField(LoginField.from(fieldError.getField()));
+
                 userResultDTO.setExceptionMessage(fieldError.getDefaultMessage());
             } else {
                 userResultDTO.setExceptionMessage(error.getDefaultMessage());
@@ -80,7 +84,7 @@ public class GlobalExceptionHandler {
 
             errorMessageList.add(userResultDTO);
         }
-        final ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
+        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

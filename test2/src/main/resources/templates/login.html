@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>남기정_로그인</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap" rel="stylesheet">
     <link href="/css/login.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -66,10 +69,18 @@
         const id = document.getElementById("id").value;
         const pwd = document.getElementById("pwd").value;
 
+        const loginData = {
+          id: document.getElementById("id").value,
+          pwd: document.getElementById("pwd").value
+        };
+
+        console.log("{\"id\":id, \"pwd\":pwd} json 문자열 출력 : "+JSON.stringify({"id":id, "pwd":pwd}));
+        console.log("{id:id, pwd:pwd} json 문자열 출력 : "+JSON.stringify({id:id, pwd:pwd}));
+        console.log("{id,pwd} json 문자열 출력 : "+JSON.stringify({id, pwd}));
         fetch("/login/loginCheck", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({"id": id, "pwd": pwd})
+            body: JSON.stringify(loginData)
         }) .then(async response => {
             /*
                 그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
@@ -133,14 +144,12 @@
             } else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
                 showMessageTag(checkDiv);
                 responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
-                if (loginAnswer.content.failText == "id") {  //아이디가 일치하지 않을때
+                if (loginAnswer.content.loginField == "ID") {  //아이디가 일치하지 않을때
                     idFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
                     showMessageTag(idFail);
-                } else if (loginAnswer.content.failText == "pwd"){ //비밀번호가 일치하지 않을때
+                } else { //비밀번호가 일치하지 않을때
                     pwdFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
                     showMessageTag(pwdFail);
-                } else { //아이디, 비번 둘 다 틀렸을때
-                    responseText += `<h3>${loginAnswer.content.exceptionMessage}</h3>`;
                 }
             }
 

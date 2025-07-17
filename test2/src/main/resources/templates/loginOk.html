@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>남기정_로그인완료_회원정보페이징</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap" rel="stylesheet">
     <link href="/css/loginOk.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -135,7 +138,7 @@
                     state : 그 URL과 연결된 상태 데이터
                     title : 페이지 제목
                     url : 주소창에 표시될 URL
-                 */
+                */
                 window.history.replaceState(null, "", "/user/userList/ajax?pageNumber=" + clickedNumber);
             },
             error: function (xhr, status, error) {

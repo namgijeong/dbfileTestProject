@@ -1,9 +1,6 @@
 package com.example.test2.controller;
 
-import com.example.test2.data.dto.LoginUserDTO;
-import com.example.test2.data.dto.UserDTO;
-import com.example.test2.data.dto.UserPagingResultDTO;
-import com.example.test2.data.dto.UserResultDTO;
+import com.example.test2.data.dto.*;
 import com.example.test2.response.ResponseBase;
 import com.example.test2.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -70,18 +67,17 @@ public class LoginController {
         String id = loginUserDTO.getId();
         String pwd = loginUserDTO.getPwd();
         log.info("넘어온 값 : "+id+ ", "+pwd);
-        UserResultDTO userLoginOk = userService.userLogin(id, pwd);
-        if (userLoginOk.getSuccessFlag() == 1) {
-            session.setAttribute("loginId", id);
 
-            ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(true, userLoginOk);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(false, userLoginOk);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+        UserResultDTO userLoginOk = userService.userLogin(id, pwd);
+
+        boolean isSuccess = userLoginOk.getSuccessFlag() == SuccessField.SUCCESS;
+        if (isSuccess) {
+            session.setAttribute("loginUser", userLoginOk.getUserDTO());
         }
 
-//        ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(true, userLoginOk);
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
+        //성공했으면 성공한대로, 실패했으면 실패한대로 값이 담긴다.
+        ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(isSuccess, userLoginOk);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 }

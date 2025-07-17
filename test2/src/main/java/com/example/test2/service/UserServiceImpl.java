@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
                         userResultDTO = new UserResultDTO.Builder()
                                 .successLine(count)
-                                .successFlag(1)
+                                .successFlag(SuccessField.findSuccessFieldEnum("SUCCESS"))
                                 .build();
 
                         successCount++;
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
                         userResultDTO = new UserResultDTO.Builder()
                                             .failLine(count)
                                             .failText(line)
-                                            .successFlag(0)
+                                            .successFlag(SuccessField.findSuccessFieldEnum("FAIL"))
 //                                            .exceptionMessage(e.getMessage())
                                             .build();
 
@@ -163,23 +163,38 @@ public class UserServiceImpl implements UserService {
     public UserResultDTO userLogin(String id, String pwd) {
         User user =  userDAO.select(id, pwd);
         UserResultDTO userResultDTO = new UserResultDTO();
-        userResultDTO.setSuccessFlag(0);
+//        userResultDTO.setSuccessFlag(0);
+//
+//        if (user == null) {
+//            userResultDTO.setExceptionMessage("아이디랑 비밀번호 모두 틀렸습니다.");
+//            userResultDTO.setFailText("all");
+//        } else {
+//            if (!user.getId().equals(id)){
+//                userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
+//                userResultDTO.setFailText("id");
+//            } else if (!user.getPwd().equals(pwd)){
+//                userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
+//                userResultDTO.setFailText("pwd");
+//            } else {
+//                userResultDTO.setSuccessFlag(1);
+//            }
+//
+//            UserDTO userDTO = new UserDTO(user);
+//            userResultDTO.setUserDTO(userDTO);
+//        }
 
+        userResultDTO.setSuccessFlag(SuccessField.findSuccessFieldEnum("FAIL"));
         if (user == null) {
-            userResultDTO.setExceptionMessage("아이디랑 비밀번호 모두 틀렸습니다.");
-            userResultDTO.setFailText("all");
-        } else {
-            if (!user.getId().equals(id)){
-                userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
-                userResultDTO.setFailText("id");
-            } else if (!user.getPwd().equals(pwd)){
+            userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
+            userResultDTO.setLoginField(LoginField.findLoginFieldEnum("ID"));
+        } else { // 아이디로 조회하기 성공하여 아이디는 맞은 상태
+            if (!user.getPwd().equals(pwd)) {
                 userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
-                userResultDTO.setFailText("pwd");
-            } else {
-                userResultDTO.setSuccessFlag(1);
+                userResultDTO.setLoginField(LoginField.findLoginFieldEnum("PWD"));
+            } else { //아이디 조회하기 성공 및 비밀번호 같음
+                userResultDTO.setSuccessFlag(SuccessField.findSuccessFieldEnum("SUCCESS"));
             }
         }
-
         return userResultDTO;
     }
 

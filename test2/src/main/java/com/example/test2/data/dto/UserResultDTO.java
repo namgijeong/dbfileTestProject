@@ -8,16 +8,27 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserResultDTO {
-    /*1이면 성공, 0이면 실패*/
-    private int successFlag;
+
+    /*성공인지 실패인지 여부*/
+    private SuccessField successFlag;
+
     /*성공했다면 몇번째 줄인지*/
     private int successLine;
+
     /*실패했다면 몇번째 줄인지*/
     private int failLine;
+
     /*실패했다면 그 줄 내용이 무엇인지*/
     private String failText;
+
     /*exception 메세지*/
     private String exceptionMessage;
+
+    /*로그인 필드 에러가 어디에서 일어났는지 */
+    private LoginField loginField;
+
+    /*로그인 성공시 user정보를 가져오기 위해 */
+    private UserDTO userDTO;
 
     public UserResultDTO() {}
 
@@ -27,16 +38,27 @@ public class UserResultDTO {
         this.failLine = builder.failLine;
         this.failText = builder.failText;
         this.exceptionMessage = builder.exceptionMessage;
+        this.loginField = builder.loginField;
+        this.userDTO = builder.userDTO;
     }
 
     public static class Builder {
-        private int successFlag;
+
+        private SuccessField successFlag;
+
         private int successLine;
+
         private int failLine;
+
         private String failText;
+
         private String exceptionMessage;
 
-        public Builder successFlag(int successFlag) {
+        private LoginField loginField;
+
+        private UserDTO userDTO;
+
+        public Builder successFlag(SuccessField successFlag) {
             this.successFlag = successFlag;
             return this;
         }
@@ -58,6 +80,16 @@ public class UserResultDTO {
 
         public Builder exceptionMessage(String exceptionMessage) {
             this.exceptionMessage = exceptionMessage;
+            return this;
+        }
+
+        public Builder loginField(LoginField loginField) {
+            this.loginField = loginField;
+            return this;
+        }
+
+        public Builder userDTO(UserDTO userDTO) {
+            this.userDTO = userDTO;
             return this;
         }
 
