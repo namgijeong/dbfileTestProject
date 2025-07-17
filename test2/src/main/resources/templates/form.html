@@ -129,7 +129,7 @@
                 responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
                 responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
                 response.content.userResultDTOList.forEach(userResultDTO => {
-                    if (userResultDTO.successFlag == "FAIL") {
+                    if (userResultDTO.successFlag == false) {
                         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
                         //원인들이 많을 경우 분리
                         // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
@@ -137,7 +137,7 @@
                         //     responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
                         // }
 
-                    } else {}
+                    }
                 });
                 responseSpace.innerHTML = responseSpaceText;
             }

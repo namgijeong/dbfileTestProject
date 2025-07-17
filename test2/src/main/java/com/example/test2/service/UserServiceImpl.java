@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
                         userResultDTO = new UserResultDTO.Builder()
                                 .successLine(count)
-                                .successFlag(SuccessField.findSuccessFieldEnum("SUCCESS"))
+                                .successFlag(true)
                                 .build();
 
                         successCount++;
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
                         userResultDTO = new UserResultDTO.Builder()
                                             .failLine(count)
                                             .failText(line)
-                                            .successFlag(SuccessField.findSuccessFieldEnum("FAIL"))
+                                            .successFlag(false)
 //                                            .exceptionMessage(e.getMessage())
                                             .build();
 
@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService {
         User user =  userDAO.select(id, pwd);
 
         UserResultDTO userResultDTO = new UserResultDTO();
-        userResultDTO.setSuccessFlag(SuccessField.findSuccessFieldEnum("FAIL"));
+        userResultDTO.setSuccessFlag(false);
 
         if (user == null) {
             userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
                 userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
                 userResultDTO.setLoginField(LoginField.findLoginFieldEnum("PWD"));
             } else { //아이디 조회하기 성공 및 비밀번호 같음
-                userResultDTO.setSuccessFlag(SuccessField.findSuccessFieldEnum("SUCCESS"));
+                userResultDTO.setSuccessFlag(true);
             }
 
             UserDTO userDTO = new UserDTO(user);

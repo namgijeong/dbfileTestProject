@@ -70,7 +70,8 @@ public class LoginController {
 
         UserResultDTO userLoginOk = userService.userLogin(id, pwd);
 
-        boolean isSuccess = userLoginOk.getSuccessFlag() == SuccessField.SUCCESS;
+        //boolean은 getter 메소드가 is로 시작
+        boolean isSuccess = userLoginOk.isSuccessFlag();
         if (isSuccess) {
             session.setAttribute("loginUser", userLoginOk.getUserDTO());
         }

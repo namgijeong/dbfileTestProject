@@ -10,7 +10,7 @@ import lombok.ToString;
 public class UserResultDTO {
 
     /*성공인지 실패인지 여부*/
-    private SuccessField successFlag;
+    private boolean successFlag;
 
     /*성공했다면 몇번째 줄인지*/
     private int successLine;
@@ -44,7 +44,7 @@ public class UserResultDTO {
 
     public static class Builder {
 
-        private SuccessField successFlag;
+        private boolean successFlag;
 
         private int successLine;
 
@@ -58,7 +58,7 @@ public class UserResultDTO {
 
         private UserDTO userDTO;
 
-        public Builder successFlag(SuccessField successFlag) {
+        public Builder successFlag(boolean successFlag) {
             this.successFlag = successFlag;
             return this;
         }
