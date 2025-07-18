@@ -4,8 +4,65 @@
     box-sizing: border-box;
 
     font-family: "Hahmlet", serif;
+
 }
 
+#background{
+    position: relative;
+    top:0;
+    left: 0;
+    width:100%;
+    height:100vh;
+    z-index:-1;
+
+    background-color: lightgray;
+    opacity:0.3;
+}
+
+#loginForm{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    margin:auto;
+
+    width: 500px;
+    height: auto;
+
+    text-align: center;
+    border: 3px solid lightsalmon;
+    /*border-bottom: none;*/
+    border-radius: 10px;
+    background-color:white ;
+
+    z-index:1;
+}
+
+
+#loginForm div div{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+
+    width:500px;
+    height:100px;
+}
+
+#loginForm > div {
+    /*border-bottom: 3px solid lightsalmon;*/
+}
+#loginForm > div:nth-child(3){
+    border-bottom: none;
+}
+#idFail, #pwdFail, #checkDiv{
+    margin-bottom:20px;
+
+    height:auto !important;
+    color:red !important;
+
+    font-style: italic;
+}
 #checkDiv{
     margin:auto;
 
@@ -22,52 +79,18 @@
     color:red;
 }
 
-#loginForm{
-    margin:auto;
-    margin-top:100px;
-
-    width: 500px;
-    height: auto;
-
-    text-align: center;
-    border: 3px solid tomato;
-    /*border-bottom: none;*/
-    border-radius: 10px;
+#loginForm div div div{
+    width:100px;
 }
 
-
-#loginForm div div{
-    display:flex;
-    justify-content: center;
-    align-items: center;
-
-    width:500px;
-    height:100px;
-}
-
-#loginForm > div {
-    border-bottom: 3px solid tomato;
-}
-#loginForm > div:nth-child(3){
-    border-bottom: none;
-}
-#idFail, #pwdFail, #checkDiv{
-    margin-bottom:20px;
-
-    height:auto !important;
-    color:red !important;
-
-    font-style: italic;
-}
 .failShow{
     display: block !important;
 }
 .failHidden{
     display: none !important;
 }
-#loginForm div div div{
-    width:100px;
-}
+
+
 
 #loginForm input{
     display:block;
@@ -79,11 +102,15 @@
     text-align: center;
 
     border-radius:10px;
-    border:3px solid tomato;
+    border:1px solid lightgray;
     box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.3);
+
+    background-color: rgba(234, 234, 234, 0.3);
+
+    outline:none;
 }
 #loginForm input:focus{
-    outline: 3px solid tomato !important;
+    border: 3px solid lightsalmon;
 }
 
 #loginForm button{

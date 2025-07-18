@@ -1,17 +1,20 @@
 package com.example.test2.controller;
 
-import com.example.test2.data.dto.*;
-import com.example.test2.response.ResponseBase;
-import com.example.test2.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.example.test2.data.dto.*;
+import com.example.test2.response.ResponseBase;
+import com.example.test2.service.UserService;
 
 @Controller
 @RequestMapping("/login/*")

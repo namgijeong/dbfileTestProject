@@ -10,47 +10,51 @@
 </head>
 <body>
 <!--<h1> 로그인 성공 </h1>-->
-<div id="userResults">
-    <table id="userResultsTable">
-        <tr>
-            <th> ID </th>
-            <th> PWD </th>
-            <th> NAME </th>
-            <th> LEVEL </th>
-            <th> DESC </th>
-            <th> REG_DATE </th>
-        </tr>
-
-        <th:block th:if="${#lists.isEmpty(userPagingResultDTO.userDTOList)}">
+<div id="background"></div>
+<div id="pagingResults">
+    <div id="userResults">
+        <table id="userResultsTable">
             <tr>
-                <td colspan="6">회원 정보가 없습니다.</td>
+                <th> ID </th>
+                <th> PWD </th>
+                <th> NAME </th>
+                <th> LEVEL </th>
+                <th> DESC </th>
+                <th> REG_DATE </th>
             </tr>
+
+            <th:block th:if="${#lists.isEmpty(userPagingResultDTO.userDTOList)}">
+                <tr>
+                    <td colspan="6">회원 정보가 없습니다.</td>
+                </tr>
+            </th:block>
+
+            <th:block th:each="userDTO : ${userPagingResultDTO.userDTOList}" th:if="${!#lists.isEmpty(userPagingResultDTO.userDTOList)}">
+                <tr>
+                    <td th:text="${userDTO.id}"></td>
+                    <td th:text="${userDTO.pwd}"></td>
+                    <td th:text="${userDTO.name}"></td>
+                    <td th:text="${userDTO.level}"></td>
+                    <td class="desc" th:data-name="${userDTO.desc}"></td>
+                    <td class="regDate" th:data-name="${userDTO.regDate}"></td>
+                </tr>
+            </th:block>
+
+        </table>
+    </div>
+
+    <div id="pagingArea">
+        <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
+            <button id="previous" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
         </th:block>
-
-        <th:block th:each="userDTO : ${userPagingResultDTO.userDTOList}" th:if="${!#lists.isEmpty(userPagingResultDTO.userDTOList)}">
-            <tr>
-                <td th:text="${userDTO.id}"></td>
-                <td th:text="${userDTO.pwd}"></td>
-                <td th:text="${userDTO.name}"></td>
-                <td th:text="${userDTO.level}"></td>
-                <td class="desc" th:data-name="${userDTO.desc}"></td>
-                <td class="regDate" th:data-name="${userDTO.regDate}"></td>
-            </tr>
+        <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
+            <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
         </th:block>
+        <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
+            <button id="next" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
+        </th:block>
+    </div>
 
-    </table>
-</div>
-
-<div id="pagingArea">
-    <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
-        <button id="previous" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
-    </th:block>
-    <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
-        <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
-    </th:block>
-    <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
-        <button id="next" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
-    </th:block>
 </div>
 
 </body>

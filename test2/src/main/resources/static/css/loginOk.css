@@ -6,10 +6,33 @@
     font-family: "Hahmlet", serif;
 }
 
+#background{
+    position: relative;
+    top:0;
+    left: 0;
+    width:100%;
+    height:100vh;
+    z-index:-1;
+
+    background-color: lightgray;
+    opacity:0.3;
+}
+
+#pagingResults{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 900px;
+    height: auto;
+
+    z-index:1;
+}
+
 #userResults{
+    position: relative;
     margin: auto;
-    margin-top: 100px;
-    margin-bottom: 50px;
 
     width: 800px;
     height: auto;
@@ -19,6 +42,9 @@
     border: 3px solid tomato;
     border-radius:10px;
     overflow:hidden; /*tr,td 삐져나온 테두리 숨김*/
+
+    background-color: white;
+    z-index:1;
 }
 
 
@@ -36,7 +62,7 @@ table th,td{
     width: 100px;
     height: 50px;
 
-    border: 3px solid tomato;
+    border: 1px solid gray;
 
     text-align: center;
     vertical-align: middle;
@@ -55,11 +81,13 @@ td:nth-child(6){
 
     /*width: 500px;*/
     width: fit-content;
-    height: 100px;
+    height: 50px;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    z-index:1;
 }
 #pagingArea button{
     display:block;
