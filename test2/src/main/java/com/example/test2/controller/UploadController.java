@@ -2,6 +2,7 @@ package com.example.test2.controller;
 
 import java.util.List;
 
+import com.example.test2.utility.Utility;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -47,8 +48,10 @@ public class UploadController {
 
         UserTotalResultDTO userTotalResultDTO = userService.userInsert(file);
 
-        ResponseBase<UserTotalResultDTO> response = ResponseBase.makeResponseBase(true, userTotalResultDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(true, userTotalResultDTO);
+
+//        ResponseBase<UserTotalResultDTO> response = ResponseBase.makeResponseBase(true, userTotalResultDTO);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 
@@ -60,8 +63,10 @@ public class UploadController {
     public ResponseEntity<?> fullSelect() {
         List<UserDTO> userDTOList = userService.findAll();
 
-        ResponseBase<List<UserDTO>> response = ResponseBase.makeResponseBase(true, userDTOList);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(true, userDTOList);
+
+//        ResponseBase<List<UserDTO>> response = ResponseBase.makeResponseBase(true, userDTOList);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 }

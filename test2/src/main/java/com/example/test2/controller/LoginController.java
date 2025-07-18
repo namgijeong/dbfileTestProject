@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.test2.data.dto.*;
 import com.example.test2.response.ResponseBase;
 import com.example.test2.service.UserService;
+import com.example.test2.utility.Utility;
 
 @Controller
 @RequestMapping("/login/*")
@@ -80,8 +81,9 @@ public class LoginController {
         }
 
         //성공했으면 성공한대로, 실패했으면 실패한대로 값이 담긴다.
-        ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(isSuccess, userLoginOk);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(isSuccess, userLoginOk);
 
+//        ResponseBase<UserResultDTO> response = ResponseBase.makeResponseBase(isSuccess, userLoginOk);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

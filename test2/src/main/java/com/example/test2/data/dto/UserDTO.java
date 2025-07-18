@@ -18,10 +18,15 @@ import com.example.test2.utility.Utility;
 @Getter
 @ToString
 public class UserDTO {
+
     private String id;
+
     private String pwd;
+
     private String name;
+
     private String level;
+
     private String desc;
 
     /*

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.example.test2.data.dto.LoginField;
 import com.example.test2.data.dto.UserResultDTO;
+import com.example.test2.utility.Utility;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -31,8 +32,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(FailFileOpen.class)
     public ResponseEntity<ResponseBase<ErrorResponse>> handleFailFileOpen(FailFileOpen exception) {
-        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_FILE_OPEN, ""));
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_FILE_OPEN, ""));
+
+//        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_FILE_OPEN, ""));
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**
@@ -43,8 +46,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(WrongFileExtension.class)
     public ResponseEntity<ResponseBase<ErrorResponse>> handleWrongFileExtension(WrongFileExtension exception) {
         log.warn("파일 오류 글로벌 익셉션에 들어옴 ");
-        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.WRONG_FILE_EXTENSION, ""));
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.WRONG_FILE_EXTENSION, ""));
+
+//        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.WRONG_FILE_EXTENSION, ""));
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**
@@ -103,7 +108,9 @@ public class GlobalExceptionHandler {
         }
 
         log.warn("errorMessageList : "+errorMessageList);
-        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
+
+//        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

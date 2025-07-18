@@ -2,6 +2,7 @@ package com.example.test2.controller;
 
 import com.example.test2.response.ResponseBase;
 
+import com.example.test2.utility.Utility;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -60,7 +61,9 @@ public class UserController {
         UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
-        ResponseBase<UserPagingResultDTO> response = ResponseBase.makeResponseBase(true, userPagingResultDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(true, userPagingResultDTO);
+
+//        ResponseBase<UserPagingResultDTO> response = ResponseBase.makeResponseBase(true, userPagingResultDTO);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
