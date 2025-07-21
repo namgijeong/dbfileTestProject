@@ -125,42 +125,120 @@
             getXxx()가 아니라 isXxx()가 자동으로 인식
             따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
         */
+        // if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
+        //     if (loginAnswer.content.exceptionCode == "FAIL_LOGIN_VALID") {
+        //         showMessageTag(checkDiv);
+        //         responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
+        //         // for (userResultDTO of loginAnswer.content.exceptionMessage) {
+        //         //     if (userResultDTO.loginField == "ID") { //아이디가 일치하지 않을때
+        //         //         idFailText += `<h5>${userResultDTO.exceptionMessage}</h5>`;
+        //         //         showMessageTag(idFail);
+        //         //     } else if (userResultDTO.loginField == "PWD") {//비밀번호가 일치하지 않을때
+        //         //         pwdFailText += `<h5>${userResultDTO.exceptionMessage}</h5>`;
+        //         //         showMessageTag(pwdFail);
+        //         //     }
+        //         //
+        //         // }
+        //         if (loginAnswer.content.exceptionMessage.loginField == "ID") { //아이디가 일치하지 않을때
+        //             idFailText += `<h5>${loginAnswer.content.exceptionMessage.exceptionMessage}</h5>`;
+        //             showMessageTag(idFail);
+        //         } else if (loginAnswer.content.exceptionMessage.loginField == "PWD") {//비밀번호가 일치하지 않을때
+        //             pwdFailText += `<h5>${loginAnswer.content.exceptionMessage.exceptionMessage}</h5>`;
+        //             showMessageTag(pwdFail);
+        //         }
+        //
+        //     } else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
+        //         showMessageTag(checkDiv);
+        //         responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
+        //         if (loginAnswer.content.loginField == "ID") {  //아이디가 일치하지 않을때
+        //             idFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
+        //             showMessageTag(idFail);
+        //         } else if (loginAnswer.content.loginField == "PWD"){ //비밀번호가 일치하지 않을때
+        //             pwdFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
+        //             showMessageTag(pwdFail);
+        //         } else { //혹시나 그밖에 null
+        //             responseText += `<h3>${userResultDTO.exceptionMessage}</h3>`;
+        //         }
+        //     }
+        //
+        // } else { //아이디랑 비번이 맞다.
+        //     window.location.href = "/user/userList/page?pageNumber=1";
+        // }
+
         if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
-            if (loginAnswer.content.exceptionCode == "FAIL_LOGIN_VALID") {
-                showMessageTag(checkDiv);
-                responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
-                for (userResultDTO of loginAnswer.content.exceptionMessage) {
-                    if (userResultDTO.loginField == "ID") { //아이디가 일치하지 않을때
-                        idFailText += `<h5>${userResultDTO.exceptionMessage}</h5>`;
-                        showMessageTag(idFail);
-                    } else if (userResultDTO.loginField == "PWD") {//비밀번호가 일치하지 않을때
-                        pwdFailText += `<h5>${userResultDTO.exceptionMessage}</h5>`;
-                        showMessageTag(pwdFail);
-                    }
+            switch (loginAnswer.content.exceptionCode) {
+                case "FAIL_LOGIN_VALID":
+                    showMessageTag(checkDiv);
+                    responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
 
-                }
+                    judgeLoginField(loginAnswer.content.exceptionMessage, idFailText, idFail, pwdFailText, pwdFail);
+                    // switch (loginAnswer.content.exceptionMessage.loginField) {
+                    //     case "ID":
+                    //         idFailText += `<h5>${loginAnswer.content.exceptionMessage.exceptionMessage}</h5>`;
+                    //         showMessageTag(idFail);
+                    //         break;
+                    //
+                    //     case "PWD":
+                    //         pwdFailText += `<h5>${loginAnswer.content.exceptionMessage.exceptionMessage}</h5>`;
+                    //         showMessageTag(pwdFail);
+                    //         break;
+                    //
+                    //     default:
+                    // }
 
-            } else { //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
-                showMessageTag(checkDiv);
-                responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
-                if (loginAnswer.content.loginField == "ID") {  //아이디가 일치하지 않을때
-                    idFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
-                    showMessageTag(idFail);
-                } else if (loginAnswer.content.loginField == "PWD"){ //비밀번호가 일치하지 않을때
-                    pwdFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
-                    showMessageTag(pwdFail);
-                } else { //혹시나 그밖에 null
-                    responseText += `<h3>${userResultDTO.exceptionMessage}</h3>`;
-                }
+                    break;
+
+                default: //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
+                    showMessageTag(checkDiv);
+                    responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
+
+                    judgeLoginField(loginAnswer.content, idFailText, idFail, pwdFailText, pwdFail);
+                    // switch (loginAnswer.content.loginField) {
+                    //     case "ID":
+                    //         idFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
+                    //         showMessageTag(idFail);
+                    //         break;
+                    //
+                    //     case "PWD":
+                    //         pwdFailText += `<h5>${loginAnswer.content.exceptionMessage}</h5>`;
+                    //         showMessageTag(pwdFail);
+                    //         break;
+                    //
+                    //     default:
+                    // }
             }
 
         } else { //아이디랑 비번이 맞다.
             window.location.href = "/user/userList/page?pageNumber=1";
         }
 
+        checkDiv.innerHTML = responseText;
+    }
+
+    /**
+     * 로그인 필드 중 어느 로그인 필드가 잘못됬는지를 체크하여 메시지를 붙인다.
+     * @param exceptionMessage ResponseBase의 content 혹은 ResponseBase의 content의 ErrorResponse의 exceptionMessage
+     * @param idFailText id 실패 메시지
+     * @param idFail id 실패 문구를 붙일 태그
+     * @param pwdFailText pwd 실패 메시지
+     * @param pwdFail pwd 실패 문구를 붙일 태그
+     */
+    function judgeLoginField(exceptionMessage, idFailText, idFail, pwdFailText, pwdFail) {
+        switch (exceptionMessage.loginField) {
+            case "ID":
+                idFailText += `<h5>${exceptionMessage.exceptionMessage}</h5>`;
+                showMessageTag(idFail);
+                break;
+
+            case "PWD":
+                pwdFailText += `<h5>${exceptionMessage.exceptionMessage}</h5>`;
+                showMessageTag(pwdFail);
+                break;
+
+        }
+
         idFail.innerHTML = idFailText;
         pwdFail.innerHTML = pwdFailText;
-        checkDiv.innerHTML = responseText;
     }
 
     /**

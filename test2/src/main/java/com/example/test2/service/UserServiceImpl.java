@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.test2.response.ResponseBase;
@@ -161,20 +162,25 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserResultDTO userLogin(String id, String pwd) {
-        User user =  userDAO.select(id, pwd);
+        Optional<User> optionalUser =  userDAO.select(id);
 
+        User user = null;
         UserResultDTO userResultDTO = new UserResultDTO();
         userResultDTO.setSuccessFlag(false);
 
+        if (optionalUser.isPresent()) { //아이디가 맞으면
+            user = optionalUser.get();
+        }
+
         if (user == null) {
             userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
-            userResultDTO.setLoginField(LoginField.findLoginFieldEnum("ID"));
+            userResultDTO.setLoginField(LoginField.ID);
         } else { // 아이디로 조회하기 성공하여 아이디는 맞은 상태
-            if (!user.getPwd().equals(pwd)) {
+            boolean isSuccess = user.getPwd().equals(pwd);
+            userResultDTO.setSuccessFlag(isSuccess);
+            if (!isSuccess) { //비밀번호 틀림
                 userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
-                userResultDTO.setLoginField(LoginField.findLoginFieldEnum("PWD"));
-            } else { //아이디 조회하기 성공 및 비밀번호 같음
-                userResultDTO.setSuccessFlag(true);
+                userResultDTO.setLoginField(LoginField.PWD);
             }
 
             UserDTO userDTO = new UserDTO(user);

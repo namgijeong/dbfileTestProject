@@ -1,9 +1,5 @@
 package com.example.test2.controller;
 
-import com.example.test2.response.ResponseBase;
-
-import com.example.test2.utility.Utility;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.service.UserService;
 import com.example.test2.data.dto.UserPagingResultDTO;
+import com.example.test2.utility.Utility;
 
 @Controller
 @RequestMapping("/user/*")
@@ -46,7 +43,7 @@ public class UserController {
         model.addAttribute("pageNumber", pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
-        return "loginOk";
+        return "userlist";
     }
 
 
@@ -63,7 +60,5 @@ public class UserController {
 
         return Utility.makeResponseEntity(true, userPagingResultDTO);
 
-//        ResponseBase<UserPagingResultDTO> response = ResponseBase.makeResponseBase(true, userPagingResultDTO);
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

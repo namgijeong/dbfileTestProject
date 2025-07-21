@@ -23,7 +23,7 @@ public class UserDAOImpl implements UserDAO {
 
     /*로그인 성공여부*/
     @Override
-    public User select(String id, String pwd) {
+    public Optional<User> select(String id) {
 //        Optional<User> optionalUser = userRepository.findByIdAndPwd(id, pwd);
 //        User user = null;
 //        if (optionalUser.isPresent()) { // 아이디랑 비번 둘다 맞으면
@@ -43,12 +43,8 @@ public class UserDAOImpl implements UserDAO {
 //        }
 
         Optional<User> optionalUser = userRepository.findById(id);
-        User user = null;
-        if (optionalUser.isPresent()) { //아이디가 맞으면
-            user = optionalUser.get();
-        }
 
-        return user;
+        return optionalUser;
     }
 
     /*User를 db table에 insert 하기 */

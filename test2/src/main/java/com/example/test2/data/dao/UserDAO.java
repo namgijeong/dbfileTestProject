@@ -1,13 +1,14 @@
 package com.example.test2.data.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.example.test2.data.entity.User;
 
 public interface UserDAO {
 
     /*아이디와 비번을 가지고 user 레코드 찾기*/
-    User select(String id, String pwd);
+    Optional<User> select(String id);
 
     /*User를 db table에 insert 하기 */
     void insert(User user);

@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.test2.data.dto.LoginField;
-import com.example.test2.data.dto.UserResultDTO;
-import com.example.test2.utility.Utility;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.response.ResponseBase;
 import com.example.test2.response.ErrorResponse;
+import com.example.test2.data.dto.LoginField;
+import com.example.test2.data.dto.UserResultDTO;
+import com.example.test2.utility.Utility;
 
 @RestControllerAdvice
 @Slf4j
@@ -31,11 +31,9 @@ public class GlobalExceptionHandler {
      * @return ResponseBase 비정상응답이라는 내용
      */
     @ExceptionHandler(FailFileOpen.class)
-    public ResponseEntity<ResponseBase<ErrorResponse>> handleFailFileOpen(FailFileOpen exception) {
+    public ResponseEntity<ResponseBase<ErrorResponse<String>>> handleFailFileOpen(FailFileOpen exception) {
         return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_FILE_OPEN, ""));
 
-//        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_FILE_OPEN, ""));
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**
@@ -44,12 +42,10 @@ public class GlobalExceptionHandler {
      * @return ResponseBase 비정상응답이라는 내용
      */
     @ExceptionHandler(WrongFileExtension.class)
-    public ResponseEntity<ResponseBase<ErrorResponse>> handleWrongFileExtension(WrongFileExtension exception) {
+    public ResponseEntity<ResponseBase<ErrorResponse<String>>> handleWrongFileExtension(WrongFileExtension exception) {
         log.warn("파일 오류 글로벌 익셉션에 들어옴 ");
         return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.WRONG_FILE_EXTENSION, ""));
 
-//        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.WRONG_FILE_EXTENSION, ""));
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**
@@ -58,7 +54,7 @@ public class GlobalExceptionHandler {
      * @return ResponseBase 비정상응답이라는 내용
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResponseBase<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ResponseBase<ErrorResponse<UserResultDTO>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         log.warn("아이디, 비밀번호 글로벌 익셉션에 들어옴 ");
 
         /*
@@ -71,46 +67,55 @@ public class GlobalExceptionHandler {
          */
 
         List<ObjectError> errors = exception.getBindingResult().getAllErrors();
-        List<UserResultDTO> errorMessageList = new ArrayList<>();
+        ObjectError error = errors.get(0);
+        UserResultDTO userResultDTO = new UserResultDTO();
+        if (error instanceof FieldError) {
+            FieldError fieldError = (FieldError) error;
 
-        //loginField를 이미 맞닥뜨렸는지 판단하기 위해 카운트를 저장
-        Map<LoginField, Integer> loginFieldCountMap = new HashMap<>();
-
-        //loginField 상수 개수만큼 map에 세팅해준다
-        LoginField[] loginFields = LoginField.values();
-        for (LoginField loginField : loginFields) {
-            loginFieldCountMap.put(loginField, 0);
+            //문자열 필드이름대로 enum 세팅
+            userResultDTO.setLoginField(LoginField.findLoginFieldEnum(fieldError.getField()));
+            userResultDTO.setExceptionMessage(fieldError.getDefaultMessage());
         }
 
-        for (ObjectError error : errors) {
-            UserResultDTO userResultDTO = new UserResultDTO();
-            if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
-
-                // 아이디나 비밀번호 필드 관련 메시지를 한번도 뽑지 않았다면
-                if (loginFieldCountMap.get(LoginField.findLoginFieldEnum(fieldError.getField())) == 0) {
-                    //카운트 저장
-                    loginFieldCountMap.put(LoginField.findLoginFieldEnum(fieldError.getField()), 1);
-                    //문자열 필드이름대로 enum 세팅
-                    userResultDTO.setLoginField(LoginField.findLoginFieldEnum(fieldError.getField()));
-                    userResultDTO.setExceptionMessage(fieldError.getDefaultMessage());
-
-                    errorMessageList.add(userResultDTO);
-                }
-            }
-
-//            } else { //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
-//                userResultDTO.setExceptionMessage(error.getDefaultMessage());
-//                errorMessageList.add(userResultDTO);
+//        List<UserResultDTO> errorMessageList = new ArrayList<>();
+//
+//        //loginField를 이미 맞닥뜨렸는지 판단하기 위해 카운트를 저장
+//        Map<LoginField, Integer> loginFieldCountMap = new HashMap<>();
+//
+//        //loginField 상수 개수만큼 map에 세팅해준다
+//        LoginField[] loginFields = LoginField.values();
+//        for (LoginField loginField : loginFields) {
+//            loginFieldCountMap.put(loginField, 0);
+//        }
+//
+//        for (ObjectError error : errors) {
+//            UserResultDTO userResultDTO = new UserResultDTO();
+//            if (error instanceof FieldError) {
+//                FieldError fieldError = (FieldError) error;
+//
+//                // 아이디나 비밀번호 필드 관련 메시지를 한번도 뽑지 않았다면
+//                if (loginFieldCountMap.get(LoginField.findLoginFieldEnum(fieldError.getField())) == 0) {
+//                    //카운트 저장
+//                    loginFieldCountMap.put(LoginField.findLoginFieldEnum(fieldError.getField()), 1);
+//                    //문자열 필드이름대로 enum 세팅
+//                    userResultDTO.setLoginField(LoginField.findLoginFieldEnum(fieldError.getField()));
+//                    userResultDTO.setExceptionMessage(fieldError.getDefaultMessage());
+//
+//                    errorMessageList.add(userResultDTO);
+//                }
 //            }
+//
+////            } else { //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
+////                userResultDTO.setExceptionMessage(error.getDefaultMessage());
+////                errorMessageList.add(userResultDTO);
+////            }
+//
+//
+//        }
 
+        //log.warn("errorMessageList : "+errorMessageList);
+        //return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
 
-        }
-
-        log.warn("errorMessageList : "+errorMessageList);
-        return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
-
-//        ResponseBase<ErrorResponse> response = ResponseBase.makeResponseBase(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, errorMessageList));
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return Utility.makeResponseEntity(false, ErrorResponse.makeErrorResponse(ExceptionCodeType.FAIL_LOGIN_VALID, userResultDTO));
     }
 }
