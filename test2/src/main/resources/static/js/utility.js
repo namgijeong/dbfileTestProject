@@ -67,6 +67,26 @@ function makeLocalDateTimeToString(localDateTime) {
     return regDateText;
 }
 
+
+/**
+ *
+ * @param easePickDate easePick에서 결과로 만든 date 객체
+ * @returns {string} yyyy-mm-dd 문자열
+ */
+function makeEasePickDateToString(easePickDate) {
+    // let now = new Date();
+    // let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    //  자바스크립트에서 Date를 숫자로 표현하려면 항상 timestamp 형태가 된다. => number (timestamp) '2025-07-21' 형태로 전달
+
+    // ISO 형식은 JS 엔진이 공식적으로 파싱할 수 있는 포맷
+    // toISOString()은 number로 변환하는 게 아니다
+    // T 아래로 시간을 자른다.
+
+    let easePickDateString = easePickDate.toISOString().split('T')[0]
+    return easePickDateString;
+}
+
+
 /**
  * 필드를 화면에 출력할때 null이면 아예 공백으로 출력하기 위해
  * @param originText  string 문자열
