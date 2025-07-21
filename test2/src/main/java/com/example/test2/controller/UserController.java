@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.test2.service.UserService;
 import com.example.test2.data.dto.UserPagingResultDTO;
 import com.example.test2.utility.Utility;
+import com.example.test2.data.dto.UserDTO;
 
 @Controller
 @RequestMapping("/user/*")
@@ -59,6 +60,11 @@ public class UserController {
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
         return Utility.makeResponseEntity(true, userPagingResultDTO);
+    }
 
+    @PostMapping("/search/userList")
+    public ResponseEntity<?> searchUserList(@RequestBody UserDTO userDTO) {
+        log.info("userDTO :  "+userDTO.toString());
+        return Utility.makeResponseEntity(true, "");
     }
 }

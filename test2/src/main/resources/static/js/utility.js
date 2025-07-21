@@ -86,6 +86,17 @@ function makeEasePickDateToString(easePickDate) {
     return easePickDateString;
 }
 
+/**
+ * userdto에 넣기 위해서 어쩔수 없이 형태를 바꾸어야한다.
+ * 시간을 무시하기 위해 강제로 임의의 00을 넣어준다.
+ * @param string 문자열
+ * @returns {string} 문자열
+ */
+function makeEasePickDateToDTOString(string) {
+    let dtoString = string+ " 00:00:00";
+    return dtoString;
+}
+
 
 /**
  * 필드를 화면에 출력할때 null이면 아예 공백으로 출력하기 위해

@@ -196,6 +196,9 @@
 
         let regDate = document.getElementById('regDate');
         let calendarIcon = document.getElementById("calendarIcon");
+        let formatedDate = null;
+        let formatedDtoString = null;
+        let searchButton = document.getElementById('searchButton');
 
         //easepick 외부 클릭시 easepick 외부 숨기기 - documentClick 을 해도 먹히지가 않아서
         document.addEventListener('click', function(e) {
@@ -205,17 +208,21 @@
                 console.log("getDate : "+picker.getDate());
                 let easePickDate =picker.getDate();
                 if (easePickDate) {
-                    const formatted = makeEasePickDateToString(easePickDate)
-                    console.log('선택된 날짜:', formatted);
+                    formatedDate = makeEasePickDateToString(easePickDate);
+                    formatedDtoString = makeEasePickDateToDTOString(formatedDate)
+                    console.log('선택된 날짜:', formatedDate);
                 }
 
             }
         });
 
         //달력 아이콘 클릭시에도 easepick가 나오도록
-
         calendarIcon.addEventListener('click', function(e) {
             picker.show();
+        });
+
+        searchButton.addEventListener('click', function(e) {
+            searchAjax(e, formatedDtoString);
         });
 
     });
@@ -269,6 +276,45 @@
                 console.error('실패:', error);
             }
         });
+    }
+
+    function searchAjax(event, formatedDtoString) {
+        event.preventDefault();
+
+        let id = document.getElementById("id").value;
+        let name = document.getElementById("name").value;
+        let level = document.getElementById("level").value;
+        let desc = document.getElementById("desc").value;
+
+        const searchData = {
+            id: id,
+            name: name,
+            level: level,
+            desc: desc,
+            reg_date : formatedDtoString
+        };
+
+        fetch("/user/search/userList", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(searchData)
+        }) .then(async response => {
+            /*
+                그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+                응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+             */
+            if (response.ok) {
+                const loginAnswer  = await response.json();
+                //makeHtml(loginAnswer);
+            } else {
+                const errorMessage = await response.json();
+                console.log("errorMessage : "+errorMessage);
+
+            }
+        }).catch(error => {
+            console.log("error : "+error);
+        })
+
     }
 
     /**
