@@ -153,8 +153,8 @@ function makeNullToBlank(originText) {
  * @returns {*|string} string 문자열 혹은 null
  */
 function makeBlankToNull(originText) {
-    let cleanText = originText.trim()
-    if (cleanText === "") {
+    let cleanText = originText.trim();
+    if (cleanText === "" || cleanText ==='') {
         cleanText = null;
     }
     return cleanText;

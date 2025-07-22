@@ -287,6 +287,34 @@
         let level = document.getElementById("level").value;
         let desc = document.getElementById("desc").value;
 
+        //만약 input에 사용자가 option에 있는 값대신 임의로 입력할 수 있다.
+        let dataList = document.getElementById("levelList");
+        let options = dataList.querySelectorAll("option");
+        let inputValid = false;
+
+        for (option of options) {
+            if (option.value === level) {
+                inputValid = true;
+                break;
+            }
+        }
+
+        if (inputValid === false) {
+            level = null;
+        }
+
+        console.log("id: "+id);
+        console.log("name : "+name);
+        console.log("level: "+level);
+        console.log("desc: "+desc);
+        console.log("reg_date: "+formatedDate);
+
+        //만약 사용자가 입력을 안했으면 null로 바꾸기
+        //이미 위에서 level과 formatedDate는 null처리가 되어있다.
+        id = makeBlankToNull(id);
+        name = makeBlankToNull(name);
+        desc = makeBlankToNull(desc);
+
         const searchData = {
             id: id,
             name: name,
@@ -294,14 +322,6 @@
             desc: desc,
             reg_date : formatedDate
         };
-
-        //만약 사용자가 입력을 안했으면 ?
-        console.log("id: "+id);
-        console.log("name : "+name);
-        console.log("level: "+level);
-        console.log("desc: "+desc);
-        console.log("reg_date: "+formatedDate);
-
 
         fetch("/user/search/userList", {
             method: "POST",
