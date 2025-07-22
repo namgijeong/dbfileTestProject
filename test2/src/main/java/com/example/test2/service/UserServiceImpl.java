@@ -216,7 +216,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
-        List<User> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
+        List<SearchUserDTO> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
         log.info("userList : "+userList);
     }
 

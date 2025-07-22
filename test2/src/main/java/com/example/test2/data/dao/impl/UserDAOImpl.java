@@ -86,7 +86,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+    public List<SearchUserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
         return userRepository.findAllBySearchUserDTO(searchUserDTO);
     }
 }

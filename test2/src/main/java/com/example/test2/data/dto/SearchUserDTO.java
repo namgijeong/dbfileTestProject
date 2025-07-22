@@ -35,4 +35,17 @@ public class SearchUserDTO {
     @JsonProperty("reg_date_end")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp regDateEnd;
+
+    /**
+     * entity를 dto로 변환한다.
+     * @param "UserDtoBase를 상속한 Entity" 객체
+     */
+    public SearchUserDTO(String id, String pwd, String name, String level, String desc, Timestamp regDate) {
+        this.id = id;
+        this.pwd = pwd;
+        this.name = name;
+        this.level = level;
+        this.desc = desc;
+        this.regDate = regDate;
+    }
 }

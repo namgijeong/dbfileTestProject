@@ -38,12 +38,12 @@ public interface UserRepository extends JpaRepository<User, String> {
     //date_trunc('day', 변수명)
     //입력 값: TIMESTAMP 값 (예: 2025-07-22 14:35:20)
     //반환 값: TIMESTAMP 값이 되며, 시간은 00:00:00으로 설정됩니다.
-    @Query("select u from User u where " +
+    @Query("select new com.example.test2.data.dto.SearchUserDTO(u.id, u.pwd,  u.name, u.level, u.desc, u.regDate) from User u where " +
             " (:#{#dto.id} IS NULL OR u.id LIKE %:#{#dto.id}%)" +
             " AND (:#{#dto.name} IS NULL OR u.name LIKE %:#{#dto.name}%) "+
             " AND (:#{#dto.level} IS NULL OR u.level = :#{#dto.level}) "+
             " AND (:#{#dto.desc} IS NULL OR  u.`desc` LIKE %:#{#dto.desc}%) "+
             " AND (:#{#dto.regDate} IS NULL OR ( u.regDate >= :#{#dto.regDate} AND u.regDate <= :#{#dto.regDateEnd} ))"
             )
-    List<User> findAllBySearchUserDTO(@Param("dto")SearchUserDTO searchUserDTO);
+    List<SearchUserDTO> findAllBySearchUserDTO(@Param("dto")SearchUserDTO searchUserDTO);
 }

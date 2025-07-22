@@ -28,5 +28,5 @@ public interface UserDAO {
     long countUsers();
 
     /* 검색 결과 회원 리스트 */
-    List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+    List<SearchUserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 }
