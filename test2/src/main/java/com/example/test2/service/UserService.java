@@ -2,14 +2,11 @@ package com.example.test2.service;
 
 import java.util.List;
 
-import com.example.test2.data.dto.UserResultDTO;
+import com.example.test2.data.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.test2.data.dto.UserDTO;
-import com.example.test2.data.dto.UserTotalResultDTO;
 import com.example.test2.exception.FailFileOpen;
 import com.example.test2.exception.WrongFileExtension;
-import com.example.test2.data.dto.UserPagingResultDTO;
 
 public interface UserService {
 
@@ -30,5 +27,7 @@ public interface UserService {
         등록된 전체 유저 개수를 세서 페이징 버튼들 블록 처리
     */
     public UserPagingResultDTO select10Users(long pageNumber);
+
+    public void selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
 }

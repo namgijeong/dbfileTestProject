@@ -66,6 +66,7 @@ public class UserController {
     @PostMapping("/search/userList")
     public ResponseEntity<?> searchUserList(@RequestBody SearchUserDTO searchUserDTO) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
+        userService.selectUsersBySearchUserDTO(searchUserDTO);
         return Utility.makeResponseEntity(true, "");
     }
 }

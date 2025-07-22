@@ -93,28 +93,28 @@ function makeEasePickDateToString(date) {
     }
 
     if (parseInt(date.getDate()) < 10) {
-        regDateText += "0"+(date.getDate())+" ";
+        regDateText += "0"+(date.getDate());
     } else {
-        regDateText += (date.getDate())+" ";
+        regDateText += (date.getDate());
     }
 
-    if (parseInt(date.getHours()) < 10) {
-        regDateText += "0"+(date.getHours())+":";
-    } else {
-        regDateText += (date.getHours())+":";
-    }
-
-    if (parseInt(date.getMinutes()) < 10) {
-        regDateText += "0"+(date.getMinutes())+":";
-    } else {
-        regDateText += (date.getMinutes())+":";
-    }
-
-    if (parseInt(date.getSeconds()) < 10) {
-        regDateText += "0"+(date.getSeconds());
-    } else {
-        regDateText += (date.getSeconds());
-    }
+    // if (parseInt(date.getHours()) < 10) {
+    //     regDateText += "0"+(date.getHours())+":";
+    // } else {
+    //     regDateText += (date.getHours())+":";
+    // }
+    //
+    // if (parseInt(date.getMinutes()) < 10) {
+    //     regDateText += "0"+(date.getMinutes())+":";
+    // } else {
+    //     regDateText += (date.getMinutes())+":";
+    // }
+    //
+    // if (parseInt(date.getSeconds()) < 10) {
+    //     regDateText += "0"+(date.getSeconds());
+    // } else {
+    //     regDateText += (date.getSeconds());
+    // }
 
     console.log("regDateText :"+regDateText);
     return regDateText;
@@ -158,4 +158,17 @@ function makeBlankToNull(originText) {
         cleanText = null;
     }
     return cleanText;
+}
+
+/**
+ * id, name, desc의 경우 문자열이 포함된것을 찾기 위해 %를 붙여준다.
+ * @param originText string 문자열
+ * @returns {string} %   % 이 끝에 붙은 문자열
+ */
+function makeFieldPercentageString(originText) {
+    let percentString = "";
+    if (originText != null) {
+        percentString += "%" +originText + "%";
+    }
+    return percentString;
 }

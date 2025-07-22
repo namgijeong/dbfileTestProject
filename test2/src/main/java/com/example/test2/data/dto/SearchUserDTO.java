@@ -1,5 +1,6 @@
 package com.example.test2.data.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,6 +12,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+/**
+ *  검색하는 정보를 담을 용도
+ */
 public class SearchUserDTO {
     private String id;
 
@@ -22,11 +26,8 @@ public class SearchUserDTO {
 
     private String desc;
 
-    /*
-        db에 timestamp로 넣기 위해
-        String을 LocalDateTime으로 변환
-    */
+
     @JsonProperty("reg_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime regDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate regDate;
 }

@@ -3,7 +3,9 @@ package com.example.test2.data.dao;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.test2.data.dto.SearchUserDTO;
 import com.example.test2.data.entity.User;
+import org.springframework.data.repository.query.Param;
 
 public interface UserDAO {
 
@@ -24,4 +26,7 @@ public interface UserDAO {
 
     /*전체 회원정보 개수 불러오기 */
     long countUsers();
+
+    /* 검색 결과 회원 리스트 */
+    List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 }

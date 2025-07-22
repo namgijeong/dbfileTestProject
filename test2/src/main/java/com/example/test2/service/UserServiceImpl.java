@@ -214,5 +214,11 @@ public class UserServiceImpl implements UserService {
         return userPagingResultDTO;
     }
 
+    @Override
+    public void selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+        List<User> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
+        log.info("userList : "+userList);
+    }
+
 
 }

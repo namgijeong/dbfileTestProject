@@ -3,6 +3,7 @@ package com.example.test2.data.dao.impl;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.test2.data.dto.SearchUserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -82,5 +83,10 @@ public class UserDAOImpl implements UserDAO {
     public long countUsers() {
         long count = userRepository.count();
         return count;
+    }
+
+    @Override
+    public List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+        return userRepository.findAllBySearchUserDTO(searchUserDTO);
     }
 }

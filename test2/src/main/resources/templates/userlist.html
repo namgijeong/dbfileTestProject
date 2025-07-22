@@ -180,6 +180,8 @@
 
 
         //easepick 라이브러리 사용
+        let formatedDate = null;
+
         const picker = new easepick.create({
             element: document.getElementById('regDate'),
             css: [
@@ -188,34 +190,47 @@
             zIndex : 5,
             lang: "ko-KR" ,
             //Hide picker on click outside picker element.
-            documentClick : true,
+            //documentClick : true,
             //autoApply: false => 사용자가 선택 후 직접 ‘Apply’(적용) 버튼을 눌러야 확정됨
-            autoApply: true,
+            autoApply: false,
 
         });
+
+        // select => Event is called when selection is submitted.
+        picker.on('select', function(date) {
+            //date 는 날짜객체
+            console.log('Date selected:', date);
+            let easePickDate =picker.getDate();
+
+            if (easePickDate) {
+                console.log("easePickDate 존재");
+                formatedDate = makeEasePickDateToString(easePickDate);
+                console.log('선택된 날짜:', formatedDate);
+            }
+        },{ once: true });
 
         let regDate = document.getElementById('regDate');
         let calendarIcon = document.getElementById("calendarIcon");
-        let formatedDate = null;
-        let formatedDtoString = null;
         let searchButton = document.getElementById('searchButton');
 
         //easepick 외부 클릭시 easepick 외부 숨기기 - documentClick 을 해도 먹히지가 않아서
-        document.addEventListener('click', function(e) {
-            //contains()는 JavaScript DOM API에서 어떤 요소가 다른 요소를 포함하고 있는지(자식이거나 자신이거나)를 판단
-            if(regDate && !regDate.contains(e.target) && !calendarIcon.contains(e.target)){
-                picker.hide();
-                console.log("getDate : "+picker.getDate());
-                let easePickDate =picker.getDate();
+        //하지만 이렇게하면 <> 달 이동할때 창이 닫혀서 안된다.
+        // document.addEventListener('click', function(e) {
+        //     //contains()는 JavaScript DOM API에서 어떤 요소가 다른 요소를 포함하고 있는지(자식이거나 자신이거나)를 판단
+        //     if(regDate && !regDate.contains(e.target) && !calendarIcon.contains(e.target)  ){
+        //         picker.hide();
+        //         console.log("getDate : "+picker.getDate());
+        //         let easePickDate =picker.getDate();
+        //
+        //         if (easePickDate) {
+        //             console.log("easePickDate 존재");
+        //             formatedDate = makeEasePickDateToString(easePickDate);
+        //             console.log('선택된 날짜:', formatedDate);
+        //         }
+        //
+        //     }
+        // });
 
-                if (easePickDate) {
-                    console.log("easePickDate 존재");
-                    formatedDate = makeEasePickDateToString(easePickDate);
-                    console.log('선택된 날짜:', formatedDate);
-                }
-
-            }
-        });
 
         //달력 아이콘 클릭시에도 easepick가 나오도록
         calendarIcon.addEventListener('click', function(e) {
@@ -314,6 +329,11 @@
         id = makeBlankToNull(id);
         name = makeBlankToNull(name);
         desc = makeBlankToNull(desc);
+
+        // % 를 붙여준다.
+        // id = makeFieldPercentageString(id);
+        // name = makeFieldPercentageString(name);
+        // desc = makeFieldPercentageString(desc);
 
         const searchData = {
             id: id,
