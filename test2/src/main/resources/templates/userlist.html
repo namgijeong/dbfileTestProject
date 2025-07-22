@@ -207,9 +207,10 @@
                 picker.hide();
                 console.log("getDate : "+picker.getDate());
                 let easePickDate =picker.getDate();
+
                 if (easePickDate) {
+                    console.log("easePickDate 존재");
                     formatedDate = makeEasePickDateToString(easePickDate);
-                    formatedDtoString = makeEasePickDateToDTOString(formatedDate)
                     console.log('선택된 날짜:', formatedDate);
                 }
 
@@ -222,7 +223,7 @@
         });
 
         searchButton.addEventListener('click', function(e) {
-            searchAjax(e, formatedDtoString);
+            searchAjax(e, formatedDate);
         });
 
     });
@@ -278,7 +279,7 @@
         });
     }
 
-    function searchAjax(event, formatedDtoString) {
+    function searchAjax(event, formatedDate) {
         event.preventDefault();
 
         let id = document.getElementById("id").value;
@@ -291,8 +292,16 @@
             name: name,
             level: level,
             desc: desc,
-            reg_date : formatedDtoString
+            reg_date : formatedDate
         };
+
+        //만약 사용자가 입력을 안했으면 ?
+        console.log("id: "+id);
+        console.log("name : "+name);
+        console.log("level: "+level);
+        console.log("desc: "+desc);
+        console.log("reg_date: "+formatedDate);
+
 
         fetch("/user/search/userList", {
             method: "POST",

@@ -36,7 +36,7 @@ function parseDate(dateString) {
 function makeRegDate(date) {
     let regDateText = '';
     regDateText += date.getFullYear()+"년";
-    regDateText += (date.getMonth()+1)+"월";
+    regDateText += (parseInt(date.getMonth())+1)+"월";
     regDateText += (date.getDate())+"일    ";
 
     if (parseInt(date.getHours()) < 10) {
@@ -69,25 +69,59 @@ function makeLocalDateTimeToString(localDateTime) {
 
 
 /**
- *
- * @param easePickDate easePick에서 결과로 만든 date 객체
- * @returns {string} yyyy-mm-dd 문자열
+ * picker.getDate에서 나온 결과를 바꾸기 위해
+ * @param date date객체
+ * @returns {string} yyyy-mm-dd hh:mm:ss 형태 문자열
  */
-function makeEasePickDateToString(easePickDate) {
-    // let now = new Date();
-    // let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+function makeEasePickDateToString(date) {
     //  자바스크립트에서 Date를 숫자로 표현하려면 항상 timestamp 형태가 된다. => number (timestamp) '2025-07-21' 형태로 전달
 
     // ISO 형식은 JS 엔진이 공식적으로 파싱할 수 있는 포맷
-    // toISOString()은 number로 변환하는 게 아니다
+    // toISOString()은 number로 변환하는 게 아니다. string 형태로 반환한다.
     // T 아래로 시간을 자른다.
+    //하지만 이걸쓰면 toISOString UTC 때문에 한국시간과 하루 차이가 난다
+    // let easePickDateString = easePickDate.toISOString().split('T')[0]
+    // return easePickDateString;
 
-    let easePickDateString = easePickDate.toISOString().split('T')[0]
-    return easePickDateString;
+    let regDateText = '';
+    regDateText += date.getFullYear()+"-";
+
+    if (parseInt(date.getMonth())+1 < 10) {
+        regDateText += "0"+(parseInt(date.getMonth())+1)+"-";
+    } else {
+        regDateText += (parseInt(date.getMonth())+1)+"-";
+    }
+
+    if (parseInt(date.getDate()) < 10) {
+        regDateText += "0"+(date.getDate())+" ";
+    } else {
+        regDateText += (date.getDate())+" ";
+    }
+
+    if (parseInt(date.getHours()) < 10) {
+        regDateText += "0"+(date.getHours())+":";
+    } else {
+        regDateText += (date.getHours())+":";
+    }
+
+    if (parseInt(date.getMinutes()) < 10) {
+        regDateText += "0"+(date.getMinutes())+":";
+    } else {
+        regDateText += (date.getMinutes())+":";
+    }
+
+    if (parseInt(date.getSeconds()) < 10) {
+        regDateText += "0"+(date.getSeconds());
+    } else {
+        regDateText += (date.getSeconds());
+    }
+
+    console.log("regDateText :"+regDateText);
+    return regDateText;
 }
 
 /**
- * userdto에 넣기 위해서 어쩔수 없이 형태를 바꾸어야한다.
+ * 필드가 localdatetime인 dto에 넣기 위해서 어쩔수 없이 형태를 바꾸어야한다.
  * 시간을 무시하기 위해 강제로 임의의 00을 넣어준다.
  * @param string 문자열
  * @returns {string} 문자열
@@ -109,6 +143,19 @@ function makeNullToBlank(originText) {
         cleanText = "";
     } else {
         cleanText = originText;
+    }
+    return cleanText;
+}
+
+/**
+ * 검색할때 필드가 공백이거나 아무것도 입력안했으면 null로 만들어 자바객체와 매핑하기 위해
+ * @param originText string 문자열
+ * @returns {*|string} string 문자열 혹은 null
+ */
+function makeBlankToNull(originText) {
+    let cleanText = originText.trim()
+    if (cleanText === "") {
+        cleanText = null;
     }
     return cleanText;
 }

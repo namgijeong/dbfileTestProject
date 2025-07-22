@@ -1,5 +1,6 @@
 package com.example.test2.controller;
 
+import com.example.test2.data.dto.SearchUserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,8 +64,8 @@ public class UserController {
     }
 
     @PostMapping("/search/userList")
-    public ResponseEntity<?> searchUserList(@RequestBody UserDTO userDTO) {
-        log.info("userDTO :  "+userDTO.toString());
+    public ResponseEntity<?> searchUserList(@RequestBody SearchUserDTO searchUserDTO) {
+        log.info("searchUserDTO :  "+searchUserDTO.toString());
         return Utility.makeResponseEntity(true, "");
     }
 }
