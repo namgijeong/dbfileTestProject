@@ -35,12 +35,15 @@ public interface UserRepository extends JpaRepository<User, String> {
     //(:category IS NULL)은 false가 되고, 대신 R.category = :category 조건이 적용
     //JPQL에서는 백틱(`)이나 큰따옴표(" ")를 사용하여 예약어를 필드 이름이나 매개변수로 처리
     //JPQL에서는 +를 이용해 문자열을 이어붙일 때 각 조건 사이에 공백을 넣어야 쿼리가 제대로 실행됩니다. 공백이 없는 경우, 문자열을 이어붙일 때 문법 오류가 발생할 수 있습니다.
-    //FUNCTION('DATE', 변수) => 시간 부분을 무시하고 날짜만 비교
+    //date_trunc('day', 변수명)
+    //입력 값: TIMESTAMP 값 (예: 2025-07-22 14:35:20)
+    //반환 값: TIMESTAMP 값이 되며, 시간은 00:00:00으로 설정됩니다.
     @Query("select u from User u where " +
             " (:#{#dto.id} IS NULL OR u.id LIKE %:#{#dto.id}%)" +
             " AND (:#{#dto.name} IS NULL OR u.name LIKE %:#{#dto.name}%) "+
             " AND (:#{#dto.level} IS NULL OR u.level = :#{#dto.level}) "+
             " AND (:#{#dto.desc} IS NULL OR  u.`desc` LIKE %:#{#dto.desc}%) "+
-            " AND (:#{#dto.regDate} IS NULL OR  FUNCTION('DATE', u.regDate) = :#{#dto.regDate}) " )
+            " AND (:#{#dto.regDate} IS NULL OR ( u.regDate >= :#{#dto.regDate} AND u.regDate <= :#{#dto.regDateEnd} ))"
+            )
     List<User> findAllBySearchUserDTO(@Param("dto")SearchUserDTO searchUserDTO);
 }

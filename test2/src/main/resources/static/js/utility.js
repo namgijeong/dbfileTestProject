@@ -69,9 +69,9 @@ function makeLocalDateTimeToString(localDateTime) {
 
 
 /**
- * picker.getDate에서 나온 결과를 바꾸기 위해
+ * picker.getDate에서 나온 결과를 자바객체와 매핑하기 위해 일단 날짜 부분만 문자열로
  * @param date date객체
- * @returns {string} yyyy-mm-dd hh:mm:ss 형태 문자열
+ * @returns {string} yyyy-mm-dd 형태 문자열
  */
 function makeEasePickDateToString(date) {
     //  자바스크립트에서 Date를 숫자로 표현하려면 항상 timestamp 형태가 된다. => number (timestamp) '2025-07-21' 형태로 전달
@@ -124,13 +124,22 @@ function makeEasePickDateToString(date) {
  * 필드가 localdatetime인 dto에 넣기 위해서 어쩔수 없이 형태를 바꾸어야한다.
  * 시간을 무시하기 위해 강제로 임의의 00을 넣어준다.
  * @param string 문자열
- * @returns {string} 문자열
+ * @returns {string} yyyy-mm-dd HH:mm:ss 형태 문자열
  */
-function makeEasePickDateToDTOString(string) {
-    let dtoString = string+ " 00:00:00";
+function plusZeroTime(string) {
+    let dtoString = string+ " 00:00:01";
     return dtoString;
 }
 
+/**
+ * 선택한 날짜의 마지막 시간 만들기
+ * @param string
+ * @returns {string}  yyyy-mm-dd HH:mm:ss 형태 문자열
+ */
+function plusEndTime(string) {
+    let dtoString = string+ " 23:59:59";
+    return dtoString;
+}
 
 /**
  * 필드를 화면에 출력할때 null이면 아예 공백으로 출력하기 위해
