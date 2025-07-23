@@ -4,14 +4,19 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Getter
 @Setter
+@Builder
 @ToString
 /**
  *  검색하는 정보를 담을 용도
@@ -27,25 +32,20 @@ public class SearchUserDTO {
 
     private String desc;
 
+    private Long pageNumber;
 
-    @JsonProperty("reg_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp regDate;
+//    @JsonProperty("reg_date")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime regDate;
+//
+//    @JsonProperty("reg_date_end")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime regDateEnd;
 
-    @JsonProperty("reg_date_end")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp regDateEnd;
+    //날짜 문자열을 Java 날짜 객체로 변환
+    //자바 날짜 객체를 문자열로 변환
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate regDate;
 
-    /**
-     * entity를 dto로 변환한다.
-     * @param "UserDtoBase를 상속한 Entity" 객체
-     */
-    public SearchUserDTO(String id, String pwd, String name, String level, String desc, Timestamp regDate) {
-        this.id = id;
-        this.pwd = pwd;
-        this.name = name;
-        this.level = level;
-        this.desc = desc;
-        this.regDate = regDate;
-    }
+
 }

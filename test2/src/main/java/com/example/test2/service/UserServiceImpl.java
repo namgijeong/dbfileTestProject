@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import com.example.test2.response.ResponseBase;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -216,9 +218,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
-        List<SearchUserDTO> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
-        log.info("userList : "+userList);
+        //List<User> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
+        //log.info("userList : "+userList);
+        List<SearchUserDTOResponse>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO, searchUserDTO.getPageNumber());
+        log.info("userList : "+searchUserDTOResponseList.toString());
     }
+
+
 
 
 }

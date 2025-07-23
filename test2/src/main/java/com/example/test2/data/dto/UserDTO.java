@@ -1,6 +1,7 @@
 package com.example.test2.data.dto;
 
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,8 @@ public class UserDTO {
         this.name = user.getName();
         this.level = user.getLevel();
         this.desc = user.getDesc();
-        this.regDate = user.getRegDate();
+        //this.regDate = user.getRegDate();
+        this.regDate = user.getRegDate().toLocalDateTime();
     }
 
     /**
@@ -162,7 +164,8 @@ public class UserDTO {
         user.setName(userDTO.getName());
         user.setLevel(userDTO.getLevel());
         user.setDesc(userDTO.getDesc());
-        user.setRegDate(userDTO.getRegDate());
+        //user.setRegDate(userDTO.getRegDate());
+        user.setRegDate(Timestamp.valueOf(userDTO.getRegDate()));
         return user;
     }
 

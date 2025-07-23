@@ -1,20 +1,25 @@
 package com.example.test2.data.repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.test2.data.dto.SearchUserDTO;
+
+import jakarta.persistence.TemporalType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Temporal;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.test2.data.entity.User;
+import com.example.test2.data.dto.SearchUserDTO;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, String>, UserRepositoryCustom {
 
     Optional<User> findByIdAndPwd(String id, String pwd);
 
@@ -38,12 +43,26 @@ public interface UserRepository extends JpaRepository<User, String> {
     //date_trunc('day', 변수명)
     //입력 값: TIMESTAMP 값 (예: 2025-07-22 14:35:20)
     //반환 값: TIMESTAMP 값이 되며, 시간은 00:00:00으로 설정됩니다.
-    @Query("select new com.example.test2.data.dto.SearchUserDTO(u.id, u.pwd,  u.name, u.level, u.desc, u.regDate) from User u where " +
-            " (:#{#dto.id} IS NULL OR u.id LIKE %:#{#dto.id}%)" +
-            " AND (:#{#dto.name} IS NULL OR u.name LIKE %:#{#dto.name}%) "+
-            " AND (:#{#dto.level} IS NULL OR u.level = :#{#dto.level}) "+
-            " AND (:#{#dto.desc} IS NULL OR  u.`desc` LIKE %:#{#dto.desc}%) "+
-            " AND (:#{#dto.regDate} IS NULL OR ( u.regDate >= :#{#dto.regDate} AND u.regDate <= :#{#dto.regDateEnd} ))"
+    // " AND (:regDate IS NULL OR ( u.regDate >= :regDate AND u.regDate <= :regDateEnd ))"
+    //" AND (:regDate IS NULL OR  FUNCTION('TO_CHAR', u.regDate, 'YYYY-MM-DD') >= :regDate) " +
+    // " AND (:regDateEnd IS NULL OR FUNCTION('TO_CHAR', u.regDate, 'YYYY-MM-DD') <= :regDateEnd)"
+    //" AND (:dateStart IS NULL OR  ( u.regDate >= :dateStart) ) " +
+    // " AND (:dateEnd IS NULL OR ( u.regDate <= :dateEnd) )"
+    //   " AND (:dateStart IS NULL OR  FUNCTION('TO_CHAR', u.regDate, 'YYYY-MM-DD HH:mm:ss') >= :dateStart) " +
+    //    " AND (:dateEnd IS NULL OR FUNCTION('TO_CHAR', u.regDate, 'YYYY-MM-DD HH:mm:ss') <= :dateEnd)"
+
+    @Query("select u from User u where " +
+            " (:id IS NULL OR u.id LIKE %:id%)" +
+            " AND (:name IS NULL OR u.name LIKE %:name%) "+
+            " AND (:level IS NULL OR u.level = :level) "+
+            " AND (:desc1 IS NULL OR  u.`desc` LIKE %:desc1%) " +
+            " AND (:dateStart IS NULL OR  FUNCTION('date_trunc', 'day', u.regDate) >= :dateStart) " +
+            " AND (:dateEnd IS NULL OR FUNCTION('date_trunc', 'day', u.regDate) <= :dateEnd)"
             )
-    List<SearchUserDTO> findAllBySearchUserDTO(@Param("dto")SearchUserDTO searchUserDTO);
+    List<User> findAllBySearchUserDTO(@Param("id") String id,
+                                      @Param("name") String name,
+                                      @Param("level") String level,
+                                      @Param("desc1") String desc,
+                                      @Param("dateStart")  LocalDateTime regDate,
+                                      @Param("dateEnd") LocalDateTime regDateEnd);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.test2.data.dto.SearchUserDTO;
+import com.example.test2.data.dto.SearchUserDTOResponse;
 import com.example.test2.data.entity.User;
 import org.springframework.data.repository.query.Param;
 
@@ -28,5 +29,8 @@ public interface UserDAO {
     long countUsers();
 
     /* 검색 결과 회원 리스트 */
-    List<SearchUserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+//    List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+
+    /*query dsl 검색결과 회원 리스트 */
+    List<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber);
 }

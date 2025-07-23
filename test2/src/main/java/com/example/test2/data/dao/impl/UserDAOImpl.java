@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.test2.data.dto.SearchUserDTO;
+import com.example.test2.data.dto.SearchUserDTOResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -85,8 +86,19 @@ public class UserDAOImpl implements UserDAO {
         return count;
     }
 
+    //querydsl 버전
     @Override
-    public List<SearchUserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
-        return userRepository.findAllBySearchUserDTO(searchUserDTO);
+    public List<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber) {
+        //페이지는 0부터 시작
+        List<SearchUserDTOResponse> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO, PageRequest.of((int)(pageNumber-1), 10));
+
+        return searchUserDTOResponseList;
     }
+
+    //jpql 버전
+//    @Override
+//    public List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+//
+//        return userRepository.findAllBySearchUserDTO(searchUserDTO.getId(),searchUserDTO.getName(), searchUserDTO.getLevel(), searchUserDTO.getDesc(), searchUserDTO.getRegDate(), searchUserDTO.getRegDate());
+//    }
 }

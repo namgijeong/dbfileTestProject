@@ -86,7 +86,7 @@ function makeEasePickDateToString(date) {
     let regDateText = '';
     regDateText += date.getFullYear()+"-";
 
-    if (parseInt(date.getMonth())+1 < 10) {
+    if ((parseInt(date.getMonth())+1) < 10) {
         regDateText += "0"+(parseInt(date.getMonth())+1)+"-";
     } else {
         regDateText += (parseInt(date.getMonth())+1)+"-";
@@ -127,7 +127,7 @@ function makeEasePickDateToString(date) {
  * @returns {string} yyyy-mm-dd HH:mm:ss 형태 문자열
  */
 function plusZeroTime(string) {
-    let dtoString = string+ " 00:00:01";
+    let dtoString = string+ " 00:00:00";
     return dtoString;
 }
 
