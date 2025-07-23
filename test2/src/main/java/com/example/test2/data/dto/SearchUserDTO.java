@@ -44,8 +44,13 @@ public class SearchUserDTO {
 
     //날짜 문자열을 Java 날짜 객체로 변환
     //자바 날짜 객체를 문자열로 변환
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate regDate;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    private LocalDate regDate;
+
+
+    @JsonProperty("reg_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime regDate;
 
 
 }

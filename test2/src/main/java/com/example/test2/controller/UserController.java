@@ -1,6 +1,7 @@
 package com.example.test2.controller;
 
 import com.example.test2.data.dto.SearchUserDTO;
+import com.example.test2.data.dto.SearchUserDTOResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,7 +58,7 @@ public class UserController {
     @GetMapping("/userList/ajax")
     //public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
     public ResponseEntity<?> ExchangeUserList(@RequestParam int pageNumber) {
-        UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
+        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
         return Utility.makeResponseEntity(true, userPagingResultDTO);
@@ -66,7 +67,7 @@ public class UserController {
     @PostMapping("/search/userList")
     public ResponseEntity<?> searchUserList(@RequestBody SearchUserDTO searchUserDTO) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
-        userService.selectUsersBySearchUserDTO(searchUserDTO);
-        return Utility.makeResponseEntity(true, "");
+        UserPagingResultDTO<SearchUserDTOResponse> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
+        return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 }

@@ -26,9 +26,9 @@ public interface UserService {
         등록 최신순 user 10명을 찾는다.
         등록된 전체 유저 개수를 세서 페이징 버튼들 블록 처리
     */
-    public UserPagingResultDTO select10Users(long pageNumber);
+    public UserPagingResultDTO<UserDTO> select10Users(long pageNumber);
 
     // 검색 dto를 가지고 회원들을 찾는다.
-    public void selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+    public UserPagingResultDTO<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
 }

@@ -33,10 +33,10 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         if (dto.getId() != null && !dto.getId().isBlank()) {
-            booleanBuilder.and(user.id.eq(dto.getId()));
+            booleanBuilder.and(user.id.contains(dto.getId()));
         }
         if (dto.getName() != null && !dto.getName().isBlank()) {
-            booleanBuilder.and(user.name.eq(dto.getName()));
+            booleanBuilder.and(user.name.contains(dto.getName()));
         }
         if (dto.getLevel() != null && !dto.getLevel().isBlank()) {
             booleanBuilder.and(user.level.eq(dto.getLevel()));
@@ -45,8 +45,9 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
             booleanBuilder.and(user.desc.contains(dto.getDesc()));
         }
         if (dto.getRegDate() != null) {
-            Timestamp startDate = Timestamp.valueOf(dto.getRegDate().atStartOfDay());
-            Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).atStartOfDay());
+            //localdatetime을 localdate로 바꿔서 해도 작동
+            Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
+            Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
             booleanBuilder.and(user.regDate.goe( startDate)); // 이상
             booleanBuilder.and(user.regDate.lt(endDate)); //  미만
         }
