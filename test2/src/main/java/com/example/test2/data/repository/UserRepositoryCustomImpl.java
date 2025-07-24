@@ -76,4 +76,44 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         return searchUserDTOResponseList;
 
     }
+
+    @Override
+    public Long searchUsersCount(SearchUserDTO dto) {
+        QUser user = QUser.user;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        if (dto.getId() != null && !dto.getId().isBlank()) {
+            booleanBuilder.and(user.id.contains(dto.getId()));
+        }
+        if (dto.getName() != null && !dto.getName().isBlank()) {
+            booleanBuilder.and(user.name.contains(dto.getName()));
+        }
+        if (dto.getLevel() != null && !dto.getLevel().isBlank()) {
+            booleanBuilder.and(user.level.eq(dto.getLevel()));
+        }
+        if (dto.getDesc() != null && !dto.getDesc().isBlank()) {
+            booleanBuilder.and(user.desc.contains(dto.getDesc()));
+        }
+        if (dto.getRegDate() != null) {
+            //localdatetime을 localdate로 바꿔서 해도 작동
+            Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
+            Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
+            booleanBuilder.and(user.regDate.goe( startDate)); // 이상
+            booleanBuilder.and(user.regDate.lt(endDate)); //  미만
+        }
+
+        System.out.println("검색조건 id: " + dto.getId());
+        System.out.println("검색조건 name: " + dto.getName());
+        System.out.println("검색조건 level: " + dto.getLevel());
+        System.out.println("검색조건 desc: " + dto.getDesc());
+        System.out.println("검색조건 regDate: " + dto.getRegDate());
+
+        Long totalCount = jpaQueryFactory
+                .select(user.count())
+                .from(user)
+                .where(booleanBuilder)
+                .fetchOne();
+
+        return totalCount;
+    }
 }

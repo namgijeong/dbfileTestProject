@@ -31,6 +31,8 @@ public interface UserDAO {
     /* 검색 결과 회원 리스트 */
 //    List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
-    /*query dsl 검색결과 회원 리스트 */
+    /*query dsl 검색결과 회원 리스트 페이지단위*/
     List<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber);
+
+    Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO);
 }

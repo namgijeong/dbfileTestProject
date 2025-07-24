@@ -95,6 +95,12 @@ public class UserDAOImpl implements UserDAO {
         return searchUserDTOResponseList;
     }
 
+    @Override
+    public Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO) {
+        Long count =  userRepository.searchUsersCount(searchUserDTO);
+        return count;
+    }
+
     //jpql 버전
 //    @Override
 //    public List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {

@@ -227,8 +227,8 @@ public class UserServiceImpl implements UserService {
         List<SearchUserDTOResponse>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO, pageNumber);
         log.info("userList : "+searchUserDTOResponseList.toString());
 
-        //검색 총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
-        long totalUsers = searchUserDTOResponseList.size();
+        //검색 조건에 맞는 총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
+        long totalUsers = userDAO.selectUsersCountBySearchUserDTO(searchUserDTO);
         ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
 
 
