@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>남기정_로그인완료_검색결과페이징</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap" rel="stylesheet">
+    <link href="/css/searchuserlist.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="background"></div>
@@ -13,21 +17,21 @@
     <div class="searchCondition">
       <div class="conditionName"> ID </div>
       <div class="conditionValue">
-        <input type="text" id="id" name="id" placeholder="id"/>
+        <input type="text" id="id" name="id" placeholder="id" th:value="${searchUserDTO.id}"/>
       </div>
     </div>
 
     <div class="searchCondition">
       <div class="conditionName"> NAME </div>
       <div class="conditionValue">
-        <input type="text" id="name" name="name" placeholder="name"/>
+        <input type="text" id="name" name="name" placeholder="name" th:value="${searchUserDTO.name}"/>
       </div>
     </div>
 
     <div class="searchCondition">
       <div class="conditionName"> LEVEL </div>
       <div class="conditionValue">
-        <input list="levelList" id="level" name="level" placeholder="레벨 선택"/>
+        <input list="levelList" id="level" name="level" placeholder="레벨 선택" th:value="${searchUserDTO.level}"/>
         <datalist id="levelList">
           <option value="A"></option>
           <option value="B"></option>
@@ -61,7 +65,7 @@
 
     <div class="searchCondition">
       <div class="conditionName"> DESC </div>
-      <div class="conditionValue"> <input type="text" id="desc" name="desc" placeholder="desc"/> </div>
+      <div class="conditionValue"> <input type="text" id="desc" name="desc" placeholder="desc" th:value="${searchUserDTO.desc}"/> </div>
     </div>
 
     <div class="searchCondition">
@@ -71,7 +75,7 @@
           <div id="calendarIcon"></div>
         </div>
         <div id="regDate" >
-          <div>날짜 선택</div>
+          <div id="regDateSub" th:data-name="${searchUserDTO.regDate}"></div>
         </div>
       </div>
     </div>
@@ -120,9 +124,17 @@
       <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
         <button id="previous" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
       </th:block>
-      <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
-        <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
+
+      <!-- 데이터가 아무것도 없을때, 버튼이 1,0 으로 생성되는 이슈가 있음 -->
+      <th:block th:if="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber <= userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber}">
+        <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
+          <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
+        </th:block>
       </th:block>
+      <th:block th:unless="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber <= userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber}">
+          <button class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber}" th:text="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber}"></button>
+      </th:block>
+
       <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
         <button id="next" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
       </th:block>
@@ -132,4 +144,422 @@
 
 </div>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="/js/utility.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@easepick/datetime@1.2.1/dist/index.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@easepick/core@1.2.1/dist/index.umd.min.js"></script>
+<script th:inline="javascript">
+
+  /**
+   *  DOM이 완전히 로드되고 파싱 완료된 시점에 이벤트를 단다.
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM 준비 완료!');
+
+    let regDates = document.getElementsByClassName("regDate");
+    for (regDate1 of regDates) {
+      let originalRegDate = regDate1.dataset.name;
+      console.log("originalRegDate : "+originalRegDate);
+      console.log("type originalRegDate : "+ typeof(originalRegDate));
+
+      let completeRegDate = makeLocalDateTimeToString(originalRegDate);
+      regDate1.textContent = completeRegDate;
+    }
+
+    let descs = document.getElementsByClassName("desc");
+    for (desc1 of descs) {
+      let descText = desc1.dataset.name;
+      console.log("descText : "+descText);
+      console.log("type descText : "+typeof(descText));
+
+      let cleanText = makeNullToBlank(descText);
+      desc1.textContent = cleanText;
+    }
+
+
+    let formatedDate = null;
+    let formatedStartDate = null;
+    let formatedEndDate = null;
+
+    //일단 검색조건들도 검색창에 유지할수있도록
+    //하지만 날짜같은 경우 형식 변환을 하여 붙여넣어야한다.
+    let regDate2 = document.getElementById("regDateSub");
+    let regDate2OriginalText = regDate2.dataset.name;
+
+    console.log("regDate2OriginalText : "+regDate2OriginalText);
+
+    //만약 전에 입력했었던 상태가 아니면
+    let regDate2CleanText = makeTimestampToString(regDate2OriginalText);
+    regDate2.textContent = regDate2CleanText;
+
+    //이때 또 다른 설정을 안하고 다음 검색을 할 수 있으므로 다음 검색에 쓰이는 변수에 미리 담아준다.
+    formatedDate = plusZeroTime(regDate2CleanText);
+
+    //easepick 라이브러리 사용
+    const picker = new easepick.create({
+      element: document.getElementById('regDate'),
+      css: [
+        'https://cdn.jsdelivr.net/npm/@easepick/core@1.2.1/dist/index.css',
+      ],
+      zIndex : 5,
+      lang: "ko-KR" ,
+      //Hide picker on click outside picker element.
+      //documentClick : true,
+      //autoApply: false => 사용자가 선택 후 직접 ‘Apply’(적용) 버튼을 눌러야 확정됨
+      autoApply: false,
+
+    });
+
+    // select => Event is called when selection is submitted.
+    picker.on('select', function(date) {
+      //date 는 날짜객체
+      console.log('Date selected:', date);
+      let easePickDate =picker.getDate();
+
+      if (easePickDate) {
+        console.log("easePickDate 존재");
+        formatedDate = makeEasePickDateToString(easePickDate);
+        formatedDate = plusZeroTime(formatedDate);
+        // formatedStartDate = plusZeroTime(formatedDate);
+        // formatedEndDate = plusEndTime(formatedDate);
+        console.log('선택된 날짜:', formatedDate);
+        // console.log("formatedStartDate : "+formatedStartDate);
+        // console.log("formatedEndDate : "+formatedEndDate);
+      }
+    },{ once: false });
+
+    let regDate = document.getElementById('regDate');
+    let calendarIcon = document.getElementById("calendarIcon");
+    let searchButton = document.getElementById('searchButton');
+
+    //easepick 외부 클릭시 easepick 외부 숨기기 - documentClick 을 해도 먹히지가 않아서
+    //하지만 이렇게하면 <> 달 이동할때 창이 닫혀서 안된다.
+    // document.addEventListener('click', function(e) {
+    //     //contains()는 JavaScript DOM API에서 어떤 요소가 다른 요소를 포함하고 있는지(자식이거나 자신이거나)를 판단
+    //     if(regDate && !regDate.contains(e.target) && !calendarIcon.contains(e.target)  ){
+    //         picker.hide();
+    //         console.log("getDate : "+picker.getDate());
+    //         let easePickDate =picker.getDate();
+    //
+    //         if (easePickDate) {
+    //             console.log("easePickDate 존재");
+    //             formatedDate = makeEasePickDateToString(easePickDate);
+    //             console.log('선택된 날짜:', formatedDate);
+    //         }
+    //
+    //     }
+    // });
+
+
+    //달력 아이콘 클릭시에도 easepick가 나오도록
+    calendarIcon.addEventListener('click', function(e) {
+      picker.show();
+    });
+
+    //검색결과 버튼 클릭시 페이지 이동
+    searchButton.addEventListener('click', function(e) {
+      searchUsersAndGoPage(e, formatedDate);
+    });
+
+    //동적 생성된 버튼들에게 이벤트 적용하기 위해 이벤트 위임
+    let pagingArea = document.getElementById("pagingArea");
+    pagingArea.addEventListener('click', function(e) {
+      handleButtonsNumber(e,formatedDate);
+    });
+
+    //페이지 이동하여 진입시
+    makeCurrentButtonBlur(/*[[${pageNumber}]]*/);
+
+  });
+
+  /**
+   * 페이징 버튼 번호들 처리
+   * @param e 이벤트 객체
+   * @param formatedDate 정제된 날짜 문자열
+   */
+  function handleButtonsNumber(e, formatedDate) {
+    //현재 있는 몇번째 페이지 정보 가져오기
+    //직접클릭 e.target
+    let clickedNumber = e.target.dataset.name;
+
+    console.log("clickedNumber: "+clickedNumber);
+    console.log("클릭된 대상 클래스 이름 : "+e.target.classList);
+
+    //이벤트 위임시 진짜 자식 요소 내부일때만
+    if (e.target.matches(".pagingButton")) {
+        searchAjax(e, formatedDate, clickedNumber);
+    }
+
+  }
+
+
+  /**
+   * 하단 버튼 클릭시 페이징 처리
+   * 하지만 이때 사용했던 검색 조건들도 ajax로 보내줘야한다.
+   * @param event 이벤트 객체
+   * @param formatedDate 정제된 날짜 문자열
+   * @param clickedNumber 클릭한 버튼 숫자
+   */
+  function searchAjax(event, formatedDate, clickedNumber) {
+      event.preventDefault();
+
+      let id = document.getElementById("id").value;
+      let name = document.getElementById("name").value;
+      let level = document.getElementById("level").value;
+      let desc = document.getElementById("desc").value;
+      let pageNumber = clickedNumber;
+
+      //만약 input에 사용자가 option에 있는 값대신 임의로 입력할 수 있다.
+      let dataList = document.getElementById("levelList");
+      let options = dataList.querySelectorAll("option");
+      let inputValid = false;
+
+      for (option of options) {
+          if (option.value === level) {
+              inputValid = true;
+              break;
+          }
+      }
+
+      if (inputValid === false) {
+          level = null;
+      }
+
+      console.log("id: "+id);
+      console.log("name : "+name);
+      console.log("level: "+level);
+      console.log("desc: "+desc);
+      console.log("reg_date: "+formatedDate);
+
+      //만약 사용자가 입력을 안했으면 null로 바꾸기
+      //이미 위에서 level과 formatedDate는 null처리가 되어있다.
+      id = makeBlankToNull(id);
+      name = makeBlankToNull(name);
+      desc = makeBlankToNull(desc);
+
+      const searchData = {
+          id: id,
+          name: name,
+          level: level,
+          desc: desc,
+          //regDate : formatedDate,
+          reg_date : formatedDate,
+          pageNumber : pageNumber
+      };
+
+      fetch("/user/search/userList/ajax", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(searchData)
+      }) .then(async response => {
+          /*
+              그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+              응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+           */
+          if (response.ok) {
+              const searchAnswer  = await response.json();
+
+              console.log("검색 조회 성공")
+              makePagingTable(searchAnswer.content.userDTOList);
+              makePagingButton(searchAnswer.content.buttonBlockDTO);
+              //일단 1페이지만
+              makeCurrentButtonBlur(clickedNumber);
+          } else {
+              const errorMessage = await response.json();
+              console.log("errorMessage : "+errorMessage);
+
+          }
+      }).catch(error => {
+          console.log("error : "+error);
+      })
+
+  }
+
+
+  /**
+   * 검색 결과가 조건에 맞는지 검사하여 처리하고, 검색 결과를 객체로 페이지이동하며 보낸다.
+   * @param event
+   * @param formatedDate
+   */
+  function searchUsersAndGoPage(event, formatedDate) {
+    event.preventDefault();
+
+    let id = document.getElementById("id").value;
+    let name = document.getElementById("name").value;
+    let level = document.getElementById("level").value;
+    let desc = document.getElementById("desc").value;
+    let pageNumber = 1;
+
+    //만약 input에 사용자가 option에 있는 값대신 임의로 입력할 수 있다.
+    let dataList = document.getElementById("levelList");
+    let options = dataList.querySelectorAll("option");
+    let inputValid = false;
+
+    for (option of options) {
+      if (option.value === level) {
+        inputValid = true;
+        break;
+      }
+    }
+
+    if (inputValid === false) {
+      level = null;
+    }
+
+    console.log("id: "+id);
+    console.log("name : "+name);
+    console.log("level: "+level);
+    console.log("desc: "+desc);
+    console.log("reg_date: "+formatedDate);
+
+    //만약 사용자가 입력을 안했으면 null로 바꾸기
+    //이미 위에서 level과 formatedDate는 null처리가 되어있다.
+    id = makeBlankToNull(id);
+    name = makeBlankToNull(name);
+    desc = makeBlankToNull(desc);
+
+    const searchData = {
+      id: id,
+      name: name,
+      level: level,
+      desc: desc,
+      regDate : formatedDate,
+      //reg_date : formatedDate,
+      pageNumber : pageNumber
+    };
+
+    // form 생성- 페이지 이동인데 객체를 보내기위해서
+    let url ="/user/search/userList/page";
+    let form = document.createElement("form");
+    form.method = "POST";
+    form.action = url;
+
+    // 데이터를 폼의 hidden input으로 추가
+    // 하지만 ajax와 다르게 input 태그 value 빈값이면 null로 가지 않는다
+    // input 태그에 null을 넣어도, JavaScript 에서는 해당 속성이 빈 문자열('')로 설정
+    for (let key in searchData) {
+      if (searchData.hasOwnProperty(key)) {
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = searchData[key];
+        form.appendChild(input);
+      }
+    }
+
+    // form을 body에 추가하고 제출
+    document.body.appendChild(form);
+    form.submit();
+
+  }
+
+  /**
+   * 페이징 테이블 내용 동적 html 생성
+   * @param response UserDTO List
+   */
+  function makePagingTable(response) {
+    let userResultsTable = document.getElementById("userResultsTable");
+    let responseText = '';
+
+    responseText += `<tr>`;
+    responseText += `<th> ID </th>`;
+    responseText += `<th> PWD </th>`;
+    responseText += `<th> NAME </th>`;
+    responseText += `<th> LEVEL </th>`;
+    responseText += `<th> DESC </th>`;
+    responseText += `<th> REG_DATE </th>`;
+    responseText += `</tr>`;
+
+    //만약 배열이 비어있다면 회원 정보가 비어있습니다를 출력
+    if (response.length === 0 || response == null || response == undefined) {
+      console.log("response.length<0 안에 들어옴");
+      responseText += `<tr>`;
+      responseText += `<td colSpan="6">회원 정보가 없습니다.</td>`;
+      responseText += `</tr>`;
+    } else {  // 회원 정보가 하나라도 있으면
+      console.log("response.length<0 else 에 들어옴");
+      response.forEach(userDTO => {
+        console.log("배열 하나: " + userDTO + '\n');
+        console.log('내용 : ' + userDTO.id + '\n');
+        console.log('내용: ' + userDTO.pwd + '\n');
+        console.log('내용: ' + userDTO.name + '\n');
+        console.log('내용: ' + userDTO.level + '\n');
+        console.log('내용: ' + userDTO.desc + '\n');
+
+        let descText = makeNullToBlank(userDTO.desc);
+
+        //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
+        console.log('내용: ' + userDTO.reg_date + '\n');
+        const date = parseDate(userDTO.reg_date);
+        let regDateText = makeRegDate(date);
+        console.log('내용: ' + regDateText + '\n');
+
+        responseText += `<tr>`;
+        responseText += `<td>${userDTO.id}</td>`;
+        responseText += `<td>${userDTO.pwd}</td>`;
+        responseText += `<td>${userDTO.name}</td>`;
+        responseText += `<td>${userDTO.level}</td>`;
+        responseText += `<td>${descText}</td>`;
+        responseText += `<td>${regDateText}</td>`;
+        responseText += `</tr>`;
+
+      });
+    }
+
+    userResultsTable.innerHTML = responseText;
+  }
+
+  /**
+   * 페이징 버튼 내용 동적 html 생성
+   * @param response ButtonBlockDTO
+   */
+  function makePagingButton(response) {
+    let pagingArea = document.getElementById("pagingArea");
+    let responseText = '';
+
+    if (response.previousBlock) {
+      responseText += `<button id="previous" class="pagingButton" data-name="${response.previousBlockPageNumber}"><</button>`;
+    }
+
+    console.log("response.currentBlockFirstNumber : "+response.currentBlockFirstNumber);
+    console.log("response.currentBlockLastNumber : "+response.currentBlockLastNumber);
+    //게시물 데이터가 0개일때 버튼이 1,0으로 생성되는것을 방지
+    if(response.currentBlockFirstNumber <= response.currentBlockLastNumber) {
+      for (let i = response.currentBlockFirstNumber; i <= response.currentBlockLastNumber; i++) {
+        responseText += `<button class="pagingButton" data-name="${i}">${i}</button>`;
+      }
+    } else {
+      responseText += `<button class="pagingButton" data-name="${response.currentBlockFirstNumber}">${response.currentBlockFirstNumber}</button>`;
+    }
+
+    if (response.nextBlock) {
+      responseText += `<button id="next" class="pagingButton" data-name="${response.nextBlockPageNumber}">></button>`;
+    }
+
+    pagingArea.innerHTML = responseText;
+
+  }
+
+  /**
+   * 현재 페이지인 버튼은 흐리게 조정
+   * @param clickedNumber 사용자가 클릭한 버튼 숫자
+   */
+  function makeCurrentButtonBlur(clickedNumber) {
+    let clickedButton = document.querySelector(`[data-name="${clickedNumber}"]`);
+
+    /*
+    clickedButton.style.backgroundColor = "darksalmon";
+    clickedButton.style.border = "1px solid darksalmon";
+    */
+
+    let buttons = document.querySelectorAll("button");
+    buttons.forEach(button => {
+      button.classList.remove('buttonClicked');
+    });
+    clickedButton.classList.add('buttonClicked');
+
+  }
+
+</script>
 </html>

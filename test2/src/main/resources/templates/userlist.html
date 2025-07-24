@@ -124,9 +124,17 @@
             <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
                 <button id="previous" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
             </th:block>
-            <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
-                <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
+
+            <!-- 데이터가 아무것도 없을때, 버튼이 1,0 으로 생성되는 이슈가 있음 -->
+            <th:block th:if="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber <= userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber}">
+                <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
+                    <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
+                </th:block>
             </th:block>
+            <th:block th:unless="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber <= userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber}">
+                <button class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber}" th:text="${userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber}"></button>
+            </th:block>
+
             <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
                 <button id="next" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
             </th:block>
@@ -509,7 +517,7 @@
             pageNumber : pageNumber
         };
 
-        // form 생성
+        // form 생성- 페이지 이동인데 객체를 보내기위해서
         let url ="/user/search/userList/page";
         let form = document.createElement("form");
         form.method = "POST";
@@ -551,31 +559,39 @@
         responseText += `<th> REG_DATE </th>`;
         responseText += `</tr>`;
 
-        response.forEach(userDTO => {
-            console.log("배열 하나: " + userDTO + '\n');
-            console.log('내용 : ' + userDTO.id + '\n');
-            console.log('내용: ' + userDTO.pwd + '\n');
-            console.log('내용: ' + userDTO.name + '\n');
-            console.log('내용: ' + userDTO.level + '\n');
-            console.log('내용: ' + userDTO.desc + '\n');
-
-            let descText = makeNullToBlank(userDTO.desc);
-
-            //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
-            console.log('내용: ' + userDTO.reg_date + '\n');
-            const date = parseDate(userDTO.reg_date);
-            let regDateText = makeRegDate(date);
-
+        //만약 배열이 비어있다면 회원 정보가 비어있습니다를 출력
+        if (response.length === 0 || response == null || response == undefined) {
             responseText += `<tr>`;
-            responseText += `<td>${userDTO.id}</td>`;
-            responseText += `<td>${userDTO.pwd}</td>`;
-            responseText += `<td>${userDTO.name}</td>`;
-            responseText += `<td>${userDTO.level}</td>`;
-            responseText += `<td>${descText}</td>`;
-            responseText += `<td>${regDateText}</td>`;
+            responseText += `<td colSpan="6">회원 정보가 없습니다.</td>`;
             responseText += `</tr>`;
+        } else {  // 회원 정보가 하나라도 있으면
+            response.forEach(userDTO => {
+                console.log("배열 하나: " + userDTO + '\n');
+                console.log('내용 : ' + userDTO.id + '\n');
+                console.log('내용: ' + userDTO.pwd + '\n');
+                console.log('내용: ' + userDTO.name + '\n');
+                console.log('내용: ' + userDTO.level + '\n');
+                console.log('내용: ' + userDTO.desc + '\n');
 
-        });
+                let descText = makeNullToBlank(userDTO.desc);
+
+                //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
+                console.log('내용: ' + userDTO.reg_date + '\n');
+                const date = parseDate(userDTO.reg_date);
+                let regDateText = makeRegDate(date);
+                console.log('내용: ' + regDateText + '\n');
+
+                responseText += `<tr>`;
+                responseText += `<td>${userDTO.id}</td>`;
+                responseText += `<td>${userDTO.pwd}</td>`;
+                responseText += `<td>${userDTO.name}</td>`;
+                responseText += `<td>${userDTO.level}</td>`;
+                responseText += `<td>${descText}</td>`;
+                responseText += `<td>${regDateText}</td>`;
+                responseText += `</tr>`;
+
+            });
+        }
 
         userResultsTable.innerHTML = responseText;
     }
@@ -591,9 +607,18 @@
         if (response.previousBlock) {
             responseText += `<button id="previous" class="pagingButton" data-name="${response.previousBlockPageNumber}"><</button>`;
         }
-        for (let i = response.currentBlockFirstNumber; i <= response.currentBlockLastNumber; i++) {
-            responseText += `<button class="pagingButton" data-name="${i}">${i}</button>`;
+
+        console.log("response.currentBlockFirstNumber : "+response.currentBlockFirstNumber);
+        console.log("response.currentBlockLastNumber : "+response.currentBlockLastNumber);
+        //게시물 데이터가 0개일때 버튼이 1,0으로 생성되는것을 방지
+        if(response.currentBlockFirstNumber <= response.currentBlockLastNumber) {
+            for (let i = response.currentBlockFirstNumber; i <= response.currentBlockLastNumber; i++) {
+                responseText += `<button class="pagingButton" data-name="${i}">${i}</button>`;
+            }
+        } else {
+            responseText += `<button class="pagingButton" data-name="${response.currentBlockFirstNumber}">${response.currentBlockFirstNumber}</button>`;
         }
+
         if (response.nextBlock) {
             responseText += `<button id="next" class="pagingButton" data-name="${response.nextBlockPageNumber}">></button>`;
         }

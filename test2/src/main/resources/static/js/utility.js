@@ -57,8 +57,8 @@ function makeRegDate(date) {
 
 
 /**
- *  Ajax json이 아닌 자바 객체 응답일때 LocalDateTime의 각각 연/월/일 부분을 분리 후, 한글을 붙인다.
- * @param localDateTime 2021-01-03T10:00 형식의 LocalDateTime
+ *  Ajax json이 아닌 자바 객체 LocalDateTime 문자열 형태를 각각 연/월/일 부분을 분리 후, 한글을 붙인다.
+ * @param localDateTime 2021-01-03T10:00 형식의 LocalDateTime이지만 여기서는 문자열 취급
  * @returns string 문자열
  */
 function makeLocalDateTimeToString(localDateTime) {
@@ -70,6 +70,7 @@ function makeLocalDateTimeToString(localDateTime) {
 
 /**
  * picker.getDate에서 나온 결과를 자바객체와 매핑하기 위해 일단 날짜 부분만 문자열로
+ * 또는 검색창 조건에 yyyy-mm-dd로 표시하여 재활용하기 위해
  * @param date date객체
  * @returns {string} yyyy-mm-dd 형태 문자열
  */
@@ -140,6 +141,18 @@ function plusEndTime(string) {
     let dtoString = string+ " 23:59:59";
     return dtoString;
 }
+
+/**
+ * Ajax json이 아닌 자바객체의 Timestamp 타입의 문자열을 yyyy-mm-dd 형태의 문자열로 바꾼다.
+ * @param timestamp  자바객체의 Timestamp 타입의 문자열
+ * @returns {string} yyyy-mm-dd 형태 문자열
+ */
+function makeTimestampToString(timestamp) {
+    const date = new Date(timestamp);
+    let regDateText = makeEasePickDateToString(date);
+    return regDateText;
+}
+
 
 /**
  * 필드를 화면에 출력할때 null이면 아예 공백으로 출력하기 위해

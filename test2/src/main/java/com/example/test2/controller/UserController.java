@@ -64,6 +64,12 @@ public class UserController {
         return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 
+    /**
+     * 원래 처음에 검색 조회 버튼 클릭시 ajax로만 처리하였을때 사용
+     * @param searchUserDTO 검색조건들 정보
+     * @param
+     * @return ResponseBase 응답
+     */
 //    @PostMapping("/search/userList")
 //    public ResponseEntity<?> searchUserList(@RequestBody SearchUserDTO searchUserDTO) {
 //        log.info("searchUserDTO :  "+searchUserDTO.toString());
@@ -72,18 +78,36 @@ public class UserController {
 //    }
 
 
+    /**
+     * 검색 조회 버튼 클릭시 페이지 이동
+     * @param searchUserDTO 검색조건들 정보
+     * @param
+     * @return 이동할 html 이름
+     */
     @PostMapping("/search/userList/page")
-    //@ModelAttribute는 객체로 데이터를 받을 수 있어, 여러 파라미터를 하나의 객체로 처리할 때 유용합니다.
-    //@RequestParam**은 개별적인 파라미터를 처리할 때 사용됩니다.
-    //이 방식은 Jackson을 거치지 않고, Spring이 내부적으로 직접 타입을 변환합니다.
-    //즉, 파라미터 이름만 DTO 필드명과 정확히 일치하면, 자동으로 변환해줍니다.
-    //@JsonFormat, @JsonProperty는 필요 없습니다. 무시됩니다.
+    //Ajax방식이 아닐시 @ModelAttribute는 객체로 데이터를 받을 수 있어, 여러 파라미터를 하나의 객체로 처리할 때 유용
+    //이 방식은 Jackson을 거치지 않고, Spring이 내부적으로 직접 타입을 변환
+    //즉, 파라미터 이름만 DTO 필드명과 정확히 일치하면, 자동으로 변환
+    //이때 @JsonFormat, @JsonProperty는 무시
     public String searchUserListAndGoPage(@ModelAttribute SearchUserDTO searchUserDTO, Model model) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
         UserPagingResultDTO<SearchUserDTOResponse> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
 
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
         model.addAttribute("pageNumber", searchUserDTO.getPageNumber());
+        model.addAttribute("searchUserDTO", searchUserDTO);
         return "searchuserlist";
+    }
+
+    /**
+     * 검색 조회 후, 하단 페이징버튼 클릭시 ajax로 처리
+     * @param searchUserDTO 원하는 페이지 숫자 + 그전에 입력했던 검색 조건들 정보가 포함
+     * @return ResponseBase 응답
+     */
+    @PostMapping("/search/userList/ajax")
+    public ResponseEntity<?> searchUserListAndAjax(@RequestBody SearchUserDTO searchUserDTO) {
+        log.info("searchUserDTO :  "+searchUserDTO.toString());
+        UserPagingResultDTO<SearchUserDTOResponse> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
+        return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 }

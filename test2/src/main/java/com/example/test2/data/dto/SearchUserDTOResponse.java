@@ -1,5 +1,7 @@
 package com.example.test2.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +27,9 @@ public class SearchUserDTOResponse {
 
     String desc;
 
+    //Json 응답 사용을 위해
+    @JsonProperty("reg_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     Timestamp regDate;
 
 

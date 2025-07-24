@@ -192,24 +192,35 @@ public class Utility {
     public static ButtonBlockDTO makeButtonBlockDTO(long currentPageNumber, long totalCount) {
         log.info("currentPageNumber : "+currentPageNumber);
         log.info("totalCount : "+totalCount);
+
         //한 페이지당 게시글 10개
         long totalPageNumber = (long)Math.ceil((double)totalCount / 10);
         log.info("totalPageNumber : "+totalPageNumber);
+
         //한 블록당 버튼은 10개씩 보여주기
         long totalBlockNumber = (long)Math.ceil((double)totalPageNumber / 10);
         log.info("totalBlockNumber : "+totalBlockNumber);
+
         //10 페이지는 1블록에 속한다.
         long currentBlockNumber = (long)Math.ceil((double)currentPageNumber / 10);
         log.info("currentBlockNumber : "+currentBlockNumber);
+
         long currentBlockFirstNumber = ((currentBlockNumber - 1) * 10) + 1;
         log.info("currentBlockFirstNumber : "+currentBlockFirstNumber);
+
         long currentBlockLastNumber = ((currentBlockNumber - 1) * 10) + 10;
         log.info("currentBlockLastNumber : "+currentBlockLastNumber);
-
         //만약 총 게시글 페이지 보다 많게 계산되면 안된다.
         if (currentBlockLastNumber > totalPageNumber) {
             currentBlockLastNumber = totalPageNumber;
         }
+
+        //만약 아무것도 게시글이 없다면, 버튼 1,0 이 생성되므로
+//        if (currentBlockLastNumber == 0L) {
+//            log.info("currentBlockLastNumber == 0 에 들어옴");
+//            currentBlockLastNumber = 1L;
+//        }
+        log.info("currentBlockLastNumber : "+currentBlockLastNumber);
 
         boolean previousBlock = false;
         boolean nextBlock = false;
