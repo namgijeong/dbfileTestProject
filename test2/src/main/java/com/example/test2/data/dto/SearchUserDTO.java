@@ -48,8 +48,11 @@ public class SearchUserDTO {
 //    private LocalDate regDate;
 
 
-    @JsonProperty("reg_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    //Jackson의 @JsonFormat은 @RequestBody일 때만 적용됩니다.
+    //하지만 @ModelAttribute일 경우에는 @DateTimeFormat을 사용해야 합니다.
+    //@JsonProperty("reg_date")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
 

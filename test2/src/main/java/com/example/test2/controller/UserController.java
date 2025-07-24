@@ -41,7 +41,7 @@ public class UserController {
     @GetMapping("/userList/page")
     //public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
     public String goUserListPage(@RequestParam("pageNumber") int pageNumber, Model model) {
-        UserPagingResultDTO userPagingResultDTO = userService.select10Users(pageNumber);
+        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
         model.addAttribute("pageNumber", pageNumber);
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
@@ -64,10 +64,26 @@ public class UserController {
         return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 
-    @PostMapping("/search/userList")
-    public ResponseEntity<?> searchUserList(@RequestBody SearchUserDTO searchUserDTO) {
+//    @PostMapping("/search/userList")
+//    public ResponseEntity<?> searchUserList(@RequestBody SearchUserDTO searchUserDTO) {
+//        log.info("searchUserDTO :  "+searchUserDTO.toString());
+//        UserPagingResultDTO<SearchUserDTOResponse> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
+//        return Utility.makeResponseEntity(true, userPagingResultDTO);
+//    }
+
+
+    @PostMapping("/search/userList/page")
+    //@ModelAttribute는 객체로 데이터를 받을 수 있어, 여러 파라미터를 하나의 객체로 처리할 때 유용합니다.
+    //@RequestParam**은 개별적인 파라미터를 처리할 때 사용됩니다.
+    //이 방식은 Jackson을 거치지 않고, Spring이 내부적으로 직접 타입을 변환합니다.
+    //즉, 파라미터 이름만 DTO 필드명과 정확히 일치하면, 자동으로 변환해줍니다.
+    //@JsonFormat, @JsonProperty는 필요 없습니다. 무시됩니다.
+    public String searchUserListAndGoPage(@ModelAttribute SearchUserDTO searchUserDTO, Model model) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
         UserPagingResultDTO<SearchUserDTOResponse> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
-        return Utility.makeResponseEntity(true, userPagingResultDTO);
+
+        model.addAttribute("userPagingResultDTO", userPagingResultDTO);
+        model.addAttribute("pageNumber", searchUserDTO.getPageNumber());
+        return "searchuserlist";
     }
 }

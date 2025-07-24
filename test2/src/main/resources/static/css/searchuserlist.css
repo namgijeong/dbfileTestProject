@@ -1,0 +1,228 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: "Hahmlet", serif;
+}
+
+#background{
+    position: relative;
+    top:0;
+    left: 0;
+    width:100%;
+    height:150vh;
+    z-index:-1;
+
+    background-color: lightgray;
+    opacity:0.3;
+
+}
+
+#content{
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    width: 900px;
+    height: auto;
+
+    z-index:1;
+}
+
+#searchArea{
+    position:relative;
+    margin:auto;
+
+    width: 450px;
+    height: auto;
+
+    background-color:white;
+    border: 3px solid tomato;
+    border-radius:10px;
+}
+.searchCondition{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+
+    width:100%;
+    height:50px;
+    line-height:50px;
+}
+.conditionName{
+    width: 100px;
+    height:100%;
+    text-align:center;
+}
+.conditionValue{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-left: 50px;
+    width: 300px;
+    height:100%;
+    text-align:center;
+}
+#calendarDiv{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+
+    width:64px;
+    height:100%;
+
+}
+#calendarIcon{
+    width:50px;
+    height:100%;
+
+    background-image: url('/image/calendarIcon.png');
+    background-repeat: no-repeat;
+    background-size:contain;
+}
+
+#regDate{
+    width:150px;
+    height:100%;
+
+    text-align:center;
+}
+
+#searchButton{
+    background-color:tomato;
+    color:white;
+    border: 1px solid tomato;
+    border-radius: 5px;
+
+    width:100px;
+    height:30px;
+}
+
+input {
+    display:block;
+
+    margin:auto;
+    margin-top:10px;
+    width: 200px;
+    height: 30px;
+
+    line-height:30px;
+    text-align: center;
+
+    border-radius:10px;
+    border:1px solid lightgray;
+    box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.3);
+
+    background-color: rgba(234, 234, 234, 0.3);
+
+    outline:none;
+}
+input:focus{
+    border: 2px solid lightsalmon;
+}
+
+
+#pagingResults{
+    position:relative;
+    margin:auto;
+    margin-top: 50px;
+
+    width: 900px;
+    height: auto;
+
+}
+
+#userResults{
+    position: relative;
+    margin: auto;
+
+    width: 800px;
+    height: auto;
+
+    text-align: center;
+
+    border: 3px solid tomato;
+    border-radius:10px;
+    overflow:hidden; /*tr,td 삐져나온 테두리 숨김*/
+
+    background-color: white;
+    z-index:1;
+}
+
+
+table{
+    margin:auto;
+
+    border-collapse:collapse;
+    border-style:hidden;  /* 두께 맞추기 위해 border-style 숨김 */
+}
+table tr:nth-child(1){
+    background-color:tomato;
+}
+
+table th,td{
+    width: 100px;
+    height: 50px;
+
+    border: 1px solid gray;
+
+    text-align: center;
+    vertical-align: middle;
+}
+
+td:nth-child(6){
+    width:300px;
+}
+
+
+#pagingArea{
+    /*inline-block은 block처럼 박스이지만 inline처럼 내용 크기에 맞는 width*/
+    /*display:inline-block;*/
+
+    margin: auto;
+    margin-bottom:50px;
+
+    /*width: 500px;*/
+    width: fit-content;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index:1;
+}
+#pagingArea button{
+    display:block;
+
+    margin:auto;
+    margin-top:20px;
+    margin-left:20px;
+
+    width: 30px;
+    height: 30px;
+
+    text-align: center;
+    /*vertical-align: middle;*/
+    line-height:30px;
+
+    color:white;
+    background-color:tomato;
+    border: 1px solid tomato;
+    border-radius: 5px;
+}
+#previous{
+    background-color: darkred !important;
+    border: 1px solid darkred !important;
+}
+#next{
+    background-color: darkred !important;
+    border: 1px solid darkred !important;
+}
+.buttonClicked{
+    background-color : darksalmon !important;
+    border : 1px solid darksalmon !important;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>남기정_로그인완료_검색결과페이징</title>
+</head>
+<body>
+<div id="background"></div>
+
+<div id="content">
+
+  <div id="searchArea">
+    <div class="searchCondition">
+      <div class="conditionName"> ID </div>
+      <div class="conditionValue">
+        <input type="text" id="id" name="id" placeholder="id"/>
+      </div>
+    </div>
+
+    <div class="searchCondition">
+      <div class="conditionName"> NAME </div>
+      <div class="conditionValue">
+        <input type="text" id="name" name="name" placeholder="name"/>
+      </div>
+    </div>
+
+    <div class="searchCondition">
+      <div class="conditionName"> LEVEL </div>
+      <div class="conditionValue">
+        <input list="levelList" id="level" name="level" placeholder="레벨 선택"/>
+        <datalist id="levelList">
+          <option value="A"></option>
+          <option value="B"></option>
+          <option value="C"></option>
+          <option value="D"></option>
+          <option value="E"></option>
+          <option value="F"></option>
+          <option value="G"></option>
+          <option value="H"></option>
+          <option value="I"></option>
+          <option value="J"></option>
+          <option value="K"></option>
+          <option value="L"></option>
+          <option value="M"></option>
+          <option value="N"></option>
+          <option value="O"></option>
+          <option value="P"></option>
+          <option value="Q"></option>
+          <option value="R"></option>
+          <option value="S"></option>
+          <option value="T"></option>
+          <option value="U"></option>
+          <option value="V"></option>
+          <option value="W"></option>
+          <option value="X"></option>
+          <option value="Y"></option>
+          <option value="Z"></option>
+        </datalist>
+      </div>
+    </div>
+
+    <div class="searchCondition">
+      <div class="conditionName"> DESC </div>
+      <div class="conditionValue"> <input type="text" id="desc" name="desc" placeholder="desc"/> </div>
+    </div>
+
+    <div class="searchCondition">
+      <div class="conditionName"> RegDate </div>
+      <div class="conditionValue">
+        <div id="calendarDiv">
+          <div id="calendarIcon"></div>
+        </div>
+        <div id="regDate" >
+          <div>날짜 선택</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchCondition">
+      <div class="conditionName">
+        <button id="searchButton">검색</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="pagingResults">
+    <div id="userResults">
+      <table id="userResultsTable">
+        <tr>
+          <th> ID </th>
+          <th> PWD </th>
+          <th> NAME </th>
+          <th> LEVEL </th>
+          <th> DESC </th>
+          <th> REG_DATE </th>
+        </tr>
+
+        <th:block th:if="${#lists.isEmpty(userPagingResultDTO.userDTOList)}">
+          <tr>
+            <td colspan="6">회원 정보가 없습니다.</td>
+          </tr>
+        </th:block>
+
+        <th:block th:each="userDTO : ${userPagingResultDTO.userDTOList}" th:if="${!#lists.isEmpty(userPagingResultDTO.userDTOList)}">
+          <tr>
+            <td th:text="${userDTO.id}"></td>
+            <td th:text="${userDTO.pwd}"></td>
+            <td th:text="${userDTO.name}"></td>
+            <td th:text="${userDTO.level}"></td>
+            <td class="desc" th:data-name="${userDTO.desc}"></td>
+            <td class="regDate" th:data-name="${userDTO.regDate}"></td>
+          </tr>
+        </th:block>
+
+      </table>
+    </div>
+
+    <div id="pagingArea">
+      <th:block th:if="${userPagingResultDTO.buttonBlockDTO.previousBlock}">
+        <button id="previous" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.previousBlockPageNumber}"><</button>
+      </th:block>
+      <th:block th:each="i : ${#numbers.sequence(userPagingResultDTO.buttonBlockDTO.currentBlockFirstNumber, userPagingResultDTO.buttonBlockDTO.currentBlockLastNumber)}">
+        <button class="pagingButton" th:data-name="${i}" th:text="${i}"></button>
+      </th:block>
+      <th:block th:if="${userPagingResultDTO.buttonBlockDTO.nextBlock}">
+        <button id="next" class="pagingButton" th:data-name="${userPagingResultDTO.buttonBlockDTO.nextBlockPageNumber}">></button>
+      </th:block>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

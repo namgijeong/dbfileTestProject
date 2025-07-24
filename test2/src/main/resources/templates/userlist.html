@@ -244,8 +244,10 @@
         });
 
         searchButton.addEventListener('click', function(e) {
-            searchAjax(e, formatedDate);
+            //searchAjax(e, formatedDate);
             //searchAjax(e, formatedStartDate, formatedEndDate);
+
+            searchUsersAndGoPage(e, formatedDate);
         });
 
     });
@@ -374,7 +376,93 @@
     //
     // }
 
-    function searchAjax(event, formatedDate) {
+    /**
+     * 검색 결과를 ajax로 불러온다.
+     * @param event
+     * @param formatedDate
+     */
+    // function searchAjax(event, formatedDate) {
+    //     event.preventDefault();
+    //
+    //     let id = document.getElementById("id").value;
+    //     let name = document.getElementById("name").value;
+    //     let level = document.getElementById("level").value;
+    //     let desc = document.getElementById("desc").value;
+    //     let pageNumber = 1;
+    //
+    //     //만약 input에 사용자가 option에 있는 값대신 임의로 입력할 수 있다.
+    //     let dataList = document.getElementById("levelList");
+    //     let options = dataList.querySelectorAll("option");
+    //     let inputValid = false;
+    //
+    //     for (option of options) {
+    //         if (option.value === level) {
+    //             inputValid = true;
+    //             break;
+    //         }
+    //     }
+    //
+    //     if (inputValid === false) {
+    //         level = null;
+    //     }
+    //
+    //     console.log("id: "+id);
+    //     console.log("name : "+name);
+    //     console.log("level: "+level);
+    //     console.log("desc: "+desc);
+    //     console.log("reg_date: "+formatedDate);
+    //
+    //     //만약 사용자가 입력을 안했으면 null로 바꾸기
+    //     //이미 위에서 level과 formatedDate는 null처리가 되어있다.
+    //     id = makeBlankToNull(id);
+    //     name = makeBlankToNull(name);
+    //     desc = makeBlankToNull(desc);
+    //
+    //     const searchData = {
+    //         id: id,
+    //         name: name,
+    //         level: level,
+    //         desc: desc,
+    //         //regDate : formatedDate,
+    //         reg_date : formatedDate,
+    //         pageNumber : pageNumber
+    //     };
+    //
+    //     fetch("/user/search/userList", {
+    //         method: "POST",
+    //         headers: {"Content-Type": "application/json"},
+    //         body: JSON.stringify(searchData)
+    //     }) .then(async response => {
+    //         /*
+    //             그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+    //             응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+    //          */
+    //         if (response.ok) {
+    //             const searchAnswer  = await response.json();
+    //
+    //             console.log("검색 조회 성공")
+    //             makePagingTable(searchAnswer.content.userDTOList);
+    //             makePagingButton(searchAnswer.content.buttonBlockDTO);
+    //             //일단 1페이지만
+    //             //makeCurrentButtonBlur(clickedNumber);
+    //         } else {
+    //             const errorMessage = await response.json();
+    //             console.log("errorMessage : "+errorMessage);
+    //
+    //         }
+    //     }).catch(error => {
+    //         console.log("error : "+error);
+    //     })
+    //
+    // }
+
+
+    /**
+     * 검색 결과가 조건에 맞는지 검사하여 처리하고, 검색 결과를 객체로 페이지이동하며 보낸다.
+     * @param event
+     * @param formatedDate
+     */
+    function searchUsersAndGoPage(event, formatedDate) {
         event.preventDefault();
 
         let id = document.getElementById("id").value;
@@ -416,36 +504,33 @@
             name: name,
             level: level,
             desc: desc,
-            //regDate : formatedDate,
-            reg_date : formatedDate,
+            regDate : formatedDate,
+            //reg_date : formatedDate,
             pageNumber : pageNumber
         };
 
-        fetch("/user/search/userList", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(searchData)
-        }) .then(async response => {
-            /*
-                그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
-                응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
-             */
-            if (response.ok) {
-                const searchAnswer  = await response.json();
+        // form 생성
+        let url ="/user/search/userList/page";
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = url;
 
-                console.log("검색 조회 성공")
-                makePagingTable(searchAnswer.content.userDTOList);
-                makePagingButton(searchAnswer.content.buttonBlockDTO);
-                //일단 1페이지만
-                //makeCurrentButtonBlur(clickedNumber);
-            } else {
-                const errorMessage = await response.json();
-                console.log("errorMessage : "+errorMessage);
-
+        // 데이터를 폼의 hidden input으로 추가
+        // 하지만 ajax와 다르게 input 태그 value 빈값이면 null로 가지 않는다
+        // input 태그에 null을 넣어도, JavaScript 에서는 해당 속성이 빈 문자열('')로 설정
+        for (let key in searchData) {
+            if (searchData.hasOwnProperty(key)) {
+                let input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = searchData[key];
+                form.appendChild(input);
             }
-        }).catch(error => {
-            console.log("error : "+error);
-        })
+        }
+
+        // form을 body에 추가하고 제출
+        document.body.appendChild(form);
+        form.submit();
 
     }
 
