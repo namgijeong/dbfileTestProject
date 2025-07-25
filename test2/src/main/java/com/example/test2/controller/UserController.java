@@ -89,6 +89,7 @@ public class UserController {
     //이 방식은 Jackson을 거치지 않고, Spring이 내부적으로 직접 타입을 변환
     //즉, 파라미터 이름만 DTO 필드명과 정확히 일치하면, 자동으로 변환
     //이때 @JsonFormat, @JsonProperty는 무시
+    //만약 아무것도 입력하지 않고 검색했다면 => SearchUserDTO(id=, pwd=null, name=, level=, desc=, pageNumber=1, regDate=null)
     public String searchUserListAndGoPage(@ModelAttribute SearchUserDTO searchUserDTO, Model model) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
         UserPagingResultDTO<SearchUserDTOResponse> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
