@@ -75,7 +75,14 @@
           <div id="calendarIcon"></div>
         </div>
         <div id="regDate" >
-          <div id="regDateSub" th:data-name="${searchUserDTO.regDate}"></div>
+
+          <th:block th:if="${searchUserDTO.regDate}">
+            <div class="regDateSub" th:data-name="${searchUserDTO.regDate}"></div>
+          </th:block>
+          <th:block th:unless="${searchUserDTO.regDate}">
+            <div class="regDateSub">날짜 선택</div>
+          </th:block>
+
         </div>
       </div>
     </div>
@@ -184,17 +191,23 @@
 
     //일단 검색조건들도 검색창에 유지할수있도록
     //하지만 날짜같은 경우 형식 변환을 하여 붙여넣어야한다.
-    let regDate2 = document.getElementById("regDateSub");
-    let regDate2OriginalText = regDate2.dataset.name;
+    let regDates2 = document.getElementsByClassName("regDateSub");
+    for (regDate2 of regDates2) {
+      let regDate2OriginalText = regDate2.dataset.name;
 
-    console.log("regDate2OriginalText : "+regDate2OriginalText);
+      console.log("regDate2OriginalText : "+regDate2OriginalText);
 
-    //만약 전에 입력했었던 상태가 아니면
-    let regDate2CleanText = makeTimestampToString(regDate2OriginalText);
-    regDate2.textContent = regDate2CleanText;
+      //만약 전에 입력했었던 상태라면
+      if (regDate2OriginalText) {
+        let regDate2CleanText = makeTimestampToString(regDate2OriginalText);
+        regDate2.textContent = regDate2CleanText;
 
-    //이때 또 다른 설정을 안하고 다음 검색을 할 수 있으므로 다음 검색에 쓰이는 변수에 미리 담아준다.
-    formatedDate = plusZeroTime(regDate2CleanText);
+        //이때 또 다른 설정을 안하고 다음 검색을 할 수 있으므로 다음 검색에 쓰이는 변수에 미리 담아준다.
+        formatedDate = plusZeroTime(regDate2CleanText);
+      }
+
+    }
+
 
     //easepick 라이브러리 사용
     const picker = new easepick.create({

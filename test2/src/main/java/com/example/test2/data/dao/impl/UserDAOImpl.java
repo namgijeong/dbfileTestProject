@@ -86,7 +86,7 @@ public class UserDAOImpl implements UserDAO {
         return count;
     }
 
-    //querydsl 버전
+    //querydsl 버전 조건에 맞는 페이지별 회원 목록
     @Override
     public List<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber) {
         //페이지는 0부터 시작
