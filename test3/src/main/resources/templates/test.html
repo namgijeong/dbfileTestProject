@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dhtmlx8기초</title>
+    <style>
+        /*!important를 사용하는 이유는 DHTMLX의 기본 스타일이 우선순위가 높기 때문*/
+        .custom-button .dhx_button{
+            width: 100px !important;
+            height: 100px !important;
+            padding: 0 !important;
+        }
+        .editDuplicateButton {
+            margin-bottom: 10px;
+        }
+        .duplicateButton>button {
+            margin-left: 10px;
+            margin-top: -10px;
+        }
+        .contentsTitleWrap>.dhx_layout-columns {
+            height: calc(100% - 47px) !important;
+        }
+
+        .dhx_form{
+            border: none;
+        }
+
+        .dhx_layout-line.dhx_layout-rows>.dhx_layout-cell {
+            border: none;
+        }
+        .marginLeft10 {
+            margin-left: 10px;
+        }
+        .marginBottom10 {
+            margin-bottom: 10px;
+        }
+        .borderAll {
+            border: 1px solid #CECECE;
+        }
+        .overflowAuto {
+            overflow: auto;
+        }
+        .dhx_list-item {
+            padding: 3px 5px;
+        }
+        .treeButton>button{
+            width: 100%;
+        }
+        .dhx_grid-body {
+            overflow-x: hidden;
+        }
+    </style>
+    <script type="text/javascript" src="/dhtmlx8/codebase/suite.js"></script>
+    <link rel="stylesheet" href="/dhtmlx8/codebase/suite.css">
+</head>
+<script type="text/javascript" src="/js/test.js"></script>
+<body onload="init()">
+<div id="layout" style="height: 100%;"></div>
+</body>
+
+</html>
