@@ -195,8 +195,12 @@ const settingForm = () => {
 }
 
 const findSmsUsage = (from) =>{
+	//레이아웃 컨테이너에 진행률 표시줄을 표시합니다.
+	//진행률 표시줄은 사용자에게 콘텐츠가 로드 중이거나 업데이트 중임을 알리는 시각적 구성 요소입니다.
 	layout.progressShow();
 
+	//form.setValue() => 폼 전체의 필드 값을 한 번에 설정할 때 사용
+	//내부적으로 각 name 속성을 기준으로 해당 필드를 찾아 값을 설정
 	form.setValue({
 	    "from": (GRIDLIMIT*from), 
 	    "limit": GRIDLIMIT,
@@ -205,9 +209,13 @@ const findSmsUsage = (from) =>{
 	});
 
 	if(pagination != null){
+		// //레이아웃 인스턴스를 제거하고 점유된 리소스를 해제합니다.
 		pagination.destructor();
 	}
-	
+
+	// form.getValue()
+	//폼 전체의 값을 객체 형태로 반환
+	// 각 name 속성을 키로 갖는 JSON 형식
 	searchData = form.getValue();
 	
 	$.ajax({
@@ -215,6 +223,8 @@ const findSmsUsage = (from) =>{
 		contentType: 'application/json',
 		data: form.getValue(),
 		method: "GET",
+		// async: true => 비동기 요청을 보냄
+		//콜백 함수 (success, error, 등)는 요청 완료 후 호출
 		async: true,
 		error: (e) => {
 			let status = e.status;
@@ -241,20 +251,37 @@ const findSmsUsage = (from) =>{
 						
 						noneDataGrid(grid);
 					}else{
+						//DHTMLX Suite 위젯의 일부 API 메서드는 위젯이 페이지에 렌더링된 후에 구현된다는 점을 이해해야 합니다.
+						// dhx.awaitRedraw helper returns a promise
 						dhx.awaitRedraw().then(() => {
 							grid.data.parse(data.payload.result);
 							$(".dhx_grid-body").removeClass("noneData");
 						});
 					}
+					// dhx.Pagination은 내부적으로 grid.data (즉, 전체 데이터 소스)를 참조해서:
+					// 전체 데이터 개수를 파악하고,
+					// pageSize에 따라 자동으로 페이지 나눔을 계산하며,
+					// 현재 페이지에 표시할 데이터를 자동으로 계산해서 그리드에 보여줍니다.
 					pagination = new dhx.Pagination(null, {
+						//dhx_widget--bordered => 테두리 다 그리기
+						//dhx_widget--no-border_top => 윗부분 테두리 없애기
 					    css: "pagination dhx_widget--bordered dhx_widget--no-border_top",
-					    data: grid.data,
-					    pageSize: GRIDLIMIT
+					    //grid의 data => 위에서 parse로 설정한 새로운 데이터에 접근
+						data: grid.data,
+
+						//page => The index of the initial page set in the pagination
+					    //pageSize => 선택 사항. 관련 위젯의 페이지당 표시되는 항목 수
+						pageSize: GRIDLIMIT
 					});
 		
 					layout.getCell("pagination").attach(pagination);
+					//setPage => 관련 위젯에 활성 페이지를 설정
 					pagination.setPage(from);
-		
+
+					//활성 페이지 변경
+					//change: (index: number, previousIndex: number) => void;
+					//index: number 새로 활성화된 페이지의 인덱스
+					//previousIndex: number- 이전에 활성화된 페이지의 인덱스
 					pagination.events.on("change", (index, previousIndex) => {
 						findSmsUsage(index);
 					});
