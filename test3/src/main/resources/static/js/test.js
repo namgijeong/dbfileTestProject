@@ -32,7 +32,7 @@ const createLayout = () => {
         //셀 사이에 라인을 넣는다
         type: "line",
         css: "contentsTitleWrap",
-        header: top.menuTitle,
+        //header: top.menuTitle,
         cols: [
             {
                 id: "main-content",
@@ -48,7 +48,7 @@ const createLayout = () => {
                         id: "grid",
                         padding: 10,
                         width:500,
-                        height: 500,
+                        height: 200,
                     },
                 ]
             },
@@ -74,6 +74,9 @@ const settingForm = () => {
                         type: "spacer"
                     },
                     {
+                        //name => 폼 데이터를 다룰 때 데이터 객체의 key 역할
+                        //form.getValue();
+                        //=> { username: "홍길동" }
                         name: "addAdmin",
                         id: "addAdmin",
                         type: "button",
@@ -91,6 +94,7 @@ const settingForm = () => {
         ]
     });
 
+    //클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
     form.events.on("click", (id, event) => {
         switch (id) {
             //이걸 클릭했을때
@@ -149,7 +153,7 @@ const settingGrid = () => {
         columns: [
             //id: "loginId" → 각 데이터 행(row)의 loginId 필드 값을 이 컬럼에 표시
             //header: [{ text: "Login ID" }] → 헤더 셀에 "Login ID" 라는 텍스트 표시
-            { id: "loginId", header: [{ text: "로그인 아이디"}] },
+            { id: "loginId", header: [{ text: "로그인 아이디"}] ,width:200},
             { id: "adminName", header: [{ text: "관리자 이름"}] },
             { id: "levelName", header: [{ text: "레벨 이름" }] },
             { hidden: true, id: "adminId", header: [{ text: '' }] },
@@ -162,7 +166,14 @@ const settingGrid = () => {
 
         //사방으로 border가 있다
         css: "dhx_widget--bordered",
+
+        //layout에 정의된 width, height 최우선 (레이아웃이 부모니까)
+        //grid 자체의 width, height =>  레이아웃이 사이즈를 안 정할 때만 반영
+        height: 200,
+        width: 300,
+
         //그리드의 열을 그리드 크기에 맞게 조정
+        //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
         autoWidth: true,
         //열 머리글을 클릭했을 때 정렬이 활성화되는지 여부를 정의
         sortable: false,
@@ -199,15 +210,31 @@ const settingGrid = () => {
     //value -> 실제로는 column 객체
     // 변수명을 잘못 지었을 뿐
     // JavaScript는 인자 순서(position) 에 따라 전달
-    grid.events.on("cellClick", (event, value) => {
-        let adminId = event.adminId;
-        let tenantId = event.tenantId;
-        
-        //결과적으로는 행의 어느부분을 클릭해도 event.adminId가 출력된다
+    // grid.events.on("cellClick", (event, value) => {
+    //     let adminId = event.adminId;
+    //     let tenantId = event.tenantId;
+    //
+    //     //결과적으로는 행의 어느부분을 클릭해도 event.adminId가 출력된다 => row 객체니까
+    //     if (adminId) {
+    //         //openEditor(event);
+    //         console.log("adminId : ",adminId);
+    //     }
+    // });
+
+
+    grid.events.on("cellClick", (row, column, event) => {
+        let adminId = row.adminId;
+        let tenantId = row.tenantId;
+
         if (adminId) {
-            //openEditor(event);
             console.log("adminId : ",adminId);
         }
+
+        if (tenantId) {
+            console.log("tenantId : ",tenantId);
+        }
+
+        console.log("event.target.textContent : "+event.target.textContent);
     });
 
     layout.getCell("grid").attach(grid);

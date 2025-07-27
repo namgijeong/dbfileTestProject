@@ -78,15 +78,36 @@ const settingForm = () => {
 				cols: [
 					{
 			            name: "smsUsageStartDate",
+
+						//DatePicker는 날짜를 선택할 수 있는 달력 UI 위젯
 			            type: "datepicker",
+
 			            label: language.label_startDate,
 			            width: 220,
+
+						//defines the position of a label: "left"|"top"
 			            labelPosition: "left",
+
+						//타임피커에 닫기 및 저장 버튼이 있는지 여부를 정의
+						//controls: true (기본값) [확인/취소/지우기 버튼 표시됨]
+						//controls: false [버튼 없이 달력만 표시됨]
 			            controls: false,
+
+						//(선택 사항) 시간 선택기의 시간 형식을 정의합니다: 12시간 또는 24시간(기본값은 12 또는 24)
 			            timeFormat: 24,
+
+						//dhx.Form 안에 포함된 각 form item(= control 요소)들의 레이아웃 옵션
+						// "cols"	라벨과 입력 필드를 가로로 나란히 배치 (기본값)
+						// "rows"	라벨을 위에, 입력 필드를 세로로 쌓아서 배치
 			        	dir: "cols",
+
 			        	css: "smsUsageDate",
+
+						//(선택 사항) 달력의 날짜 형식을 정의합니다. 기본값은 "%d/%m/%y"입니다. 날짜 형식에는 구분 기호(공백 또는 기호)가 포함되어야 합니다. 그렇지 않으면 오류가 발생합니다.
 			        	dateFormat: "%Y-%m-%d",
+
+						//(선택 사항) 날짜 선택기의 값
+						//value는 datepicker의 기본 값(선택된 날짜) 을 지정하는 속성
 			        	value: getStringToDate(new Date())
 			        },
 			        {
@@ -145,7 +166,17 @@ const settingForm = () => {
 			}
 		]
 	});
-	
+
+	//getItem => 폼 컨트롤 객체에 대한 액세스를 제공
+	//폼 컨트롤의 이름 또는 해당 ID(컨트롤의 구성에 이름 속성이 정의되지 않은 경우)
+
+	//form.getItem("smsUsageStartDate").getValue()
+	//해당 id 또는 name을 가진 단일 필드 컴포넌트를 가져온 후
+	//그 필드의 getValue() 메서드를 호출
+
+	// form.getValue()
+	//폼 전체의 값을 객체 형태로 반환
+	// 각 name 속성을 키로 갖는 JSON 형식
 	form.getItem("findSmsUsage").events.on("click", (event) => {
 		let startDate = form.getItem("smsUsageStartDate").getValue();
 		let endDate = form.getItem("smsUsageEndDate").getValue();
