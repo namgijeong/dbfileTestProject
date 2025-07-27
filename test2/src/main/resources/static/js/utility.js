@@ -1,8 +1,12 @@
 
 /**
- * Ajax json format 응답일때 자바스크립트 객체 Date로 변환한다.
+ * Ajax json format 응답일때 (localdatetime 응답)  자바스크립트 객체 Date로 변환한다.
  * @param dateString 문자열
  * @returns {Date} 객체
+ * 주의사항
+ * Java에서 LocalDateTime을 사용하면 서버에서 UTC 기준으로 시간을 보냈다고 해도, LocalDateTime 자체는 타임존을 가지지 않기 때문에 그대로 시간을 해석
+ * Java에서 Timestamp를 사용하면 UTC 기준으로 전달되므로, JavaScript에서 로컬 타임존(예: KST) 기준으로 해석할 때 9시간 차이가 발생
+ * JavaScript의 Date 객체는 기본적으로 **로컬 타임존(KST)**을 기준으로 처리되기 때문에, 서버에서 UTC 시간을 보내면 9시간 차이가 발생
  */
 function parseDate(dateString) {
     const [datePart, timePart] = dateString.split(" ");
@@ -27,6 +31,38 @@ function parseDate(dateString) {
     return date;
 }
 
+/**
+ * Ajax json format 응답일때 (timestamp응답) 자바스크립트 객체 Date로 변환한다.
+ * @param dateString 문자열
+ * @returns {Date} 객체
+ * 주의사항
+ * Java에서 LocalDateTime을 사용하면 서버에서 UTC 기준으로 시간을 보냈다고 해도, LocalDateTime 자체는 타임존을 가지지 않기 때문에 그대로 시간을 해석
+ * Java에서 Timestamp를 사용하면 UTC 기준으로 전달되므로, JavaScript에서 로컬 타임존(예: KST) 기준으로 해석할 때 9시간 차이가 발생
+ * JavaScript의 Date 객체는 기본적으로 **로컬 타임존(KST)**을 기준으로 처리되기 때문에, 서버에서 UTC 시간을 보내면 9시간 차이가 발생
+ */
+function parseTimeStampDate(dateString) {
+    const [datePart, timePart] = dateString.split(" ");
+    const [year, month, day] = datePart.split("-");
+    const [hour, minute, second] = timePart.split(":");
+
+
+    const date = new Date(Date.UTC(
+        parseInt(year),
+        parseInt(month) - 1, // JS month is 0-based
+        parseInt(day),
+        parseInt(hour),
+        parseInt(minute),
+        parseInt(second)
+    ));
+
+    console.log(date.getFullYear());
+    console.log(date.getMonth() + 1); // (주의: 0-based)
+    console.log(date.getDate());
+    console.log(date.getHours());
+    console.log(date.getMinutes());
+
+    return date;
+}
 
 /**
  * 자바스크립트 객체 Date의 각각 연/월/일 부분을 분리 후, 한글을 붙인다.

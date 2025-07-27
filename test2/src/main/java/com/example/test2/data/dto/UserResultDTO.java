@@ -1,5 +1,6 @@
 package com.example.test2.data.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,10 +28,26 @@ public class UserResultDTO {
     /*로그인 필드 에러가 어디에서 일어났는지 */
     private LoginField loginField;
 
+//    private ErrorField  errorField;
+
     /*로그인 성공시 user정보를 가져오기 위해 */
     private UserDTO userDTO;
 
     public UserResultDTO() {}
+
+//    public void setErrorField(ErrorField errorField) {
+//        this.errorField = errorField;
+//
+//    }
+//
+//
+//    @AllArgsConstructor
+//    public static class ErrorField {
+//
+//        String message;
+//        LoginField loginField;
+//
+//    }
 
     private UserResultDTO(Builder builder) {
         this.successFlag = builder.successFlag;

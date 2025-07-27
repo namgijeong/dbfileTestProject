@@ -166,28 +166,32 @@ public class UserServiceImpl implements UserService {
     public UserResultDTO userLogin(String id, String pwd) {
         Optional<User> optionalUser =  userDAO.select(id);
 
-        User user = null;
+//        User user = null;
         UserResultDTO userResultDTO = new UserResultDTO();
         userResultDTO.setSuccessFlag(false);
 
-        if (optionalUser.isPresent()) { //아이디가 맞으면
-            user = optionalUser.get();
-        }
+//        if (optionalUser.isPresent()) { //아이디가 맞으면
+//            user = optionalUser.get();
+//        }
 
-        if (user == null) {
+        if (optionalUser.isEmpty()) {
             userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
             userResultDTO.setLoginField(LoginField.ID);
-        } else { // 아이디로 조회하기 성공하여 아이디는 맞은 상태
-            boolean isSuccess = user.getPwd().equals(pwd);
-            userResultDTO.setSuccessFlag(isSuccess);
-            if (!isSuccess) { //비밀번호 틀림
-                userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
-                userResultDTO.setLoginField(LoginField.PWD);
-            }
-
-            UserDTO userDTO = new UserDTO(user);
-            userResultDTO.setUserDTO(userDTO);
+            return userResultDTO;
         }
+
+        // 아이디로 조회하기 성공하여 아이디는 맞은 상태
+        User user = optionalUser.get();
+        boolean isSuccess = user.getPwd().equals(pwd);
+        userResultDTO.setSuccessFlag(isSuccess);
+        if (!isSuccess) { //비밀번호 틀림
+            userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
+            userResultDTO.setLoginField(LoginField.PWD);
+        }
+
+        UserDTO userDTO = new UserDTO(user);
+        userResultDTO.setUserDTO(userDTO);
+
 
         return userResultDTO;
     }

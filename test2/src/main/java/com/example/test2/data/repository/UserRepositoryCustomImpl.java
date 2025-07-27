@@ -1,28 +1,29 @@
 package com.example.test2.data.repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import com.example.test2.data.dto.QSearchUserDTOResponse;
-import com.example.test2.data.entity.QUser;
-import com.querydsl.core.types.Expression;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import com.example.test2.data.dto.SearchUserDTO;
 import com.example.test2.data.dto.SearchUserDTOResponse;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
+import com.example.test2.data.dto.QSearchUserDTOResponse;
+import com.example.test2.data.entity.QUser;
+import com.querydsl.core.types.Expression;
 
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class UserRepositoryCustomImpl implements UserRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -70,6 +71,8 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
             //gt(): A > ?
             //loe(): A <= ?
             //lt(): A < ?
+            log.info("Timestamp startDate : "+startDate);
+            log.info("Timestamp endDate : "+endDate);
             booleanBuilder.and(user.regDate.goe(startDate)); // 이상
             booleanBuilder.and(user.regDate.lt(endDate)); //  미만
         }

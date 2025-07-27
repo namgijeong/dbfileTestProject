@@ -34,6 +34,11 @@ public class LoginController {
         return "login";
     }
 
+    @GetMapping("/test")
+    public String showTest(){
+        return "test";
+    }
+
     /**
      * id, password가 맞으면 유저리스트 화면으로 이동, 틀리면 다시 로그인 페이지로 이동
      * @param id

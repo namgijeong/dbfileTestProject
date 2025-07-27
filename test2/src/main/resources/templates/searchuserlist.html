@@ -504,7 +504,7 @@
 
         //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
         console.log('내용: ' + userDTO.reg_date + '\n');
-        const date = parseDate(userDTO.reg_date);
+        const date = parseTimeStampDate(userDTO.reg_date);
         let regDateText = makeRegDate(date);
         console.log('내용: ' + regDateText + '\n');
 
