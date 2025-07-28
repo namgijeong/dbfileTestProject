@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>남기정_파일올리기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box !important;
+
+            font-family: "Hahmlet", serif;
+        }
+
+        .mainContent{
+            margin:auto;
+            margin-top : 50px;
+            text-align: center;
+        }
+        .fileForm{
+            margin:auto;
+            margin-bottom:50px;
+
+            text-align: center;
+        }
+
+
+        .dbFile {
+            display:block;
+
+            margin:auto;
+            margin-top:20px;
+
+            width: 200px;
+            height: 50px;
+
+            text-align: center;
+        }
+        .dbFileInput {
+            display:block;
+
+            margin:auto;
+
+            width: 200px;
+            height: 50px;
+
+            text-align: center;
+        }
+
+
+        input[type="file"]::file-selector-button{
+            background-color:tomato;
+            color:white;
+            border: 1px solid tomato;
+            border-radius: 5px;
+        }
+        /*!important를 사용하는 이유는 DHTMLX의 기본 스타일이 우선순위가 높기 때문*/
+        .submitButton .dhx_button{
+            display:block !important;
+
+            margin:auto !important;
+            margin-top: 20px !important;
+            padding: 0px !important;
+            width: 80px !important;
+            height: 50px !important;
+            text-align: center !important;
+
+            background-color:tomato !important;
+            color:white !important;
+            border: 1px solid tomato !important;
+            border-radius: 5px !important;
+        }
+
+
+        #responseDiv{
+            margin:auto;
+            margin-bottom:50px;
+
+            width: 1000px;
+            height: 500px;
+            text-align: center;
+        }
+        #responseDiv h1{
+            margin:auto;
+            width:500px;
+            height:50px;
+            text-align:center;
+        }
+        #responseDiv h3{
+            margin:auto;
+            width:500px;
+            height:50px;
+            text-align:center;
+        }
+        #responseDiv h5{
+            margin:auto;
+            width:700px;
+            height:50px;
+            text-align:center;
+        }
+        #responseDiv button{
+            display:block;
+
+            margin:auto;
+            margin-bottom:100px;
+            width: 80px;
+            height: 50px;
+            text-align: center;
+
+            background-color:tomato;
+            color:white;
+            border: 1px solid tomato;
+            border-radius: 5px;
+        }
+
+
+        table{
+            margin:auto;
+            border-collapse:collapse;
+        }
+        table tr:nth-child(1){
+            background-color:tomato;
+        }
+        table th,td{
+            width: 100px;
+            height: 50px;
+            text-align: center;
+            border: 1px solid #000;
+
+            vertical-align: middle;   /* 가운데 */
+        }
+
+        td:nth-child(6){
+            width:300px;
+        }
+    </style>
+    <script type="text/javascript" src="/dhtmlx8/codebase/suite.js"></script>
+    <link rel="stylesheet" href="/dhtmlx8/codebase/suite.css">
+</head>
+<script type="text/javascript" src="/js/form.js"></script>
+<body onload="init()">
+<div id="layout" style="height: 100%;"></div>
+</body>
+</html>
