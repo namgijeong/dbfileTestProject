@@ -12,6 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class LoginController {
 
+    /**
+     * 로그인 화면으로 이동한다.
+     * @return 로그인 화면을 반환한다.
+     */
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
+    }
+
+
     @GetMapping("/test")
     public String showTest(){
         return "test";

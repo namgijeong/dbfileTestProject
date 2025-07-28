@@ -21,7 +21,7 @@ const createLayout = () => {
                 css: "mainContent",
                 width:500,
                 height:700,
-                // header: BUSINESS_NAME,
+
                 rows: [
                     {
                         id: "fileForm",
