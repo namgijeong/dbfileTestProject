@@ -64,30 +64,6 @@
     }
 
 
-    #checkDiv{
-      margin:auto;
-
-      width:500px;
-      height:auto;
-      text-align:center;
-    }
-    #checkDiv h3{
-      margin: auto;
-      width:500px;
-      height:auto;
-
-      text-align:center;
-      color:red;
-    }
-
-
-    .failShow{
-      display: block !important;
-    }
-    .failHidden{
-      display: none !important;
-    }
-
     .input{
         display:block !important;
 
@@ -107,34 +83,50 @@
 
       border-radius:10px !important;
       border:1px solid lightgray !important;
-      /*box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.3);*/
 
-      /*background-color: rgba(234, 234, 234, 0.3);*/
-
-      /*outline:none;*/
-    }
-    /*#loginForm input:focus{*/
-    /*  border: 3px solid lightsalmon;*/
-    /*}*/
-
-    #loginForm button{
-      display:block;
-
-      margin:auto;
-      margin-top:20px;
-      margin-bottom:20px;
-      width: 80px;
-      height: 50px;
-      text-align: center;
-
-      color:white;
-      background-color:tomato;
-      border: 1px solid tomato;
-      border-radius: 5px;
     }
 
 
+    /*!important를 사용하는 이유는 DHTMLX의 기본 스타일이 우선순위가 높기 때문*/
+    .loginSubmit .dhx_button{
+        display:block !important;
 
+        margin:auto !important;
+        margin-top: 20px !important;
+        padding: 0px !important;
+        width: 80px !important;
+        height: 50px !important;
+        text-align: center !important;
+
+        background-color:tomato !important;
+        color:white !important;
+        border: 1px solid tomato !important;
+        border-radius: 5px !important;
+    }
+
+    .checkDiv{
+        margin:auto;
+        text-align:center;
+
+        color:red;
+
+        font-weight:bold;
+        line-height:50px;
+    }
+    .itemDiv{
+        font-weight:bold;
+        font-size: 20px;
+        line-height:100px;
+
+        color:black;
+    }
+
+    .failShow{
+        display: block !important;
+    }
+    .failHidden{
+        display: none !important;
+    }
   </style>
 </head>
 <script type="text/javascript" src="/js/login.js"></script>

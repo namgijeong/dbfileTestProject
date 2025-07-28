@@ -29,7 +29,7 @@ const createLayout = () => {
                         name : "loginForm",
                         css : "loginForm",
                         width: 500,
-                        height: 600,
+                        height: 500,
                         padding:0,
                     },
 
@@ -86,6 +86,7 @@ const settingForm = () => {
                         id: "idFailDiv",
                         width: 480,
                         height: 50,
+                        css : "loginFormDivDiv",
 
                         cols:[
                             {
@@ -107,18 +108,89 @@ const settingForm = () => {
             {
                 id: "loginFormDivPwd",
                 width:490,
-                height:200,
+                height:160,
                 padding:0,
                 css : "loginFormDivDiv",
+
+                rows: [
+                    //div
+                    {
+                        width: 480,
+                        height: 100,
+
+                        cols:[
+                            {
+                                id: "pwdDiv",
+                                width:100,
+                                height: 100,
+                            },
+                            {
+                                id: "pwd",
+                                name : "pwd",
+                                type : "input",
+                                inputType : "password",
+                                css: "input",
+                                width:200,
+                                height: 50,
+                            },
+
+                        ]
+                    },
+
+                    //div
+                    {
+                        id: "pwdFailDiv",
+                        width: 480,
+                        height: 50,
+                        css : "loginFormDivDiv",
+
+                        cols:[
+                            {
+                                id: "pwdFail",
+                                width:400,
+                                height: 50,
+                            },
+
+                        ]
+
+                    }
+
+                ]
             },
 
             //div
             {
                 id: "loginFormDivCheck",
                 width:490,
-                height:200,
+                height:150,
                 padding:0,
                 css : "loginFormDivDiv",
+
+                rows: [
+                    {
+                        id:"loginSubmit",
+                        name: "loginSubmit",
+                        type: "button",
+                        submit: false,
+                        //DHTMLX가 만든 외부 래퍼 div에만 붙습니다.
+                        //하지만 실제 크기를 정하는 건 내부의 .dhx_button 엘리먼트
+                        css: "loginSubmit",
+                        width: 190,
+                        height:100,
+                        padding: 0,
+                        text: "로그인",
+                    },
+                    {
+                        id:"checkDiv",
+                        name: "checkDiv",
+
+                        css: "checkDiv",
+                        width: 400,
+                        padding: 0,
+                        height: 50,
+
+                    }
+                ]
             },
         ]
     });
@@ -134,24 +206,42 @@ const settingForm = () => {
         const idFailText = document.querySelector('[data-cell-id="idFail"] > div');
         if (idFailText) {
             idFailText.textContent = "아이디가 틀렸습니다.";
-            idFailText.style.color = "red";
-            idFailText.style.fontWeight = "bold";
-            idFailText.style.lineHeight = "50px";
-            //idFailText.style.display = "none";
+
+            idFailText.classList.add("checkDiv");
+            idFailText.classList.add("failHidden");
         }
 
-        const idDiv = document.querySelector('[data-cell-id="idDiv"] > div');
-        if(idDiv) {
-            idDiv.textContent = "ID";
-            idDiv.style.fontWeight = "bold";
-            idDiv.style.fontSize = "20px";
-            idDiv.style.color = "black";
-            idDiv.style.lineHeight = "100px";
+
+        const idDivText = document.querySelector('[data-cell-id="idDiv"] > div');
+        if(idDivText) {
+            idDivText.textContent = "ID";
+
+            idDivText.classList.add("itemDiv");
+        }
+
+        const pwdFailText = document.querySelector('[data-cell-id="pwdFail"] > div');
+        if (pwdFailText) {
+            pwdFailText.textContent = "비밀번호가 틀렸습니다.";
+
+            pwdFailText.classList.add("checkDiv");
+            pwdFailText.classList.add("failHidden");
+        }
+
+        const pwdDivText = document.querySelector('[data-cell-id="pwdDiv"] > div');
+        if(pwdDivText) {
+            pwdDivText.textContent = "PWD";
+
+            pwdDivText.classList.add("itemDiv");
+        }
+
+        const checkDivText = document.querySelector('[data-cell-id="checkDiv"] > div');
+        if(checkDivText) {
+            checkDivText.textContent = "로그인을 다시 시도해주세요.";
+
+            checkDivText.classList.add("checkDiv");
+            checkDivText.classList.add("failHidden");
         }
     });
 
 }
 
-const loginFormDivId = {
-
-}
