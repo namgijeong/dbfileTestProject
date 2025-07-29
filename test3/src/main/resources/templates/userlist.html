@@ -16,7 +16,7 @@
 
         .layout.dhx_layout {
             width: 100% !important;
-            height: 100vh !important;
+            height: 180vh !important;
 
             /*
                opacity: 0.3;을 사용하면, 해당 요소의 모든 자식 요소까지 영향
@@ -120,10 +120,109 @@
             border: 1px solid tomato !important;
             border-radius: 5px !important;
         }
+
+
+        .pagingResults{
+            position:relative;
+            margin:auto;
+            margin-top: 50px;
+        }
+
+        .userResults{
+            position: relative;
+            margin: auto;
+
+            width: 800px;
+            height: auto;
+
+            text-align: center;
+
+            border: 3px solid tomato;
+            border-radius:10px;
+            /*overflow:hidden; !*tr,td 삐져나온 테두리 숨김*!*/
+
+            background-color: white;
+            z-index:1;
+        }
+
+
+        table{
+            margin:auto;
+
+            border-collapse:collapse;
+            border-style:hidden;  /* 두께 맞추기 위해 border-style 숨김 */
+        }
+        table tr:nth-child(1){
+            background-color:tomato;
+        }
+
+        table th,td{
+            width: 100px;
+            height: 50px;
+
+            border: 1px solid gray;
+
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        td:nth-child(6){
+            width:300px;
+        }
+
+
+        #pagingArea{
+            /*inline-block은 block처럼 박스이지만 inline처럼 내용 크기에 맞는 width*/
+            /*display:inline-block;*/
+
+            margin: auto;
+            margin-bottom:50px;
+
+            /*width: 500px;*/
+            width: fit-content;
+            height: 50px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            z-index:1;
+        }
+        #pagingArea button{
+            display:block;
+
+            margin:auto;
+            margin-top:20px;
+            margin-left:20px;
+
+            width: 30px;
+            height: 30px;
+
+            text-align: center;
+            /*vertical-align: middle;*/
+            line-height:30px;
+
+            color:white;
+            background-color:tomato;
+            border: 1px solid tomato;
+            border-radius: 5px;
+        }
+        #previous{
+            background-color: darkred !important;
+            border: 1px solid darkred !important;
+        }
+        #next{
+            background-color: darkred !important;
+            border: 1px solid darkred !important;
+        }
+        .buttonClicked{
+            background-color : darksalmon !important;
+            border : 1px solid darksalmon !important;
+        }
     </style>
 </head>
 <script type="text/javascript" src="/js/userlist.js"></script>
 <body onload="init()">
-<div id="layout" style="width:100%; height: 100vh;"></div>
+<div id="layout" style="width:100%; height: 180vh;"></div>
 </body>
 </html>

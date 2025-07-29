@@ -1,13 +1,17 @@
-let layout;
-let searchForm;
-let SearchCalendar;
+var layout;
+var searchForm;
+var SearchCalendar;
+var userResults;
 
 const init = () => {
-
     createLayout();
 
     settingForm();
-    ///settingCalendar();
+    settingCalendar();
+
+    settingGrid();
+
+    awaitRedraw();
 
 }
 
@@ -36,11 +40,17 @@ const createLayout = () => {
                         padding:0,
                     },
                     {
-                        id: "pagingResults",
-                        width: 1000,
+                        id: "userResults",
+                        name : "userResults",
+                        css: "userResults",
+                        width: 810,
                         height: 500,
                         padding:0,
                     },
+                    {
+                        id:	"pagination",
+                        height: 50,
+                    }
                 ]
             },
 
@@ -82,8 +92,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "id",
-                                name : "id",
+                                id : "id1",
+                                name : "id1",
                                 css: "input",
                                 type : "input",
                                 inputType : "text",
@@ -125,8 +135,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "name",
-                                name : "name",
+                                id : "name1",
+                                name : "name1",
                                 css: "input",
                                 type : "input",
                                 inputType : "text",
@@ -169,8 +179,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "level",
-                                name : "level",
+                                id : "level1",
+                                name : "level1",
                                 css: "input",
                                 type : "combo",
                                 data : [
@@ -242,8 +252,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "desc",
-                                name : "desc",
+                                id : "desc1",
+                                name : "desc1",
                                 css: "input",
                                 type : "input",
                                 inputType : "text",
@@ -286,8 +296,10 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "regDate",
-                                name : "regDate",
+                                id : "regDate1",
+                                name : "regDate1",
+                                //A control to attach HTML code or the DHTMLX widgets.
+                                type : "container",
                                 css: "input",
                                 width: 200,
                                 height: 300,
@@ -356,7 +368,7 @@ const settingForm = () => {
     });
 
     //콤보박스 level의 값이 바뀌면
-    searchForm.getItem("level").events.on("change", function(ids) {
+    searchForm.getItem("level1").events.on("change", function(ids) {
         console.log("change", ids);
     });
 
@@ -365,7 +377,191 @@ const settingForm = () => {
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
     layout.getCell("searchArea").attach(searchForm);
 
+}
 
+const settingCalendar = () => {
+    //getWidget() => returns the widget attached to Window
+    //let regDateInput = searchForm.getItem("regDate").getWidget();
+    //let regDateInput = searchForm.getItem("regDate");
+    //console.log("regDateInput : "+regDateInput);
+
+    SearchCalendar = new dhx.Calendar(null, {
+        css: "dhx_widget--bordered",
+        // 날짜 범위 선택을 활성화
+        range: true,
+        dateFormat:"%Y-%m-%d",
+        //현재 표시된 날짜를 기준으로 이전/다음 달의 날짜를 숨김
+        thisMonthOnly:true,
+        width : 200,
+    });
+
+
+    //change: (date: Date, oldDate: Date, byClick: boolean) => void;
+    //date: Date- 새로 선택한 날짜
+    //oldDate: Date- 이전에 선택한 날짜
+    //byClick: boolean- 날짜 클릭으로 인해 변경이 발생했는지( true) 또는 API 호출로 인해 변경이 발생했는지( false) 를 정의
+    SearchCalendar.events.on("change",function(date, oldDate, byClick){
+        console.log("Change selection from "+oldDate+" to "+date);
+    });
+
+    console.log("calendar 만들기 ");
+
+    //위 dhx.Form 생성할때 내부요소에 type container로 지정해서 가능하다
+    searchForm.getItem("regDate1").attach(SearchCalendar);
+}
+
+
+const settingGrid = () => {
+    const dataset =[
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "NJJH",
+            pwd: "7a5BmFhHd",
+            name: "임꺽정",
+            level: "C",
+            desc: "의적",
+            regDate: "2025년 10월 24일 10시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HAMG",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "QEAISV",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "OIJQGA",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "DYSXY",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "KVQV",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "BHLZ",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "WVOHZ",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HHUU",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HHUV",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+
+    ]
+
+    const config = {
+        //id 속성은 컬럼명과 JSON key를 연결하는 역할
+        //hidden: true로 설정된 컬럼은 그리드에 표시는 안 되지만, grid.data.getItem()에서는 정상적으로 조회
+        //columns는 "화면에 어떤 필드를 어떤 방식으로 표시할지" 정의
+        //data는 실제로 **"어떤 값을 각 행(row)에 넣을지"**를 담는 별도의 객체
+        //1. grid 생성시 포함
+        // data: [...]
+        // 방법 2: 나중에 넣기
+        //grid.data.parse([...]);
+        //data의 자료형에 자바스크립트  Date() 객체를 사용가능
+        columns: [
+            //id: "loginId" → 각 데이터 행(row)의 loginId 필드 값을 이 컬럼에 표시
+            //header: [{ text: "Login ID" }] → 헤더 셀에 "Login ID" 라는 텍스트 표시
+            { id: "id", header: [{ text:"ID"}], width:100 },
+            { id: "pwd", header: [{ text: "PWD"}], width:100 },
+            { id: "name", header: [{ text: "NAME"}], width:100 },
+            { id: "level", header: [{ text: "LEVEL" }], width:100 },
+            { id: "desc", header: [{ text: "DESC" }],width:100 },
+            { id: "regDate", header: [{ text: "REGDATE" }], width:300 },
+        ],
+
+        data: dataset,
+
+        //사방으로 border가 있다
+        css: "dhx_widget--bordered",
+
+        //layout에 정의된 width, height 최우선 (레이아웃이 부모니까)
+        //grid 자체의 width, height =>  레이아웃이 사이즈를 안 정할 때만 반영
+        // height: 200,
+        // width: 300,
+
+        //그리드의 열을 그리드 크기에 맞게 조정
+        //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
+        autoWidth: true,
+        //열 머리글을 클릭했을 때 정렬이 활성화되는지 여부를 정의
+        sortable: false,
+        // 열의 모든 도구 설명을 활성화/비활성화
+        tooltip: false
+    };
+
+    // if(userResults) {
+    //     //레이아웃 인스턴스를 제거하고 점유된 리소스를 해제합니다.
+    //     userResults.destructor();
+    // }
+
+    userResults = new dhx.Grid(null, config);
+
+    layout.getCell("userResults").attach(userResults);
+
+
+}
+
+
+
+
+const awaitRedraw = () => {
     //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
     // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
     dhx.awaitRedraw().then(() => {
@@ -400,167 +596,6 @@ const settingForm = () => {
             regDateDivText.classList.add("itemDiv");
         }
 
-        const regDate = document.querySelector('[data-cell-id="regDate"]');
-        //위에서는 data-cell-id로만 들어가므로 직접 id 주자
-        regDate.id = "regDate";
-        if(regDate) {
-            settingCalendar(regDate.id);
-        }
     });
-
 }
 
-const settingCalendar = (regDateNode) => {
-    //getWidget() => returns the widget attached to Window
-    //let regDateInput = searchForm.getItem("regDate").getWidget();
-    //let regDateInput = searchForm.getItem("regDate");
-    //console.log("regDateInput : "+regDateInput);
-
-    SearchCalendar = new dhx.Calendar(regDateNode, {
-        css: "dhx_widget--bordered",
-        // 날짜 범위 선택을 활성화
-        range: true,
-        dateFormat:"%Y-%m-%d",
-        //현재 표시된 날짜를 기준으로 이전/다음 달의 날짜를 숨김
-        thisMonthOnly:true,
-        width : 200,
-    });
-
-    //searchForm.getItem("regDate").attach(SearchCalendar);
-
-    //change: (date: Date, oldDate: Date, byClick: boolean) => void;
-    //date: Date- 새로 선택한 날짜
-    //oldDate: Date- 이전에 선택한 날짜
-    //byClick: boolean- 날짜 클릭으로 인해 변경이 발생했는지( true) 또는 API 호출로 인해 변경이 발생했는지( false) 를 정의
-    SearchCalendar.events.on("change",function(date, oldDate, byClick){
-        console.log("Change selection from "+oldDate+" to "+date);
-    });
-
-
-}
-
-const settingGrid = () => {
-    const dataset =[
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "row1",
-            loginId: "admin001",
-            adminName : "jung",
-            levelName : "상급",
-            adminId : "admin111",
-            tenantId : "tenant111",
-            loginPasscode: "secret001",
-            permitLevel : "최고수준"
-        },
-
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "row2",
-            loginId: "admin002",
-            adminName : "jong",
-            levelName : "상급",
-            adminId : "admin222",
-            tenantId : "tenant222",
-            loginPasscode: "secret002",
-            permitLevel : "최고수준"
-        }
-    ]
-    const config = {
-        //id 속성은 컬럼명과 JSON key를 연결하는 역할
-        //hidden: true로 설정된 컬럼은 그리드에 표시는 안 되지만, grid.data.getItem()에서는 정상적으로 조회
-        //columns는 "화면에 어떤 필드를 어떤 방식으로 표시할지" 정의
-        //data는 실제로 **"어떤 값을 각 행(row)에 넣을지"**를 담는 별도의 객체
-        //1. grid 생성시 포함
-        // data: [...]
-        // 방법 2: 나중에 넣기
-        //grid.data.parse([...]);
-        //data의 자료형에 자바스크립트  Date() 객체를 사용가능
-        columns: [
-            //id: "loginId" → 각 데이터 행(row)의 loginId 필드 값을 이 컬럼에 표시
-            //header: [{ text: "Login ID" }] → 헤더 셀에 "Login ID" 라는 텍스트 표시
-            { id: "loginId", header: [{ text: "로그인 아이디"}] ,width:200},
-            { id: "adminName", header: [{ text: "관리자 이름"}] },
-            { id: "levelName", header: [{ text: "레벨 이름" }] },
-            { hidden: true, id: "adminId", header: [{ text: '' }] },
-            { hidden: true, id: "tenantId", header: [{ text: '' }] },
-            { hidden: true, id: "loginPasscode", header: [{ text: '' }] },
-            { hidden: true, id: "permitLevel", header: [{ text: '' }] },
-        ],
-
-        data: dataset,
-
-        //사방으로 border가 있다
-        css: "dhx_widget--bordered",
-
-        //layout에 정의된 width, height 최우선 (레이아웃이 부모니까)
-        //grid 자체의 width, height =>  레이아웃이 사이즈를 안 정할 때만 반영
-        height: 200,
-        width: 300,
-
-        //그리드의 열을 그리드 크기에 맞게 조정
-        //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
-        autoWidth: true,
-        //열 머리글을 클릭했을 때 정렬이 활성화되는지 여부를 정의
-        sortable: false,
-        // 열의 모든 도구 설명을 활성화/비활성화
-        tooltip: false
-    };
-
-    if(grid) {
-        //레이아웃 인스턴스를 제거하고 점유된 리소스를 해제합니다.
-        grid.destructor();
-    }
-
-    grid = new dhx.Grid(null, config);
-
-    //grid.selection.setCell(row, column): 특정 셀(cell) 을 선택 (포커스를 줄 때 사용)
-    //selection.setCell(...)은 렌더링 이후에 호출해야 정상 동작합니다. (예: grid.events.on("afterRender", ...) 안에서)
-
-    //setCell(row?: object | string | number, column?: object | string | number, ctrlUp?: boolean, shiftUp?: boolean): void;
-    //row : 선택할 셀 또는 행의 ID가 있는 객체
-    //column: 열의 구성 또는 ID
-    //ctrlUp : true 원하는 행이나 셀을 선택합니다. 그렇지 않으면 - false ( multiselection모드의 경우)
-    //shiftUp:  true - 행 또는 셀 범위를 선택하려면 true, 그렇지 않으면 false ( multiselection모드의 경우)
-
-    //grid.data는 내부적으로 TreeCollection 또는 DataCollection 객체
-    //grid.data.getId(0) =>  첫 번째 행의 ID 가져옴
-    //grid.data.getItem(rowId) => 그 행의 데이터 가져옴
-
-    // grid.config.columns => dhx.Grid로 설정한 속성
-    grid.selection.setCell(grid.data.getItem(grid.data.getId(0)), grid.config.columns[0]);
-
-    //그리드 셀을 클릭하면
-    //cellClick: (row: object, column: object, event: MouseEvent) => void;
-    //event	→ 실제로는 row 객체
-    //value -> 실제로는 column 객체
-    // 변수명을 잘못 지었을 뿐
-    // JavaScript는 인자 순서(position) 에 따라 전달
-    // grid.events.on("cellClick", (event, value) => {
-    //     let adminId = event.adminId;
-    //     let tenantId = event.tenantId;
-    //
-    //     //결과적으로는 행의 어느부분을 클릭해도 event.adminId가 출력된다 => row 객체니까
-    //     if (adminId) {
-    //         //openEditor(event);
-    //         console.log("adminId : ",adminId);
-    //     }
-    // });
-
-
-    grid.events.on("cellClick", (row, column, event) => {
-        let adminId = row.adminId;
-        let tenantId = row.tenantId;
-
-        if (adminId) {
-            console.log("adminId : ",adminId);
-        }
-
-        if (tenantId) {
-            console.log("tenantId : ",tenantId);
-        }
-
-        console.log("event.target.textContent : "+event.target.textContent);
-    });
-
-    layout.getCell("grid").attach(grid);
-}
