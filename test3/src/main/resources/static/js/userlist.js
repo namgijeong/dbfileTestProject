@@ -1,11 +1,13 @@
 let layout;
 let searchForm;
+let SearchCalendar;
 
 const init = () => {
 
     createLayout();
 
     settingForm();
+    ///settingCalendar();
 
 }
 
@@ -21,7 +23,7 @@ const createLayout = () => {
                 id: "mainContent",
                 css: "mainContent",
                 width:900,
-                height:800,
+                height:1200,
                 padding:0,
 
                 rows: [
@@ -30,7 +32,7 @@ const createLayout = () => {
                         name : "searchArea",
                         css : "searchArea",
                         width: 470,
-                        height: 260,
+                        height: 510,
                         padding:0,
                     },
                     {
@@ -264,7 +266,7 @@ const settingForm = () => {
                 id : "searchCondition5",
                 css : "searchCondition",
                 width : 450,
-                height : 50,
+                height : 300,
                 padding:0,
 
                 cols:[
@@ -279,7 +281,7 @@ const settingForm = () => {
                         id: "conditionValue5",
                         css : "conditionValue",
                         width:300,
-                        height: 50,
+                        height: 300,
                         padding:0,
 
                         cols : [
@@ -287,11 +289,8 @@ const settingForm = () => {
                                 id : "regDate",
                                 name : "regDate",
                                 css: "input",
-                                type : "input",
-                                inputType : "text",
-                                placeholder : "regDate",
                                 width: 200,
-                                height: 30,
+                                height: 300,
                                 padding : 0,
                             }
 
@@ -362,7 +361,43 @@ const settingForm = () => {
             regDateDivText.textContent = "RegDate";
             regDateDivText.classList.add("itemDiv");
         }
+
+        const regDate = document.querySelector('[data-cell-id="regDate"]');
+        //위에서는 data-cell-id로만 들어가므로 직접 id 주자
+        regDate.id = "regDate";
+        if(regDate) {
+            settingCalendar(regDate.id);
+        }
     });
+
+}
+
+const settingCalendar = (regDateNode) => {
+    //getWidget() => returns the widget attached to Window
+    //let regDateInput = searchForm.getItem("regDate").getWidget();
+    //let regDateInput = searchForm.getItem("regDate");
+    //console.log("regDateInput : "+regDateInput);
+
+    SearchCalendar = new dhx.Calendar(regDateNode, {
+        css: "dhx_widget--bordered",
+        // 날짜 범위 선택을 활성화
+        range: true,
+        dateFormat:"%Y-%m-%d",
+        //현재 표시된 날짜를 기준으로 이전/다음 달의 날짜를 숨김
+        thisMonthOnly:true,
+        width : 200,
+    });
+
+    //searchForm.getItem("regDate").attach(SearchCalendar);
+
+    //change: (date: Date, oldDate: Date, byClick: boolean) => void;
+    //date: Date- 새로 선택한 날짜
+    //oldDate: Date- 이전에 선택한 날짜
+    //byClick: boolean- 날짜 클릭으로 인해 변경이 발생했는지( true) 또는 API 호출로 인해 변경이 발생했는지( false) 를 정의
+    SearchCalendar.events.on("change",function(date, oldDate, byClick){
+        console.log("Change selection from "+oldDate+" to "+date);
+    });
+
 
 }
 
