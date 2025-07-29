@@ -32,7 +32,7 @@ const createLayout = () => {
                         name : "searchArea",
                         css : "searchArea",
                         width: 470,
-                        height: 510,
+                        height: 560,
                         padding:0,
                     },
                     {
@@ -303,14 +303,52 @@ const settingForm = () => {
 
             },
 
+            {
+                id : "searchCondition6",
+                css : "searchCondition",
+                width : 450,
+                height : 50,
+                padding:0,
+
+                cols:[
+                    {
+                        id: "conditionName6",
+                        css : "conditionName",
+                        width : 100,
+                        height : 50,
+                        padding:0,
+
+                        cols : [
+                            {
+                                id : "searchButton",
+                                name : "searchButton",
+                                css: "searchButton",
+                                
+                                type : "button",
+                                submit: false,
+                                
+                                width: 100,
+                                height: 40,
+                                padding : 0,
+                                text:"검색"
+                            }
+
+                        ]
+                    },
+
+
+                ]
+
+            },
+
         ]
     });
 
-    //클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
+    //id => 클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
     searchForm.events.on("click", (id, event) => {
         switch (id) {
             //이걸 클릭했을때
-            case "submitButton":
+            case "searchButton":
                 console.log("찾기 버튼 클릭");
                 //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
                 break;
