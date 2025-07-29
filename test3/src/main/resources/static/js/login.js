@@ -47,7 +47,7 @@ const settingForm = () => {
 
     loginForm = new dhx.Form(null, {
         //사방으로 border가 있다
-        css: "dhx_widget--bordered fileForm",
+        css: "dhx_widget--bordered",
         rows: [
             //div
             {
@@ -76,6 +76,7 @@ const settingForm = () => {
                                 css: "input",
                                 width:200,
                                 height: 50,
+                                placeholder : "id",
                             },
 
                         ]
@@ -132,6 +133,7 @@ const settingForm = () => {
                                 css: "input",
                                 width:200,
                                 height: 50,
+                                placeholder : "pwd",
                             },
 
                         ]
