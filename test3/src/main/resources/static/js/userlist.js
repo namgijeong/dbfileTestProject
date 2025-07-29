@@ -10,6 +10,7 @@ const init = () => {
     settingCalendar();
 
     settingGrid();
+    settingPagination();
 
     awaitRedraw();
 
@@ -44,12 +45,15 @@ const createLayout = () => {
                         name : "userResults",
                         css: "userResults",
                         width: 810,
-                        height: 500,
+                        height: 450,
                         padding:0,
                     },
                     {
-                        id:	"pagination",
+                        id:	"pagingArea",
+                        name: "pagingArea",
+                        css: "pagingArea",
                         height: 50,
+                        padding:0,
                     }
                 ]
             },
@@ -503,6 +507,150 @@ const settingGrid = () => {
             desc: " ",
             regDate: "2025년 10월 12일 03시 27분 00초",
         },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HHUW",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HHUX",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HHUY",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HHUZ",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "HHUT",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "NBRY",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "BNWMQ",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "NHGAUK",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "BSDL",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "DUFT",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "XDFR",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "YELFFL",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "VHZJ",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "MXDQTF",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "EYOMFT",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
+        {
+            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
+            id: "ROGDL",
+            pwd: "QejbX9iq",
+            name: "홍길동",
+            level: "C",
+            desc: " ",
+            regDate: "2025년 10월 12일 03시 27분 00초",
+        },
 
     ]
 
@@ -530,12 +678,8 @@ const settingGrid = () => {
         data: dataset,
 
         //사방으로 border가 있다
-        css: "dhx_widget--bordered",
+        css: "dhx_widget--bordered table",
 
-        //layout에 정의된 width, height 최우선 (레이아웃이 부모니까)
-        //grid 자체의 width, height =>  레이아웃이 사이즈를 안 정할 때만 반영
-        // height: 200,
-        // width: 300,
 
         //그리드의 열을 그리드 크기에 맞게 조정
         //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
@@ -558,7 +702,35 @@ const settingGrid = () => {
 
 }
 
+const settingPagination = () => {
+    // dhx.Pagination은 내부적으로 grid.data (즉, 전체 데이터 소스)를 참조해서:
+    // 전체 데이터 개수를 파악하고,
+    // pageSize에 따라 자동으로 페이지 나눔을 계산하며,
+    // 현재 페이지에 표시할 데이터를 자동으로 계산해서 그리드에 보여줍니다.
+    pagination = new dhx.Pagination(null, {
 
+        //grid의 data => 위에서 parse로 설정한 새로운 데이터에 접근
+        data: userResults.data,
+
+        //page => The index of the initial page set in the pagination
+        //pageSize => 선택 사항. 관련 위젯의 페이지당 표시되는 항목 수
+        pageSize: 10,
+    });
+
+    layout.getCell("pagingArea").attach(pagination);
+    //setPage => 관련 위젯에 활성 페이지를 설정
+    //0부터 1페이지
+    pagination.setPage(0);
+
+    //활성 페이지 변경
+    //change: (index: number, previousIndex: number) => void;
+    //index: number 새로 활성화된 페이지의 인덱스
+    //previousIndex: number- 이전에 활성화된 페이지의 인덱스
+    pagination.events.on("change", (index, previousIndex) => {
+        //findSmsUsage(index);
+        console.log("현재 페이지: "+index);
+    });
+}
 
 
 const awaitRedraw = () => {
