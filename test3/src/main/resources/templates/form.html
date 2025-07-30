@@ -16,10 +16,16 @@
             margin:auto;
             margin-top : 50px;
             text-align: center;
+            display: flex;
+            /*요소들을 세로로 정렬*/
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
         }
         .fileForm{
-            margin:auto !important;
-            margin-top:50px !important;
+            /*이렇게 했더니 잘리는 오류가 발생 */
+            /*margin:auto !important;*/
+            /*margin-top:50px !important;*/
 
             text-align: center;
         }
@@ -93,17 +99,21 @@
         }
 
         .responseDiv{
-            margin:auto;
-            margin-top:50px;
+            /*이렇게 했더니 잘리는 오류가 발생 */
+            /*margin:auto;*/
+            /*margin-top:50px;*/
 
-            /*width: 1000px;*/
-            /*height: 500px;*/
+            display: flex;
+            /*요소들을 세로로 정렬*/
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+
             text-align: center;
         }
         .responseTextDiv{
             margin:auto;
-            /*width:500px;*/
-            /*height:50px;*/
+
             text-align:center;
         }
         #responseTextDiv1, #responseTextDiv2{
@@ -113,25 +123,25 @@
 
 
 
-        table{
-            margin:auto;
-            border-collapse:collapse;
-        }
-        table tr:nth-child(1){
-            background-color:tomato;
-        }
-        table th,td{
-            width: 100px;
-            height: 50px;
-            text-align: center;
-            border: 1px solid #000;
+        /*table{*/
+        /*    margin:auto;*/
+        /*    border-collapse:collapse;*/
+        /*}*/
+        /*table tr:nth-child(1){*/
+        /*    background-color:tomato;*/
+        /*}*/
+        /*table th,td{*/
+        /*    width: 100px;*/
+        /*    height: 50px;*/
+        /*    text-align: center;*/
+        /*    border: 1px solid #000;*/
 
-            vertical-align: middle;   /* 가운데 */
-        }
+        /*    vertical-align: middle;   !* 가운데 *!*/
+        /*}*/
 
-        td:nth-child(6){
-            width:300px;
-        }
+        /*td:nth-child(6){*/
+        /*    width:300px;*/
+        /*}*/
     </style>
     <script type="text/javascript" src="/dhtmlx8/codebase/suite.js"></script>
     <link rel="stylesheet" href="/dhtmlx8/codebase/suite.css">

@@ -1,7 +1,7 @@
 let layout;
 let fileForm;
 let result;
-let responseDiv;
+let responseDivForm;
 
 const init = () => {
 
@@ -217,9 +217,6 @@ const makeResultHtml = (response) => {
     let responseSpaceText2 = '';
     let showFindAllButton = false;
 
-    // let responseSpace = document.querySelector('[data-cell-id="responseDiv"]');
-    // let responseSpaceText = '';
-
     /*
         boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
         getXxx()가 아니라 isXxx()가 자동으로 인식
@@ -277,14 +274,13 @@ const makeResultHtml = (response) => {
         }
     }
 
-    responseDiv = new dhx.Form(null, {
+    responseDivForm = new dhx.Form(null, {
         //사방으로 border가 있다
         css: "dhx_widget--bordered responseDiv",
         padding: 0,
         rows: [
 
             {
-
                 id: "responseTextDiv1",
                 type: "text",
 
@@ -293,10 +289,8 @@ const makeResultHtml = (response) => {
                 width: 480,
                 height: 50,
                 padding: 0,
-
             },
             {
-
                 id: "responseTextDiv2",
                 type: "text",
 
@@ -305,21 +299,14 @@ const makeResultHtml = (response) => {
                 width: 480,
                 height: 50,
                 padding: 0,
-
             },
             {
-                //name => 폼 데이터를 다룰 때 데이터 객체의 key 역할
-                //form.getValue();
-                //=> { username: "홍길동" }
                 name: "findAllButton",
                 id: "findAllButton",
                 type: "button",
-                // value: language.button_add,
                 submit: false,
-                //DHTMLX가 만든 외부 래퍼 div에만 붙습니다.
-                //하지만 실제 크기를 정하는 건 내부의 .dhx_button 엘리먼트
                 css: "findAllButton",
-                //hidden: true,
+                hidden: true,
                 width: 190,
                 height: 70,
                 padding: 0,
@@ -333,10 +320,14 @@ const makeResultHtml = (response) => {
 
     if (showFindAllButton) {
         console.log("findallbutton show");
-        responseDiv.getItem("findAllButton").show();
+
+        dhx.awaitRedraw().then(() => {
+            responseDivForm.getItem("findAllButton").show();
+        });
+
     }
     //클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
-    responseDiv.events.on("click", (id, event) => {
+    responseDivForm.events.on("click", (id, event) => {
         switch (id) {
             //이걸 클릭했을때
             case "findAllButton":
@@ -349,7 +340,7 @@ const makeResultHtml = (response) => {
 
     //이렇게 해당 레이아웃 cell 에 다시 attach 까지 해주면 화면에 나올거에요
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
-    layout.getCell("responseDiv").attach(responseDiv);
+    layout.getCell("responseDiv").attach(responseDivForm);
 
 
 
