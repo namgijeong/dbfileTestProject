@@ -19,21 +19,24 @@ const createLayout = () => {
             {
                 id: "mainContent",
                 css: "mainContent",
-                width:500,
+                width:1100,
                 height:700,
 
                 rows: [
                     {
                         id: "fileForm",
                         name : "fileForm",
+                        css: "fileForm",
                         width: 500,
                         height: 120,
                         padding:0,
                     },
                     {
                         id: "responseDiv",
+                        css: "responseDiv",
                         width: 1000,
                         height: 500,
+                        padding: 0,
                     },
                 ]
             },
@@ -47,8 +50,6 @@ const createLayout = () => {
 // 레이아웃 내부에 id 가 form 인 부분을 선언했다면
 const settingForm = () => {
 
-    //const container = document.getElementById("fileForm");
-    //layout.getCell("fileForm").attach(new dhx.Form( null , {
     fileForm = new dhx.Form(null, {
         //사방으로 border가 있다
         css: "dhx_widget--bordered fileForm",
@@ -106,6 +107,7 @@ const settingForm = () => {
             case "submitButton":
                 console.log("파일 올리기 버튼 클릭");
                 //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
+                ajaxSubmit(event);
                 break;
         }
     });
@@ -132,22 +134,6 @@ const settingForm = () => {
     //     fileForm.getCell("dbFile").attachHTML(inputHtml);
     // });
 
-    // DOM 완전히 붙은 뒤 실행 보장
-    // setTimeout(() => {
-    //     //const placeholder = document.getElementById("dbFilePlaceholder");
-    //     const placeholder = document.querySelector('[data-cell-id="dbFile"]')
-    //     if (placeholder) {
-    //         const input = document.createElement("input");
-    //         input.type = "file";
-    //         input.id = "dbFile";
-    //         input.className = "dbFile";
-    //         placeholder.appendChild(input);
-    //         console.log("파일 input 삽입됨");
-    //     } else {
-    //         console.warn("dbFilePlaceholder가 아직 없음");
-    //     }
-    // }, 100);
-
     //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
     // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
     dhx.awaitRedraw().then(() => {
@@ -166,4 +152,105 @@ const settingForm = () => {
     });
 
 }
+
+
+/**
+ * 업로드한 파일을 Ajax로 보낸 후 DB table에 추가
+ * @param event 이벤트 객체
+ */
+const ajaxSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    const file = document.getElementById("dbFile").files[0];
+    formData.append('file', file);
+
+    $.ajax({
+        url: '/upload/insertTable',
+        method: 'POST',
+        data: formData,              // 일반 데이터나 FormData 객체
+        processData: false,          // 파일 업로드 시 false
+        contentType: false,          // 파일 업로드 시 false
+        success: function(response) {
+            console.log('성공:', response);
+            console.log('리턴 타입 : '+typeof response);
+
+            makeResultHtml(response);
+
+        },
+        error: function(xhr, status, error) {
+            console.error('실패:', error);
+        }
+    });
+}
+
+/**
+ * 전체성공/각 줄별로 실패를 HTML로 동적 생성
+ * @param response ResponseBase 응답객체
+ */
+const makeResultHtml = (response) => {
+    let responseSpace = document.querySelector('[data-cell-id="responseDiv"]');
+    let responseSpaceText = '';
+
+    /*
+        boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
+        getXxx()가 아니라 isXxx()가 자동으로 인식
+        따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
+     */
+
+    if (response.normal == false) { // 비정상적 플래그면
+        switch (response.content.exceptionCode) {
+            case "FAIL_FILE_OPEN":  //파일읽기 리더가 실패했을때
+                console.log("파일 열기 실패");
+                responseSpaceText += `<h1>파일 읽기 실패하였습니다.</h1>`;
+                responseSpaceText += `<h1>다시 재시도 해주세요.</h1>`;
+                responseSpace.innerHTML = responseSpaceText;
+                break;
+
+            case "WRONG_FILE_EXTENSION":  //사용자가 잘못된 파일 확장자를 올렸을때
+                console.log("사용자가 잘못된 파일 올림");
+                responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
+                responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;
+                responseSpace.innerHTML = responseSpaceText;
+                break;
+
+            default:
+        }
+
+    } else { // 정상적인 플래그면
+        if (response.content.totalCount == response.content.successCount) {  //전체 성공
+            responseSpaceText += `<h3>▼ 전체 성공</h3>`;
+            responseSpaceText += `<h3>레코드 건수  ${response.content.successCount}건 입력 성공</h3>`;
+            responseSpaceText += `<button id="findAllButton">조회버튼</button>`;
+
+            //조회하기 결과 표가 붙을 자리
+            responseSpaceText += `<div id="result"></div>`;
+
+            responseSpace.innerHTML = responseSpaceText;
+            document.getElementById("findAllButton").classList.add("findAllButton");
+            document.getElementById("findAllButton").addEventListener('click',function(event){
+                ajaxSelectAll(event);
+            });
+
+        } else { //일부 실패
+            responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
+            responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
+            responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
+            response.content.userResultDTOList.forEach(userResultDTO => {
+                if (userResultDTO.successFlag == false) {
+                    responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
+                    //원인들이 많을 경우 분리
+                    // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
+                    // for(const exceptionMessagePart of exceptionMessageParts){
+                    //     responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
+                    // }
+
+                }
+            });
+            responseSpace.innerHTML = responseSpaceText;
+        }
+
+    }
+}
+
 
