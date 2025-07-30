@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class SearchUserDTOResponse {
     //Json 응답 사용을 위해
     @JsonProperty("reg_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    Timestamp regDate;
+    LocalDateTime regDate;
 
 
     public SearchUserDTOResponse() {
@@ -36,7 +37,7 @@ public class SearchUserDTOResponse {
 
     // select 절에 대상을 지정하는 것.
     @QueryProjection
-    public SearchUserDTOResponse(String id, String pwd, String name, String level, String desc, Timestamp regDate) {
+    public SearchUserDTOResponse(String id, String pwd, String name, String level, String desc, LocalDateTime regDate) {
         this.id = id;
         this.pwd = pwd;
         this.name = name;

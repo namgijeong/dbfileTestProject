@@ -1,6 +1,7 @@
 package com.example.test3.data.repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -59,9 +60,11 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
             //localdatetime을 localdate로 바꿔서 해도 작동
             //Timestamp.valueOf() => 매개변수는 String s, LocalDateTime dateTime
             //atStartOfDay() =>  LocalDate 타입에서만 사용, 해당 날짜의 자정 (00:00:00) 을 나타내는 LocalDateTime 객체를 반환
-            Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
+            //Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
+            LocalDateTime startDate = dto.getRegDate().toLocalDate().atStartOfDay();
             //plusDays => LocalDate, LocalDateTime 타입 모두 사용가능
-            Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
+            //Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
+            LocalDateTime endDate = dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay();
             //goe(): A >= ?
             //gt(): A > ?
             //loe(): A <= ?
@@ -122,8 +125,10 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         }
         if (dto.getRegDate() != null) {
             //localdatetime을 localdate로 바꿔서 해도 작동
-            Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
-            Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
+            //Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
+            //Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
+            LocalDateTime startDate = dto.getRegDate().toLocalDate().atStartOfDay();
+            LocalDateTime endDate = dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay();
             booleanBuilder.and(user.regDate.goe(startDate)); // 이상
             booleanBuilder.and(user.regDate.lt(endDate)); //  미만
         }

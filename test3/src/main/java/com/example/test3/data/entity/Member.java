@@ -1,6 +1,7 @@
 package com.example.test3.data.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +23,5 @@ public class Member implements UserDtoBase {
 
     private String desc;
 
-    private Timestamp regDate;
+    private LocalDateTime regDate;
 }

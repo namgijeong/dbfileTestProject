@@ -1,6 +1,7 @@
 package com.example.test3.data.dto;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public interface UserDtoBase {
     String getId();
@@ -13,5 +14,5 @@ public interface UserDtoBase {
 
     String getDesc();
 
-    Timestamp getRegDate();
+    LocalDateTime getRegDate();
 }

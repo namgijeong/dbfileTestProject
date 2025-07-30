@@ -1,6 +1,7 @@
 package com.example.test3.data.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +37,6 @@ public class User implements UserDtoBase {
     private String desc;
 
     @Column(nullable = false)
-    private Timestamp regDate;
+    private LocalDateTime regDate;
 
 }
