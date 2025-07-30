@@ -1,5 +1,7 @@
 let layout;
 let fileForm;
+let result;
+let responseDiv;
 
 const init = () => {
 
@@ -20,7 +22,7 @@ const createLayout = () => {
                 id: "mainContent",
                 css: "mainContent",
                 width:1100,
-                height:700,
+                height:1100,
 
                 rows: [
                     {
@@ -34,10 +36,29 @@ const createLayout = () => {
                     {
                         id: "responseDiv",
                         css: "responseDiv",
-                        width: 1000,
-                        height: 500,
+                        width: 500,
+                        height: 200,
                         padding: 0,
+                        //평소에는 보이지 않게
+                        hidden:true,
                     },
+                    {
+                        id: "falseResult",
+                        css: "result",
+                        width: 810,
+                        height: 450,
+                        padding: 0,
+                        hidden:true,
+                    },
+                    {
+                        id: "trueResult",
+                        css: "result",
+                        width: 810,
+                        height: 450,
+                        padding: 0,
+                        hidden:true,
+                    },
+
                 ]
             },
 
@@ -184,13 +205,20 @@ const ajaxSubmit = (event) => {
     });
 }
 
+
 /**
  * 전체성공/각 줄별로 실패를 HTML로 동적 생성
  * @param response ResponseBase 응답객체
  */
 const makeResultHtml = (response) => {
-    let responseSpace = document.querySelector('[data-cell-id="responseDiv"]');
-    let responseSpaceText = '';
+    layout.getCell("responseDiv").show();
+
+    let responseSpaceText1 = '';
+    let responseSpaceText2 = '';
+    let showFindAllButton = false;
+
+    // let responseSpace = document.querySelector('[data-cell-id="responseDiv"]');
+    // let responseSpaceText = '';
 
     /*
         boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
@@ -202,55 +230,262 @@ const makeResultHtml = (response) => {
         switch (response.content.exceptionCode) {
             case "FAIL_FILE_OPEN":  //파일읽기 리더가 실패했을때
                 console.log("파일 열기 실패");
-                responseSpaceText += `<h1>파일 읽기 실패하였습니다.</h1>`;
-                responseSpaceText += `<h1>다시 재시도 해주세요.</h1>`;
-                responseSpace.innerHTML = responseSpaceText;
+                responseSpaceText1 = "파일 읽기 실패하였습니다.";
+                responseSpaceText2 = "다시 재시도 해주세요.";
                 break;
 
             case "WRONG_FILE_EXTENSION":  //사용자가 잘못된 파일 확장자를 올렸을때
                 console.log("사용자가 잘못된 파일 올림");
-                responseSpaceText += `<h1>잘못된 파일 형식입니다.</h1>`;
-                responseSpaceText += `<h1>.dbfile 형식으로 올려주세요.</h1>`;
-                responseSpace.innerHTML = responseSpaceText;
+                responseSpaceText1 = "잘못된 파일 형식입니다.";
+                responseSpaceText2 = ".dbfile 형식으로 올려주세요.";
                 break;
 
             default:
         }
 
     } else { // 정상적인 플래그면
-        if (response.content.totalCount == response.content.successCount) {  //전체 성공
-            responseSpaceText += `<h3>▼ 전체 성공</h3>`;
-            responseSpaceText += `<h3>레코드 건수  ${response.content.successCount}건 입력 성공</h3>`;
-            responseSpaceText += `<button id="findAllButton">조회버튼</button>`;
+        if (response.content.totalCount === response.content.successCount) {  //전체 성공
+            responseSpaceText1 = "▼ 전체 성공";
+            responseSpaceText2 = "레코드 건수 " + response.content.successCount + "건 입력 성공";
+            //`<button id="findAllButton">조회버튼</button>`
+            showFindAllButton = true;
 
             //조회하기 결과 표가 붙을 자리
-            responseSpaceText += `<div id="result"></div>`;
+            //responseSpaceText += `<div id="result"></div>`;
 
-            responseSpace.innerHTML = responseSpaceText;
-            document.getElementById("findAllButton").classList.add("findAllButton");
-            document.getElementById("findAllButton").addEventListener('click',function(event){
-                ajaxSelectAll(event);
-            });
+            // document.getElementById("findAllButton").classList.add("findAllButton");
+            // document.getElementById("findAllButton").addEventListener('click', function (event) {
+            //     ajaxSelectAll(event);
+            // });
 
         } else { //일부 실패
-            responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
-            responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
-            responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
-            response.content.userResultDTOList.forEach(userResultDTO => {
-                if (userResultDTO.successFlag == false) {
-                    responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
-                    //원인들이 많을 경우 분리
-                    // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
-                    // for(const exceptionMessagePart of exceptionMessageParts){
-                    //     responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
-                    // }
+            // responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
+            // responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
+            // responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
+            // response.content.userResultDTOList.forEach(userResultDTO => {
+            //     if (userResultDTO.successFlag == false) {
+            //         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
+            //         //원인들이 많을 경우 분리
+            //         // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
+            //         // for(const exceptionMessagePart of exceptionMessageParts){
+            //         //     responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
+            //         // }
+            //
+            //     }
+            // });
 
-                }
-            });
-            responseSpace.innerHTML = responseSpaceText;
         }
-
     }
+
+    responseDiv = new dhx.Form(null, {
+        //사방으로 border가 있다
+        css: "dhx_widget--bordered responseDiv",
+        padding: 0,
+        rows: [
+
+            {
+
+                id: "responseTextDiv1",
+                type: "text",
+
+                value: responseSpaceText1,
+                css : "responseTextDiv",
+                width: 480,
+                height: 50,
+                padding: 0,
+
+            },
+            {
+
+                id: "responseTextDiv2",
+                type: "text",
+
+                value: responseSpaceText2,
+                css : "responseTextDiv",
+                width: 480,
+                height: 50,
+                padding: 0,
+
+            },
+            {
+                //name => 폼 데이터를 다룰 때 데이터 객체의 key 역할
+                //form.getValue();
+                //=> { username: "홍길동" }
+                name: "findAllButton",
+                id: "findAllButton",
+                type: "button",
+                // value: language.button_add,
+                submit: false,
+                //DHTMLX가 만든 외부 래퍼 div에만 붙습니다.
+                //하지만 실제 크기를 정하는 건 내부의 .dhx_button 엘리먼트
+                css: "findAllButton",
+                //hidden: true,
+                width: 190,
+                height: 70,
+                padding: 0,
+                text: "조회하기"
+            }
+
+        ]
+
+
+    });
+
+    if (showFindAllButton) {
+        console.log("findallbutton show");
+        responseDiv.getItem("findAllButton").show();
+    }
+    //클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
+    responseDiv.events.on("click", (id, event) => {
+        switch (id) {
+            //이걸 클릭했을때
+            case "findAllButton":
+                console.log("조회하기 버튼 클릭");
+                //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
+                ajaxSelectAll(event);
+                break;
+        }
+    });
+
+    //이렇게 해당 레이아웃 cell 에 다시 attach 까지 해주면 화면에 나올거에요
+    //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
+    layout.getCell("responseDiv").attach(responseDiv);
+
+
+
+
 }
+
+
+/**
+ * 전체성공시 조회하기 버튼을 클릭하면 작동
+ * db table에 있는 모든 user 정보 가져옴
+ * @param event 이벤트 객체
+ */
+const ajaxSelectAll = (event) => {
+    event.preventDefault();
+
+    $.ajax({
+        url: '/upload/selectFullUsers',
+        method: 'POST',
+        success: function(response) {
+            //makeTableHtml(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('실패:', error);
+        }
+    });
+
+}
+
+
+/**
+ * DB table에 있는 레코드 각각을 HTML로 동적 생성
+ * @param response UserDTO List
+ */
+const makeTableHtml = (response) => {
+    layout.getCell("result").show();
+
+    let resultSpace = document.getElementById('result');
+    let resultSpaceText = '';
+
+    const config = {
+        //id 속성은 컬럼명과 JSON key를 연결하는 역할
+        //hidden: true로 설정된 컬럼은 그리드에 표시는 안 되지만, grid.data.getItem()에서는 정상적으로 조회
+        //columns는 "화면에 어떤 필드를 어떤 방식으로 표시할지" 정의
+        //data는 실제로 **"어떤 값을 각 행(row)에 넣을지"**를 담는 별도의 객체
+        //1. grid 생성시 포함
+        // data: [...]
+        // 방법 2: 나중에 넣기
+        //grid.data.parse([...]);
+        //data의 자료형에 자바스크립트  Date() 객체를 사용가능
+        columns: [
+            //id: "loginId" → 각 데이터 행(row)의 loginId 필드 값을 이 컬럼에 표시
+            //header: [{ text: "Login ID" }] → 헤더 셀에 "Login ID" 라는 텍스트 표시
+            { id: "id", header: [{ text:"ID"}], width:100 },
+            { id: "pwd", header: [{ text: "PWD"}], width:100 },
+            { id: "name", header: [{ text: "NAME"}], width:100 },
+            { id: "level", header: [{ text: "LEVEL" }], width:100 },
+            { id: "desc", header: [{ text: "DESC" }],width:100 },
+            { id: "reg_date", header: [{ text: "REGDATE" }], width:300 },
+        ],
+
+        data: dataset,
+
+        //사방으로 border가 있다
+        css: "dhx_widget--bordered table",
+
+
+        //그리드의 열을 그리드 크기에 맞게 조정
+        //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
+        autoWidth: true,
+        //열 머리글을 클릭했을 때 정렬이 활성화되는지 여부를 정의
+        sortable: false,
+        // 열의 모든 도구 설명을 활성화/비활성화
+        tooltip: false
+    };
+
+    // if(userResults) {
+    //     //레이아웃 인스턴스를 제거하고 점유된 리소스를 해제합니다.
+    //     userResults.destructor();
+    // }
+
+    result = new dhx.Grid(null, config);
+
+    layout.getCell("result").attach(result);
+
+    // resultSpaceText += '<table>';
+    //
+    // resultSpaceText += `<tr>`;
+    // resultSpaceText += `<th> ID </th>`;
+    // resultSpaceText += `<th> PWD </th>`;
+    // resultSpaceText += `<th> NAME </th>`;
+    // resultSpaceText += `<th> LEVEL </th>`;
+    // resultSpaceText += `<th> DESC </th>`;
+    // resultSpaceText += `<th> REG_DATE </th>`;
+    // resultSpaceText += `</tr>`;
+
+    if (response.content.length === 0) {
+        //resultSpaceText += `</table>`;
+        resultSpaceText += `<h1>회원 정보가 비어 있습니다.</h1>`;
+    } else {
+        response.content.forEach(userDTO => {
+            console.log("배열 하나: " + userDTO+'\n');
+            console.log('내용 : '+ userDTO.id+'\n');
+            console.log('내용: '+ userDTO.pwd+'\n');
+            console.log('내용: '+ userDTO.name+'\n');
+            console.log('내용: '+ userDTO.level+'\n');
+            console.log('내용: '+ userDTO.desc+'\n');
+
+            let descText = makeNullToBlank(userDTO.desc);
+
+            //@JsonProperty("reg_date") 때문에 snake 명으로 바뀐다.
+            console.log('내용: '+ userDTO.reg_date+'\n');
+
+            const date = parseDate(userDTO.reg_date);
+            let regDateText = makeRegDate(date);
+            //
+            // resultSpaceText += `<tr>`;
+            // resultSpaceText += `<td> ${userDTO.id} </td>`;
+            // resultSpaceText += `<td> ${userDTO.pwd} </td>`;
+            // resultSpaceText += `<td> ${userDTO.name} </td>`;
+            // resultSpaceText += `<td> ${userDTO.level} </td>`;
+            // resultSpaceText += `<td> ${descText} </td>`;
+            // resultSpaceText += `<td> ${regDateText} </td>`;
+            // resultSpaceText += `</tr>`;
+
+
+
+        });
+
+        result.data.parse(response.content);
+
+        resultSpaceText += `</table>` ;
+    }
+
+    //resultSpace.innerHTML = resultSpaceText;
+
+}
+
 
 
