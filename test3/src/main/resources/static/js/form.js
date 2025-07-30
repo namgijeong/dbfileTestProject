@@ -2,6 +2,8 @@ let layout;
 let fileForm;
 let result;
 let responseDivForm;
+let trueResult;
+let falseResult
 
 const init = () => {
 
@@ -215,7 +217,13 @@ const makeResultHtml = (response) => {
 
     let responseSpaceText1 = '';
     let responseSpaceText2 = '';
+    let responseSpaceText3 = '';
+    let responseSpaceText4 = '';
+
     let showFindAllButton = false;
+    let showFalseResult = false;
+    let showTrueResult = false;
+    let showResponseSpaceText3 = false;
 
     /*
         boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
@@ -244,32 +252,74 @@ const makeResultHtml = (response) => {
         if (response.content.totalCount === response.content.successCount) {  //전체 성공
             responseSpaceText1 = "▼ 전체 성공";
             responseSpaceText2 = "레코드 건수 " + response.content.successCount + "건 입력 성공";
-            //`<button id="findAllButton">조회버튼</button>`
+
+            //버튼 붙이기 하단
             showFindAllButton = true;
+            
+            //회원 전체 목록 출력
+            showTrueResult = true;
 
             //조회하기 결과 표가 붙을 자리
             //responseSpaceText += `<div id="result"></div>`;
 
-            // document.getElementById("findAllButton").classList.add("findAllButton");
-            // document.getElementById("findAllButton").addEventListener('click', function (event) {
-            //     ajaxSelectAll(event);
-            // });
+
 
         } else { //일부 실패
-            // responseSpaceText += `<h3>▼ 전체/일부 실패</h3>`;
-            // responseSpaceText += `<h3>성공  ${response.content.successCount}건, 실패 ${response.content.totalCount - response.content.successCount}건 </h3>`;
-            // responseSpaceText += `<h3>실패한 라인번호와 텍스트</h3> `;
-            // response.content.userResultDTOList.forEach(userResultDTO => {
-            //     if (userResultDTO.successFlag == false) {
-            //         responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
-            //         //원인들이 많을 경우 분리
-            //         // const exceptionMessageParts = userResultDTO.exceptionMessage.split(",");
-            //         // for(const exceptionMessagePart of exceptionMessageParts){
-            //         //     responseSpaceText += `<h5>원인 : ${exceptionMessagePart}</h5> `;
-            //         // }
-            //
-            //     }
-            // });
+            //실패 블록 보여주기
+            showFalseResult = true;
+            //실패문구 추가로 보여주기
+            showResponseSpaceText3 = true;
+
+            responseSpaceText1 = "▼ 전체/일부 실패</h3>";
+            responseSpaceText2 = "성공  "+ response.content.successCount+"건, 실패  "+ (response.content.totalCount - response.content.successCount) + "건 ";
+            responseSpaceText3 = "실패한 라인번호와 텍스트";
+
+            const dataset =[];
+            const config = {
+                //id 속성은 컬럼명과 JSON key를 연결하는 역할
+                //hidden: true로 설정된 컬럼은 그리드에 표시는 안 되지만, grid.data.getItem()에서는 정상적으로 조회
+                //columns는 "화면에 어떤 필드를 어떤 방식으로 표시할지" 정의
+                //data는 실제로 **"어떤 값을 각 행(row)에 넣을지"**를 담는 별도의 객체
+                //1. grid 생성시 포함
+                // data: [...]
+                // 방법 2: 나중에 넣기
+                //grid.data.parse([...]);
+                //data의 자료형에 자바스크립트  Date() 객체를 사용가능
+                columns: [
+                    //id: "loginId" → 각 데이터 행(row)의 loginId 필드 값을 이 컬럼에 표시
+                    //header: [{ text: "Login ID" }] → 헤더 셀에 "Login ID" 라는 텍스트 표시
+                    { id: "failLine", header: [{ text:"failLine"}], width:100 },
+                    { id: "failText", header: [{ text: "failText"}], width:400 },
+                ],
+
+                //사방으로 border가 있다
+                css: "dhx_widget--bordered table",
+
+                //그리드의 열을 그리드 크기에 맞게 조정
+                //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
+                autoWidth: true,
+                //열 머리글을 클릭했을 때 정렬이 활성화되는지 여부를 정의
+                sortable: false,
+                // 열의 모든 도구 설명을 활성화/비활성화
+                tooltip: false
+            };
+            falseResult = new dhx.Grid(null, config);
+
+            response.content.userResultDTOList.forEach(userResultDTO => {
+                if (userResultDTO.successFlag == false) {
+
+                    let data = {failLine : userResultDTO.failLine, failText : userResultDTO.failText};
+                    dataset.push(userResultDTO);
+                    console.log("data : "+data.failLine);
+                    console.log("data : "+data.failText);
+
+                    //responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
+
+                }
+            });
+
+            console.log("dataset : "+dataset);
+            falseResult.data.parse(dataset);
 
         }
     }
@@ -283,7 +333,6 @@ const makeResultHtml = (response) => {
             {
                 id: "responseTextDiv1",
                 type: "text",
-
                 value: responseSpaceText1,
                 css : "responseTextDiv",
                 width: 480,
@@ -301,6 +350,16 @@ const makeResultHtml = (response) => {
                 padding: 0,
             },
             {
+                id: "responseTextDiv3",
+                type: "text",
+                value: responseSpaceText3,
+                css : "responseTextDiv",
+                hidden: true,
+                width: 480,
+                height: 50,
+                padding: 0,
+            },
+            {
                 name: "findAllButton",
                 id: "findAllButton",
                 type: "button",
@@ -311,6 +370,9 @@ const makeResultHtml = (response) => {
                 height: 70,
                 padding: 0,
                 text: "조회하기"
+            },
+            {
+
             }
 
         ]
@@ -318,31 +380,46 @@ const makeResultHtml = (response) => {
 
     });
 
+    //모두 맞을경우 - 조회하기 버튼 보여주기
     if (showFindAllButton) {
         console.log("findallbutton show");
 
         dhx.awaitRedraw().then(() => {
             responseDivForm.getItem("findAllButton").show();
+            layout.getCell("showTrueResult").show();
+
+            //조회하기 버튼 이벤트 달기
+            responseDivForm.events.on("click", (id, event) => {
+                switch (id) {
+                    //이걸 클릭했을때
+                    case "findAllButton":
+                        console.log("파일 올리기 버튼 클릭");
+                        //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
+                        ajaxSubmit(event);
+                        break;
+                }
+            });
+
         });
 
     }
-    //클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
-    responseDivForm.events.on("click", (id, event) => {
-        switch (id) {
-            //이걸 클릭했을때
-            case "findAllButton":
-                console.log("조회하기 버튼 클릭");
-                //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
-                ajaxSelectAll(event);
-                break;
-        }
-    });
+
+    //하나라도 실패했을때 실패 출력버튼 보여주기
+    if (showFalseResult) {
+        console.log("showFalseResult show");
+
+        dhx.awaitRedraw().then(() => {
+            responseDivForm.getItem("responseTextDiv3").show();
+            layout.getCell("falseResult").show();
+
+            layout.getCell("falseResult").attach(falseResult);
+
+        });
+    }
 
     //이렇게 해당 레이아웃 cell 에 다시 attach 까지 해주면 화면에 나올거에요
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
     layout.getCell("responseDiv").attach(responseDivForm);
-
-
 
 
 }
