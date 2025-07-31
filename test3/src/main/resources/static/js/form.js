@@ -1,9 +1,8 @@
 let layout;
 let fileForm;
-let result;
 let responseDivForm;
 let trueResult;
-let falseResult
+let falseResult;
 
 const init = () => {
 
@@ -24,7 +23,7 @@ const createLayout = () => {
                 id: "mainContent",
                 css: "mainContent",
                 width:1100,
-                height:1100,
+                height:900,
 
                 rows: [
                     {
@@ -47,8 +46,8 @@ const createLayout = () => {
                     {
                         id: "falseResult",
                         css: "result",
-                        width: 810,
-                        height: 450,
+                        width: 510,
+                        height: 460,
                         padding: 0,
                         hidden:true,
                     },
@@ -60,6 +59,13 @@ const createLayout = () => {
                         padding: 0,
                         hidden:true,
                     },
+                    {
+                        id:	"pagingArea",
+                        name: "pagingArea",
+                        css: "pagingArea",
+                        height: 50,
+                        padding:0,
+                    }
 
                 ]
             },
@@ -218,12 +224,13 @@ const makeResultHtml = (response) => {
     let responseSpaceText1 = '';
     let responseSpaceText2 = '';
     let responseSpaceText3 = '';
-    let responseSpaceText4 = '';
 
     let showFindAllButton = false;
     let showFalseResult = false;
     let showTrueResult = false;
     let showResponseSpaceText3 = false;
+    //성공했을때 표냐, 실패했을때 표냐
+    let resultGrid = null;
 
     /*
         boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
@@ -261,6 +268,52 @@ const makeResultHtml = (response) => {
 
             //조회하기 결과 표가 붙을 자리
             //responseSpaceText += `<div id="result"></div>`;
+
+            const dataset =[];
+            const config = {
+                //id 속성은 컬럼명과 JSON key를 연결하는 역할
+                //hidden: true로 설정된 컬럼은 그리드에 표시는 안 되지만, grid.data.getItem()에서는 정상적으로 조회
+                //columns는 "화면에 어떤 필드를 어떤 방식으로 표시할지" 정의
+                //data는 실제로 **"어떤 값을 각 행(row)에 넣을지"**를 담는 별도의 객체
+                //1. grid 생성시 포함
+                // data: [...]
+                // 방법 2: 나중에 넣기
+                //grid.data.parse([...]);
+                //data의 자료형에 자바스크립트  Date() 객체를 사용가능
+                columns: [
+                    //id: "loginId" → 각 데이터 행(row)의 loginId 필드 값을 이 컬럼에 표시
+                    //header: [{ text: "Login ID" }] → 헤더 셀에 "Login ID" 라는 텍스트 표시
+                    { id: "failLine", header: [{ text:"failLine"}], width:100 },
+                    { id: "failText", header: [{ text: "failText"}], width:400 },
+                ],
+
+                //사방으로 border가 있다
+                css: "dhx_widget--bordered table",
+
+                //그리드의 열을 그리드 크기에 맞게 조정
+                //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
+                autoWidth: true,
+                //열 머리글을 클릭했을 때 정렬이 활성화되는지 여부를 정의
+                sortable: false,
+                // 열의 모든 도구 설명을 활성화/비활성화
+                tooltip: false
+            };
+            falseResult = new dhx.Grid(null, config);
+
+            response.content.userResultDTOList.forEach(userResultDTO => {
+                if (userResultDTO.successFlag == false) {
+
+                    let data = {failLine : userResultDTO.failLine, failText : userResultDTO.failText};
+                    dataset.push(userResultDTO);
+                    console.log("data : "+data.failLine);
+                    console.log("data : "+data.failText);
+
+                }
+            });
+
+            console.log("dataset : "+dataset);
+            falseResult.data.parse(dataset);
+            resultGrid = falseResult;
 
 
 
@@ -313,13 +366,12 @@ const makeResultHtml = (response) => {
                     console.log("data : "+data.failLine);
                     console.log("data : "+data.failText);
 
-                    //responseSpaceText += `<h5>라인번호 : ${userResultDTO.failLine}, 실패한 텍스트 : ${userResultDTO.failText}</h5> `;
-
                 }
             });
 
             console.log("dataset : "+dataset);
             falseResult.data.parse(dataset);
+            resultGrid = falseResult;
 
         }
     }
@@ -411,17 +463,50 @@ const makeResultHtml = (response) => {
         dhx.awaitRedraw().then(() => {
             responseDivForm.getItem("responseTextDiv3").show();
             layout.getCell("falseResult").show();
-
             layout.getCell("falseResult").attach(falseResult);
 
         });
     }
+
+    //실패든, 성공이든 페이징을 해야한다.
+    settingPagination(resultGrid);
 
     //이렇게 해당 레이아웃 cell 에 다시 attach 까지 해주면 화면에 나올거에요
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
     layout.getCell("responseDiv").attach(responseDivForm);
 
 
+}
+
+
+const settingPagination = (resultGrid) => {
+    // dhx.Pagination은 내부적으로 grid.data (즉, 전체 데이터 소스)를 참조해서:
+    // 전체 데이터 개수를 파악하고,
+    // pageSize에 따라 자동으로 페이지 나눔을 계산하며,
+    // 현재 페이지에 표시할 데이터를 자동으로 계산해서 그리드에 보여줍니다.
+    pagination = new dhx.Pagination(null, {
+
+        //grid의 data => 위에서 parse로 설정한 새로운 데이터에 접근
+        data: resultGrid.data,
+
+        //page => The index of the initial page set in the pagination
+        //pageSize => 선택 사항. 관련 위젯의 페이지당 표시되는 항목 수
+        pageSize: 10,
+    });
+
+    layout.getCell("pagingArea").attach(pagination);
+    //setPage => 관련 위젯에 활성 페이지를 설정
+    //0부터 1페이지
+    pagination.setPage(0);
+
+    //활성 페이지 변경
+    //change: (index: number, previousIndex: number) => void;
+    //index: number 새로 활성화된 페이지의 인덱스
+    //previousIndex: number- 이전에 활성화된 페이지의 인덱스
+    pagination.events.on("change", (index, previousIndex) => {
+        //findSmsUsage(index);
+        console.log("현재 페이지: "+index);
+    });
 }
 
 
