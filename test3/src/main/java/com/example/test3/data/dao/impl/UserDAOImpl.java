@@ -3,6 +3,7 @@ package com.example.test3.data.dao.impl;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.test3.data.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -88,15 +89,15 @@ public class UserDAOImpl implements UserDAO {
 
     //querydsl 버전 조건에 맞는 페이지별 회원 목록
     @Override
-    public List<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber) {
+    public List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber) {
         //페이지는 0부터 시작
-        List<SearchUserDTOResponse> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO, PageRequest.of((int)(pageNumber-1), 10));
+        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO, PageRequest.of((int)(pageNumber-1), 10));
 
         return searchUserDTOResponseList;
     }
 
     @Override
-    public Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO) {
+    public Long selectUsersCountBySearchUserDTO(UserDTO searchUserDTO) {
         Long count =  userRepository.searchUsersCount(searchUserDTO);
         return count;
     }

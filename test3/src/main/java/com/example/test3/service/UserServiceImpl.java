@@ -218,14 +218,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserPagingResultDTO<SearchUserDTOResponse>  selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+    public UserPagingResultDTO<UserDTO>  selectUsersBySearchUserDTO(UserDTO searchUserDTO) {
         //jpql 사용
         //List<User> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
         //log.info("userList : "+userList);
 
         //query dsl 사용
         long pageNumber = searchUserDTO.getPageNumber();
-        List<SearchUserDTOResponse>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO, pageNumber);
+        List<UserDTO>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO, pageNumber);
         log.info("userList : "+searchUserDTOResponseList.toString());
 
         //검색 조건에 맞는 총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
@@ -233,7 +233,7 @@ public class UserServiceImpl implements UserService {
         ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
 
 
-        UserPagingResultDTO<SearchUserDTOResponse> userPagingResultDTO = UserPagingResultDTO.<SearchUserDTOResponse>builder()
+        UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
                 .userDTOList(searchUserDTOResponseList)
                 .buttonBlockDTO(buttonBlockDTO)
                 .build();

@@ -28,5 +28,5 @@ public interface UserService {
     public UserPagingResultDTO<UserDTO> select10Users(long pageNumber);
 
     // 검색 dto를 가지고 회원들을 찾는다.
-    public UserPagingResultDTO<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+    public UserPagingResultDTO<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO);
 }

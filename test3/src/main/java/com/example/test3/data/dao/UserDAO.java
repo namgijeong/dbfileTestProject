@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.example.test3.data.dto.SearchUserDTO;
 import com.example.test3.data.dto.SearchUserDTOResponse;
+import com.example.test3.data.dto.UserDTO;
 import com.example.test3.data.entity.User;
 
 public interface UserDAO {
@@ -30,8 +31,8 @@ public interface UserDAO {
 //    List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
     /*query dsl 검색결과 회원 리스트 페이지단위*/
-    List<SearchUserDTOResponse> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber);
+    List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber);
 
     /*query dsl 검색결과 회원 리스트 전체 개수*/
-    Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO);
+    Long selectUsersCountBySearchUserDTO(UserDTO searchUserDTO);
 }

@@ -499,8 +499,6 @@ const ajaxSelectAll = (event) => {
  */
 const makeTableHtml = (response) => {
 
-    // let resultSpace = document.getElementById('result');
-    // let resultSpaceText = '';
     const dataset = [];
     const config = {
         //id 속성은 컬럼명과 JSON key를 연결하는 역할
@@ -544,16 +542,6 @@ const makeTableHtml = (response) => {
     trueResult = new dhx.Grid(null, config);
 
 
-    // resultSpaceText += '<table>';
-    //
-    // resultSpaceText += `<tr>`;
-    // resultSpaceText += `<th> ID </th>`;
-    // resultSpaceText += `<th> PWD </th>`;
-    // resultSpaceText += `<th> NAME </th>`;
-    // resultSpaceText += `<th> LEVEL </th>`;
-    // resultSpaceText += `<th> DESC </th>`;
-    // resultSpaceText += `<th> REG_DATE </th>`;
-    // resultSpaceText += `</tr>`;
 
     if (response.content.length === 0) {
         //resultSpaceText += `</table>`;
@@ -579,15 +567,6 @@ const makeTableHtml = (response) => {
 
             const date = parseDate(userDTO.reg_date);
             let regDateText = makeRegDate(date);
-            //
-            // resultSpaceText += `<tr>`;
-            // resultSpaceText += `<td> ${userDTO.id} </td>`;
-            // resultSpaceText += `<td> ${userDTO.pwd} </td>`;
-            // resultSpaceText += `<td> ${userDTO.name} </td>`;
-            // resultSpaceText += `<td> ${userDTO.level} </td>`;
-            // resultSpaceText += `<td> ${descText} </td>`;
-            // resultSpaceText += `<td> ${regDateText} </td>`;
-            // resultSpaceText += `</tr>`;
 
             let data = {id : userDTO.id, pwd : userDTO.pwd, name: userDTO.name, level:userDTO.level , desc : descText, reg_date : regDateText};
             dataset.push(data);
@@ -600,10 +579,7 @@ const makeTableHtml = (response) => {
         //실패든, 성공이든 페이징을 해야한다.
         settingPagination(trueResult);
 
-        //resultSpaceText += `</table>` ;
     }
-
-    //resultSpace.innerHTML = resultSpaceText;
 
     layout.getCell("trueResult").show();
     layout.getCell("trueResult").attach(trueResult);

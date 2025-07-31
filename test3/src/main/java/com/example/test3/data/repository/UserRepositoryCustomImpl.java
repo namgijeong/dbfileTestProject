@@ -4,17 +4,15 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.test3.data.dto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.test3.data.dto.SearchUserDTO;
-import com.example.test3.data.dto.SearchUserDTOResponse;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.example.test3.data.dto.QSearchUserDTOResponse;
 import com.example.test3.data.entity.QUser;
 
 @Repository
@@ -24,7 +22,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<SearchUserDTOResponse> searchUsers(SearchUserDTO dto, Pageable pageable) {
+    public List<UserDTO> searchUsers(UserDTO dto, Pageable pageable) {
 
         //Q 클래스는 엔티티 클래스의 메타 정보를 담고 있는 클래스
         //타입 안전한 쿼리작성을 할 수 있다
@@ -81,9 +79,9 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         System.out.println("검색조건 desc: " + dto.getDesc());
         System.out.println("검색조건 regDate: " + dto.getRegDate());
 
-        List<SearchUserDTOResponse> searchUserDTOResponseList = jpaQueryFactory
+        List<UserDTO> searchUserDTOResponseList = jpaQueryFactory
                 //select() 안에 new 키워드를 사용하여 원하는 DTO를 반환하도록 설정
-                .select(new QSearchUserDTOResponse(
+                .select(new QUserDTO(
                         user.id,
                         user.pwd,
                         user.name,
@@ -107,7 +105,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
     }
 
     @Override
-    public Long searchUsersCount(SearchUserDTO dto) {
+    public Long searchUsersCount(UserDTO dto) {
         QUser user = QUser.user;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
