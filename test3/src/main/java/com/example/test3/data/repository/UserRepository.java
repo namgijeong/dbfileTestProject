@@ -21,6 +21,13 @@ public interface UserRepository extends JpaRepository<User, String>, UserReposit
 
     Page<User> findAllByOrderByRegDateDesc(Pageable pageable);
 
+    /**
+     * dhtmlx8용
+     * 회원 정보들 전체 조회
+     * @return User List
+     */
+    List<User> findAllByOrderByRegDateDesc();
+
     long count();
 
 

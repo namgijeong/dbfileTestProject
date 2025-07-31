@@ -22,7 +22,14 @@ public interface UserDAO {
     void deleteAll();
 
     /*시간 최신순 10개만 user 정보 출력*/
-    List<User> select10Users(Long pageNumber);
+//    List<User> select10Users(Long pageNumber);
+
+    /**
+     * dhtmlx8용
+     * 페이지 진입시 전체 유저리스트 뽑기
+     * @return User List
+     */
+    List<User> selectAllUsers();
 
     /*전체 회원정보 개수 불러오기 */
     long countUsers();

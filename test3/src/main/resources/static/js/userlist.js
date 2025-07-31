@@ -415,244 +415,101 @@ const settingCalendar = () => {
 }
 
 
-const settingGrid = () => {
-    const dataset =[
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "NJJH",
-            pwd: "7a5BmFhHd",
-            name: "임꺽정",
-            level: "C",
-            desc: "의적",
-            regDate: "2025년 10월 24일 10시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HAMG",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "QEAISV",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "OIJQGA",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "DYSXY",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "KVQV",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "BHLZ",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "WVOHZ",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HHUU",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HHUV",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HHUW",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HHUX",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HHUY",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HHUZ",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "HHUT",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "NBRY",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "BNWMQ",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "NHGAUK",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "BSDL",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "DUFT",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "XDFR",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "YELFFL",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "VHZJ",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "MXDQTF",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "EYOMFT",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
-        {
-            // 행 ID를 명시적으로 지정 (생략 시 자동 생성됨)
-            id: "ROGDL",
-            pwd: "QejbX9iq",
-            name: "홍길동",
-            level: "C",
-            desc: " ",
-            regDate: "2025년 10월 12일 03시 27분 00초",
-        },
+//검색 버튼을 눌러서 ajax
+function searchAjaxFirst(event) {
+    event.preventDefault();
 
-    ]
+    let id = document.getElementById("id").value;
+    let name = document.getElementById("name").value;
+    let level = document.getElementById("level").value;
+    let desc = document.getElementById("desc").value;
+    let pageNumber = 1;
+
+    //만약 input에 사용자가 option에 있는 값대신 임의로 입력할 수 있다.
+    let dataList = document.getElementById("levelList");
+    let options = dataList.querySelectorAll("option");
+    let inputValid = false;
+
+    for (option of options) {
+        if (option.value === level) {
+            inputValid = true;
+            break;
+        }
+    }
+
+    if (inputValid === false) {
+        level = null;
+    }
+
+    console.log("id: "+id);
+    console.log("name : "+name);
+    console.log("level: "+level);
+    console.log("desc: "+desc);
+    console.log("reg_date: "+formatedDate);
+
+    //만약 사용자가 입력을 안했으면 null로 바꾸기
+    //이미 위에서 level과 formatedDate는 null처리가 되어있다.
+    id = makeBlankToNull(id);
+    name = makeBlankToNull(name);
+    desc = makeBlankToNull(desc);
+
+    const searchData = {
+        id: id,
+        name: name,
+        level: level,
+        desc: desc,
+        //regDate : formatedDate,
+        reg_date : formatedDate,
+        pageNumber : pageNumber
+    };
+
+    fetch("/user/search/userList/ajax", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(searchData)
+    }) .then(async response => {
+        /*
+            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+         */
+        if (response.ok) {
+            const searchAnswer  = await response.json();
+
+            console.log("검색 조회 성공")
+            makePagingTable(searchAnswer.content.userDTOList);
+            makePagingButton(searchAnswer.content.buttonBlockDTO);
+            //일단 1페이지만
+            makeCurrentButtonBlur(clickedNumber);
+        } else {
+            const errorMessage = await response.json();
+            console.log("errorMessage : "+errorMessage);
+
+        }
+    }).catch(error => {
+        console.log("error : "+error);
+    })
+
+}
+
+
+const settingGrid = () => {
+    const dataset =[];
+    userDTOList.forEach(userDTO => {
+        console.log("userDTO.id : "+userDTO.id);
+
+        //thymeleaf를 사용했기 때문에
+        //${} 안의 객체를 JSON으로 자동 변환
+        let originalRegDate =userDTO.reg_date;
+        console.log("originalRegDate : "+originalRegDate);
+        let completeRegDate = makeLocalDateTimeToString(originalRegDate);
+
+        let descText = userDTO.desc;
+        let cleanText = makeNullToBlank(descText);
+
+        const data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate }
+        dataset.push(data);
+    });
+
 
     const config = {
         //id 속성은 컬럼명과 JSON key를 연결하는 역할
@@ -672,7 +529,7 @@ const settingGrid = () => {
             { id: "name", header: [{ text: "NAME"}], width:100 },
             { id: "level", header: [{ text: "LEVEL" }], width:100 },
             { id: "desc", header: [{ text: "DESC" }],width:100 },
-            { id: "regDate", header: [{ text: "REGDATE" }], width:300 },
+            { id: "reg_date", header: [{ text: "REGDATE" }], width:300 },
         ],
 
         data: dataset,

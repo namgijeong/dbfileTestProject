@@ -29,18 +29,17 @@ public class UserController {
      */
 
     /**
+     * dhtmlx8 용
      * 로그인 성공시 유저리스트 관련한 페이지로 이동한다.
-     *
-     * @param pageNumber 유저리스트에서 볼 페이지 번호
+     * 페이지 진입시 전체 회원 정보들 조회 반환
      * @param model 화면 객체
      * @return user 목록 화면으로 이동
      */
     @GetMapping("/userList/page")
-    //public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
-    public String goUserListPage(@RequestParam("pageNumber") int pageNumber, Model model) {
-        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
+    public String goUserListPage( Model model) {
+        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.selectAllUsers();
         model.addAttribute("userPagingResultDTO", userPagingResultDTO);
-        model.addAttribute("pageNumber", pageNumber);
+
         log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
 
         return "userlist";
@@ -48,18 +47,38 @@ public class UserController {
 
 
     /**
+     * 로그인 성공시 유저리스트 관련한 페이지로 이동한다.
+     *
+     * @param pageNumber 유저리스트에서 볼 페이지 번호
+     * @param model 화면 객체
+     * @return user 목록 화면으로 이동
+     */
+//    @GetMapping("/userList/page")
+//    //public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
+//    public String goUserListPage(@RequestParam("pageNumber") int pageNumber, Model model) {
+//        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
+//        model.addAttribute("userPagingResultDTO", userPagingResultDTO);
+//        model.addAttribute("pageNumber", pageNumber);
+//        log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
+//
+//        return "userlist";
+//    }
+
+
+    /**
      * 버튼을 클릭했을시 ajax로 해당 페이지 내용 반환
      * @param pageNumber 유저리스트에서 볼 페이지 번호
      * @return user list를 담은 ResponseEntity
      */
-    @GetMapping("/userList/ajax")
-    //public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
-    public ResponseEntity<?> ExchangeUserList(@RequestParam int pageNumber) {
-        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
-        log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
+//    @GetMapping("/userList/ajax")
+//    //public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
+//    public ResponseEntity<?> ExchangeUserList(@RequestParam int pageNumber) {
+//        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
+//        log.info("userPagingResultDTO :  "+userPagingResultDTO.toString());
+//
+//        return Utility.makeResponseEntity(true, userPagingResultDTO);
+//    }
 
-        return Utility.makeResponseEntity(true, userPagingResultDTO);
-    }
 
     /**
      * 원래 처음에 검색 조회 버튼 클릭시 ajax로만 처리하였을때 사용
@@ -98,6 +117,19 @@ public class UserController {
 //    }
 
     /**
+     * 검색 조회 후, 하단 페이징버튼 클릭시 ajax로 처리
+     * @param searchUserDTO 원하는 페이지 숫자 + 그전에 입력했던 검색 조건들 정보가 포함
+     * @return ResponseBase 응답
+     */
+//    @PostMapping("/search/userList/ajax")
+//    public ResponseEntity<?> searchUserListAndAjax(@RequestBody UserDTO searchUserDTO) {
+//        log.info("searchUserDTO :  "+searchUserDTO.toString());
+//        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
+//        return Utility.makeResponseEntity(true, userPagingResultDTO);
+//    }
+
+    /**
+     * dhtmlx8용
      * 검색 조회 후, 하단 페이징버튼 클릭시 ajax로 처리
      * @param searchUserDTO 원하는 페이지 숫자 + 그전에 입력했던 검색 조건들 정보가 포함
      * @return ResponseBase 응답

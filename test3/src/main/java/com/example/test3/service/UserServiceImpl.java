@@ -200,19 +200,37 @@ public class UserServiceImpl implements UserService {
      * @param pageNumber 페이지 번호
      * @return UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
      */
-    @Override
-    public UserPagingResultDTO<UserDTO> select10Users(long pageNumber) {
-        //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.
-        List<User> userList =  userDAO.select10Users(pageNumber);
-        List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
+//    @Override
+//    public UserPagingResultDTO<UserDTO> select10Users(long pageNumber) {
+//        //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.
+//        List<User> userList =  userDAO.select10Users(pageNumber);
+//        List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
+//
+//        //총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
+//        long totalUsers = userDAO.countUsers();
+//        ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
+//
+//        UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
+//                .userDTOList(userDTOList)
+//                .buttonBlockDTO(buttonBlockDTO)
+//                .build();
+//        return userPagingResultDTO;
+//    }
 
-        //총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
-        long totalUsers = userDAO.countUsers();
-        ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
+
+    /**
+     * dhtmlx8용
+     * 페이지 진입시 전체 회원들 목록을 조회해서 준다.
+     * @return UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
+     */
+    @Override
+    public UserPagingResultDTO<UserDTO> selectAllUsers() {
+        //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.
+        List<User> userList =  userDAO.selectAllUsers();
+        List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
 
         UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
                 .userDTOList(userDTOList)
-                .buttonBlockDTO(buttonBlockDTO)
                 .build();
         return userPagingResultDTO;
     }

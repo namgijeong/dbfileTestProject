@@ -70,12 +70,25 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /*시간 최신순 10개만 user 정보 출력*/
+//    @Override
+//    public List<User> select10Users(Long pageNumber) {
+//        //페이지는 0부터 시작
+//        Page<User> userPage= userRepository.findAllByOrderByRegDateDesc(PageRequest.of((int)(pageNumber-1), 10));
+//        log.info("paging jpa 결과 : "+userPage.getContent());
+//        List<User> userList = userPage.getContent();
+//
+//        return userList;
+//    }
+
+    /**
+     * dhtmlx8용
+     * 페이지 진입시 전체 유저리스트 뽑기
+     * @return User List
+     */
     @Override
-    public List<User> select10Users(Long pageNumber) {
+    public List<User> selectAllUsers() {
         //페이지는 0부터 시작
-        Page<User> userPage= userRepository.findAllByOrderByRegDateDesc(PageRequest.of((int)(pageNumber-1), 10));
-        log.info("paging jpa 결과 : "+userPage.getContent());
-        List<User> userList = userPage.getContent();
+        List<User> userList= userRepository.findAllByOrderByRegDateDesc();
 
         return userList;
     }
