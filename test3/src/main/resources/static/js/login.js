@@ -198,13 +198,13 @@ const settingForm = () => {
     });
 
     //로그인 버튼 이벤트 달기
-    responseDivForm.events.on("click", (id, event) => {
+    loginForm.events.on("click", (id, event) => {
         switch (id) {
             //이걸 클릭했을때
-            case "findAllButton":
-                console.log("파일 올리기 버튼 클릭");
+            case "loginSubmit":
+                console.log("로그인 버튼 클릭");
                 //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
-                ajaxSelectAll(event);
+                ajaxSubmit(event);
                 break;
         }
     });
@@ -256,5 +256,125 @@ const settingForm = () => {
         }
     });
 
+}
+
+
+/**
+ *  로그인 로직을 Ajax로 처리한다.
+ * @param event
+ */
+function ajaxSubmit(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("id").value;
+    const pwd = document.getElementById("pwd").value;
+
+    const loginData = {
+        id: id,
+        pwd: pwd,
+    };
+
+    console.log("{\"id\":id, \"pwd\":pwd} json 문자열 출력 : "+JSON.stringify({"id":id, "pwd":pwd}));
+    console.log("{id:id, pwd:pwd} json 문자열 출력 : "+JSON.stringify({id:id, pwd:pwd}));
+    console.log("{id,pwd} json 문자열 출력 : "+JSON.stringify({id, pwd}));
+
+    fetch("/login/loginCheck", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(loginData)
+    }) .then(async response => {
+        /*
+            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+         */
+        if (response.ok) {
+            const loginAnswer  = await response.json();
+            //makeHtml(loginAnswer);
+        } else {
+            const errorMessage = await response.json();
+            console.log("errorMessage : "+errorMessage);
+
+        }
+    }).catch(error => {
+        console.log("error : "+error);
+    })
+
+}
+
+
+/**
+ * 아이디와 관련한 메시지는 아이디칸 밑에,
+ * 비밀번호와 관련한 메시지는 비밀번호칸 밑에
+ * 메시지가 존재한다면 숨겨져있던 메시지 태그를 보여준다.
+ * @param loginAnswer ResponseBase 응답객체
+ */
+function makeHtml(loginAnswer){
+    let checkDiv = document.getElementById("checkDiv");
+    let idFail = document.getElementById("idFail");
+    let pwdFail = document.getElementById("pwdFail");
+    let responseText = '';
+    let idFailText = '';
+    let pwdFailText = '';
+
+    //기존 결과를 지운다.
+    // hideMessageTag(idFail);
+    // hideMessageTag(pwdFail);
+    // hideMessageTag(checkDiv);
+
+    /*
+        boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
+        getXxx()가 아니라 isXxx()가 자동으로 인식
+        따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
+    */
+
+    if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
+        switch (loginAnswer.content.exceptionCode) {
+            case "FAIL_LOGIN_VALID":
+                showMessageTag(checkDiv);
+                responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
+
+                judgeLoginField(loginAnswer.content.exceptionMessage, idFailText, idFail, pwdFailText, pwdFail);
+                break;
+
+            default: //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
+                showMessageTag(checkDiv);
+                responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
+
+                judgeLoginField(loginAnswer.content, idFailText, idFail, pwdFailText, pwdFail);
+
+        }
+
+    } else { //아이디랑 비번이 맞다.
+        window.location.href = "/user/userList/page?pageNumber=1";
+    }
+
+    checkDiv.innerHTML = responseText;
+}
+
+
+/**
+ * 로그인 필드 중 어느 로그인 필드가 잘못됬는지를 체크하여 메시지를 붙인다.
+ * @param exceptionMessage ResponseBase의 content 혹은 ResponseBase의 content의 ErrorResponse의 exceptionMessage
+ * @param idFailText id 실패 메시지
+ * @param idFail id 실패 문구를 붙일 태그
+ * @param pwdFailText pwd 실패 메시지
+ * @param pwdFail pwd 실패 문구를 붙일 태그
+ */
+function judgeLoginField(exceptionMessage, idFailText, idFail, pwdFailText, pwdFail) {
+    switch (exceptionMessage.loginField) {
+        case "ID":
+            idFailText += `<h5>${exceptionMessage.exceptionMessage}</h5>`;
+            //showMessageTag(idFail);
+            break;
+
+        case "PWD":
+            pwdFailText += `<h5>${exceptionMessage.exceptionMessage}</h5>`;
+            //showMessageTag(pwdFail);
+            break;
+
+    }
+
+    idFail.innerHTML = idFailText;
+    pwdFail.innerHTML = pwdFailText;
 }
 
