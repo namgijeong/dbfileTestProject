@@ -1,5 +1,7 @@
 let layout;
-let fileForm;
+let loginForm;
+let alertText1;
+let alertText2;
 
 const init = () => {
 
@@ -83,22 +85,22 @@ const settingForm = () => {
                     },
 
                     //div
-                    {
-                        id: "idFailDiv",
-                        width: 480,
-                        height: 50,
-                        css : "loginFormDivDiv",
-
-                        cols:[
-                            {
-                                id: "idFail",
-                                width:400,
-                                height: 50,
-                            },
-
-                        ]
-
-                    }
+                    // {
+                    //     id: "idFailDiv",
+                    //     width: 480,
+                    //     height: 50,
+                    //     css : "loginFormDivDiv",
+                    //
+                    //     cols:[
+                    //         {
+                    //             id: "idFail",
+                    //             width:400,
+                    //             height: 50,
+                    //         },
+                    //
+                    //     ]
+                    //
+                    // }
 
                 ]
 
@@ -140,22 +142,22 @@ const settingForm = () => {
                     },
 
                     //div
-                    {
-                        id: "pwdFailDiv",
-                        width: 480,
-                        height: 50,
-                        css : "loginFormDivDiv",
-
-                        cols:[
-                            {
-                                id: "pwdFail",
-                                width:400,
-                                height: 50,
-                            },
-
-                        ]
-
-                    }
+                    // {
+                    //     id: "pwdFailDiv",
+                    //     width: 480,
+                    //     height: 50,
+                    //     css : "loginFormDivDiv",
+                    //
+                    //     cols:[
+                    //         {
+                    //             id: "pwdFail",
+                    //             width:400,
+                    //             height: 50,
+                    //         },
+                    //
+                    //     ]
+                    //
+                    // }
 
                 ]
             },
@@ -185,7 +187,8 @@ const settingForm = () => {
                     {
                         id:"checkDiv",
                         name: "checkDiv",
-
+                        type: "text",
+                        hidden: true,
                         css: "checkDiv",
                         width: 400,
                         padding: 0,
@@ -216,15 +219,6 @@ const settingForm = () => {
     //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
     dhx.awaitRedraw().then(() => {
 
-        const idFailText = document.querySelector('[data-cell-id="idFail"] > div');
-        if (idFailText) {
-            idFailText.textContent = "아이디가 틀렸습니다.";
-
-            idFailText.classList.add("checkDiv");
-            idFailText.classList.add("failHidden");
-        }
-
-
         const idDivText = document.querySelector('[data-cell-id="idDiv"] > div');
         if(idDivText) {
             idDivText.textContent = "ID";
@@ -232,13 +226,6 @@ const settingForm = () => {
             idDivText.classList.add("itemDiv");
         }
 
-        const pwdFailText = document.querySelector('[data-cell-id="pwdFail"] > div');
-        if (pwdFailText) {
-            pwdFailText.textContent = "비밀번호가 틀렸습니다.";
-
-            pwdFailText.classList.add("checkDiv");
-            pwdFailText.classList.add("failHidden");
-        }
 
         const pwdDivText = document.querySelector('[data-cell-id="pwdDiv"] > div');
         if(pwdDivText) {
@@ -247,13 +234,6 @@ const settingForm = () => {
             pwdDivText.classList.add("itemDiv");
         }
 
-        const checkDivText = document.querySelector('[data-cell-id="checkDiv"] > div');
-        if(checkDivText) {
-            checkDivText.textContent = "로그인을 다시 시도해주세요.";
-
-            checkDivText.classList.add("checkDiv");
-            checkDivText.classList.add("failHidden");
-        }
     });
 
 }
@@ -266,8 +246,8 @@ const settingForm = () => {
 function ajaxSubmit(event) {
     event.preventDefault();
 
-    const id = document.getElementById("id").value;
-    const pwd = document.getElementById("pwd").value;
+    const id = loginForm.getItem("id").getValue();
+    const pwd = loginForm.getItem("pwd").getValue();
 
     const loginData = {
         id: id,
@@ -289,7 +269,7 @@ function ajaxSubmit(event) {
          */
         if (response.ok) {
             const loginAnswer  = await response.json();
-            //makeHtml(loginAnswer);
+            makeHtml(loginAnswer);
         } else {
             const errorMessage = await response.json();
             console.log("errorMessage : "+errorMessage);
@@ -309,18 +289,6 @@ function ajaxSubmit(event) {
  * @param loginAnswer ResponseBase 응답객체
  */
 function makeHtml(loginAnswer){
-    let checkDiv = document.getElementById("checkDiv");
-    let idFail = document.getElementById("idFail");
-    let pwdFail = document.getElementById("pwdFail");
-    let responseText = '';
-    let idFailText = '';
-    let pwdFailText = '';
-
-    //기존 결과를 지운다.
-    // hideMessageTag(idFail);
-    // hideMessageTag(pwdFail);
-    // hideMessageTag(checkDiv);
-
     /*
         boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
         getXxx()가 아니라 isXxx()가 자동으로 인식
@@ -330,51 +298,24 @@ function makeHtml(loginAnswer){
     if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
         switch (loginAnswer.content.exceptionCode) {
             case "FAIL_LOGIN_VALID":
-                showMessageTag(checkDiv);
-                responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
-
-                judgeLoginField(loginAnswer.content.exceptionMessage, idFailText, idFail, pwdFailText, pwdFail);
+                alertText1 = loginAnswer.content.exceptionMessage.exceptionMessage;
                 break;
 
             default: //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
-                showMessageTag(checkDiv);
-                responseText += `<h3>로그인을 다시 시도해주세요.</h3>`;
-
-                judgeLoginField(loginAnswer.content, idFailText, idFail, pwdFailText, pwdFail);
+                alertText1 = loginAnswer.content.exceptionMessage;
 
         }
 
+        //로그인 경고 메시지 칸 보이기
+        loginForm.getItem("checkDiv").show();
+
     } else { //아이디랑 비번이 맞다.
         window.location.href = "/user/userList/page?pageNumber=1";
+
+        //로그인 경고 메시지 칸 숨기기
+        loginForm.getItem("checkDiv").hide();
     }
 
-    checkDiv.innerHTML = responseText;
-}
-
-
-/**
- * 로그인 필드 중 어느 로그인 필드가 잘못됬는지를 체크하여 메시지를 붙인다.
- * @param exceptionMessage ResponseBase의 content 혹은 ResponseBase의 content의 ErrorResponse의 exceptionMessage
- * @param idFailText id 실패 메시지
- * @param idFail id 실패 문구를 붙일 태그
- * @param pwdFailText pwd 실패 메시지
- * @param pwdFail pwd 실패 문구를 붙일 태그
- */
-function judgeLoginField(exceptionMessage, idFailText, idFail, pwdFailText, pwdFail) {
-    switch (exceptionMessage.loginField) {
-        case "ID":
-            idFailText += `<h5>${exceptionMessage.exceptionMessage}</h5>`;
-            //showMessageTag(idFail);
-            break;
-
-        case "PWD":
-            pwdFailText += `<h5>${exceptionMessage.exceptionMessage}</h5>`;
-            //showMessageTag(pwdFail);
-            break;
-
-    }
-
-    idFail.innerHTML = idFailText;
-    pwdFail.innerHTML = pwdFailText;
+    loginForm.getItem("checkDiv").setValue(alertText1);
 }
 

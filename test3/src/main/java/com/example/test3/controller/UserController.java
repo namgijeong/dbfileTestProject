@@ -140,4 +140,5 @@ public class UserController {
         UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
         return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
+
 }

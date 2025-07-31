@@ -34,8 +34,23 @@ public class UserDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
 
-    private Long pageNumber;
+    /*
+        db에 timestamp로 넣기 위해
+        String을 LocalDateTime으로 변환
+    */
+    @JsonProperty("start_reg_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime startRegDate;
 
+    /*
+        db에 timestamp로 넣기 위해
+        String을 LocalDateTime으로 변환
+    */
+    @JsonProperty("end_reg_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endRegDate;
+
+    private Long pageNumber;
 
     public UserDTO() {}
 

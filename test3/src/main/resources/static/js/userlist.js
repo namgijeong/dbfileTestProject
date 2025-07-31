@@ -426,15 +426,15 @@ const searchAjaxFirst = (event) => {
     let level = searchForm.getItem("level").getValue();
     let desc = searchForm.getItem("desc").getValue();
     let regDate = SearchCalendar.getValue();
-    let regDate1 = regDate[0];
-    let regDate2 = regDate[1];
+    let startRegDate = regDate[0];
+    let endRegDate = regDate[1];
     let pageNumber = 1;
 
     console.log("id : "+id);
     console.log("name : "+name);
     console.log("level : "+level);
-    console.log("regDate1 : "+regDate1);
-    console.log("regDate2 : "+regDate2);
+    console.log("startRegDate : "+startRegDate);
+    console.log("endRegDate : "+endRegDate);
 
 
     //만약 사용자가 입력을 안했으면 null로 바꾸기
@@ -444,9 +444,9 @@ const searchAjaxFirst = (event) => {
     name = makeBlankToNull(name);
     level = makeBlankToNull(level);
     desc = makeBlankToNull(desc);
-    if (regDate1 === undefined || regDate2 === undefined) {
-        regDate1 = null;
-        regDate2 = null;
+    if (startRegDate === undefined || endRegDate === undefined) {
+        startRegDate = null;
+        endRegDate = null;
     }
 
     console.log("formated id: "+id);
@@ -458,9 +458,8 @@ const searchAjaxFirst = (event) => {
         name: name,
         level: level,
         desc: desc,
-        //regDate : formatedDate,
-        reg_date : formatedDate,
-        pageNumber : pageNumber
+        start_reg_date: startRegDate,
+        end_reg_date: endRegDate,
     };
 
     // fetch("/user/search/userList/ajax", {
