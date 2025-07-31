@@ -197,6 +197,17 @@ const settingForm = () => {
         ]
     });
 
+    //로그인 버튼 이벤트 달기
+    responseDivForm.events.on("click", (id, event) => {
+        switch (id) {
+            //이걸 클릭했을때
+            case "findAllButton":
+                console.log("파일 올리기 버튼 클릭");
+                //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
+                ajaxSelectAll(event);
+                break;
+        }
+    });
 
     //이렇게 해당 레이아웃 cell 에 다시 attach 까지 해주면 화면에 나올거에요
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음

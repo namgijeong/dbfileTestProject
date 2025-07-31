@@ -141,25 +141,14 @@
             line-height: 40px !important;
         }
 
-        /*table{*/
-        /*    margin:auto;*/
-        /*    border-collapse:collapse;*/
-        /*}*/
-        /*table tr:nth-child(1){*/
-        /*    background-color:tomato;*/
-        /*}*/
-        /*table th,td{*/
-        /*    width: 100px;*/
-        /*    height: 50px;*/
-        /*    text-align: center;*/
-        /*    border: 1px solid #000;*/
-
-        /*    vertical-align: middle;   !* 가운데 *!*/
-        /*}*/
-
-        /*td:nth-child(6){*/
-        /*    width:300px;*/
-        /*}*/
+        /*
+            이 속성이 동작하려면 부모 요소가 CSS Grid 레이아웃이어야 해요.
+            DHTMLX 8 Grid는 내부적으로 display: grid를 사용하기 때문에 grid-column이 정상 동작
+         */
+        .dhx_grid-cell[data-column-id="pwd"][data-id="empty"] {
+            grid-column: 1 / span 6 !important;
+            text-align: center !important;
+        }
     </style>
     <script type="text/javascript" src="/dhtmlx8/codebase/suite.js"></script>
     <link rel="stylesheet" href="/dhtmlx8/codebase/suite.css">

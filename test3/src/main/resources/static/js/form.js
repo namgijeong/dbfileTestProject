@@ -269,52 +269,6 @@ const makeResultHtml = (response) => {
             //조회하기 결과 표가 붙을 자리
             //responseSpaceText += `<div id="result"></div>`;
 
-            const dataset =[];
-            const config = {
-                //id 속성은 컬럼명과 JSON key를 연결하는 역할
-                //hidden: true로 설정된 컬럼은 그리드에 표시는 안 되지만, grid.data.getItem()에서는 정상적으로 조회
-                //columns는 "화면에 어떤 필드를 어떤 방식으로 표시할지" 정의
-                //data는 실제로 **"어떤 값을 각 행(row)에 넣을지"**를 담는 별도의 객체
-                //1. grid 생성시 포함
-                // data: [...]
-                // 방법 2: 나중에 넣기
-                //grid.data.parse([...]);
-                //data의 자료형에 자바스크립트  Date() 객체를 사용가능
-                columns: [
-                    //id: "loginId" → 각 데이터 행(row)의 loginId 필드 값을 이 컬럼에 표시
-                    //header: [{ text: "Login ID" }] → 헤더 셀에 "Login ID" 라는 텍스트 표시
-                    { id: "failLine", header: [{ text:"failLine"}], width:100 },
-                    { id: "failText", header: [{ text: "failText"}], width:400 },
-                ],
-
-                //사방으로 border가 있다
-                css: "dhx_widget--bordered table",
-
-                //그리드의 열을 그리드 크기에 맞게 조정
-                //단, 이 역시 부모 layout이 공간을 제한하면 무용지물이 될 수 있음.
-                autoWidth: true,
-                //열 머리글을 클릭했을 때 정렬이 활성화되는지 여부를 정의
-                sortable: false,
-                // 열의 모든 도구 설명을 활성화/비활성화
-                tooltip: false
-            };
-            falseResult = new dhx.Grid(null, config);
-
-            response.content.userResultDTOList.forEach(userResultDTO => {
-                if (userResultDTO.successFlag == false) {
-
-                    let data = {failLine : userResultDTO.failLine, failText : userResultDTO.failText};
-                    dataset.push(userResultDTO);
-                    console.log("data : "+data.failLine);
-                    console.log("data : "+data.failText);
-
-                }
-            });
-
-            console.log("dataset : "+dataset);
-            falseResult.data.parse(dataset);
-            resultGrid = falseResult;
-
 
 
         } else { //일부 실패
@@ -372,6 +326,9 @@ const makeResultHtml = (response) => {
             console.log("dataset : "+dataset);
             falseResult.data.parse(dataset);
             resultGrid = falseResult;
+
+            //실패든, 성공이든 페이징을 해야한다.
+            settingPagination(falseResult);
 
         }
     }
@@ -437,8 +394,10 @@ const makeResultHtml = (response) => {
         console.log("findallbutton show");
 
         dhx.awaitRedraw().then(() => {
+            //기존에 출력했던 하나라도 실패시 표는 안보이게 한다.
+            layout.getCell("falseResult").hide();
+
             responseDivForm.getItem("findAllButton").show();
-            layout.getCell("showTrueResult").show();
 
             //조회하기 버튼 이벤트 달기
             responseDivForm.events.on("click", (id, event) => {
@@ -447,7 +406,7 @@ const makeResultHtml = (response) => {
                     case "findAllButton":
                         console.log("파일 올리기 버튼 클릭");
                         //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
-                        ajaxSubmit(event);
+                        ajaxSelectAll(event);
                         break;
                 }
             });
@@ -461,6 +420,9 @@ const makeResultHtml = (response) => {
         console.log("showFalseResult show");
 
         dhx.awaitRedraw().then(() => {
+            //기존에 출력했던 모두 성공시 표는 안보이게 한다.
+            layout.getCell("trueResult").hide();
+
             responseDivForm.getItem("responseTextDiv3").show();
             layout.getCell("falseResult").show();
             layout.getCell("falseResult").attach(falseResult);
@@ -468,8 +430,6 @@ const makeResultHtml = (response) => {
         });
     }
 
-    //실패든, 성공이든 페이징을 해야한다.
-    settingPagination(resultGrid);
 
     //이렇게 해당 레이아웃 cell 에 다시 attach 까지 해주면 화면에 나올거에요
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
@@ -518,11 +478,12 @@ const settingPagination = (resultGrid) => {
 const ajaxSelectAll = (event) => {
     event.preventDefault();
 
+
     $.ajax({
         url: '/upload/selectFullUsers',
         method: 'POST',
         success: function(response) {
-            //makeTableHtml(response);
+            makeTableHtml(response);
         },
         error: function(xhr, status, error) {
             console.error('실패:', error);
@@ -537,11 +498,10 @@ const ajaxSelectAll = (event) => {
  * @param response UserDTO List
  */
 const makeTableHtml = (response) => {
-    layout.getCell("result").show();
 
-    let resultSpace = document.getElementById('result');
-    let resultSpaceText = '';
-
+    // let resultSpace = document.getElementById('result');
+    // let resultSpaceText = '';
+    const dataset = [];
     const config = {
         //id 속성은 컬럼명과 JSON key를 연결하는 역할
         //hidden: true로 설정된 컬럼은 그리드에 표시는 안 되지만, grid.data.getItem()에서는 정상적으로 조회
@@ -563,8 +523,6 @@ const makeTableHtml = (response) => {
             { id: "reg_date", header: [{ text: "REGDATE" }], width:300 },
         ],
 
-        data: dataset,
-
         //사방으로 border가 있다
         css: "dhx_widget--bordered table",
 
@@ -583,9 +541,8 @@ const makeTableHtml = (response) => {
     //     userResults.destructor();
     // }
 
-    result = new dhx.Grid(null, config);
+    trueResult = new dhx.Grid(null, config);
 
-    layout.getCell("result").attach(result);
 
     // resultSpaceText += '<table>';
     //
@@ -600,7 +557,12 @@ const makeTableHtml = (response) => {
 
     if (response.content.length === 0) {
         //resultSpaceText += `</table>`;
-        resultSpaceText += `<h1>회원 정보가 비어 있습니다.</h1>`;
+        //resultSpaceText += `<h1>회원 정보가 비어 있습니다.</h1>`;
+        let data = {id:"empty", pwd : "회원 정보가 비어 있습니다."};
+        dataset.push(data);
+        console.log("data : "+data.id);
+        trueResult.data.parse(dataset);
+
     } else {
         response.content.forEach(userDTO => {
             console.log("배열 하나: " + userDTO+'\n');
@@ -627,16 +589,24 @@ const makeTableHtml = (response) => {
             // resultSpaceText += `<td> ${regDateText} </td>`;
             // resultSpaceText += `</tr>`;
 
-
+            let data = {id : userDTO.id, pwd : userDTO.pwd, name: userDTO.name, level:userDTO.level , desc : descText, reg_date : regDateText};
+            dataset.push(data);
+            console.log("data : "+data.id);
 
         });
 
-        result.data.parse(response.content);
+        trueResult.data.parse(dataset);
 
-        resultSpaceText += `</table>` ;
+        //실패든, 성공이든 페이징을 해야한다.
+        settingPagination(trueResult);
+
+        //resultSpaceText += `</table>` ;
     }
 
     //resultSpace.innerHTML = resultSpaceText;
+
+    layout.getCell("trueResult").show();
+    layout.getCell("trueResult").attach(trueResult);
 
 }
 
