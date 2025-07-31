@@ -38,7 +38,15 @@ public interface UserDAO {
 //    List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
     /*query dsl 검색결과 회원 리스트 페이지단위*/
-    List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber);
+//    List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber);
+
+    /**
+     * dhtmlx8 용
+     * 검색 결과에 맞는 회원 리스트들 뽑기
+     * @param searchUserDTO UserDTO
+     * @return UserDTO List
+     */
+    List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
     /*query dsl 검색결과 회원 리스트 전체 개수*/
     Long selectUsersCountBySearchUserDTO(UserDTO searchUserDTO);

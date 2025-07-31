@@ -22,9 +22,9 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<UserDTO> searchUsers(UserDTO dto, Pageable pageable) {
-
-        //Q 클래스는 엔티티 클래스의 메타 정보를 담고 있는 클래스
+    //public List<UserDTO> searchUsers(UserDTO dto, Pageable pageable) {
+    public List<UserDTO> searchUsers(SearchUserDTO dto) {
+    //Q 클래스는 엔티티 클래스의 메타 정보를 담고 있는 클래스
         //타입 안전한 쿼리작성을 할 수 있다
         QUser user = QUser.user;
 
@@ -54,15 +54,18 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         if (dto.getDesc() != null && !dto.getDesc().isBlank()) {
             booleanBuilder.and(user.desc.contains(dto.getDesc()));
         }
-        if (dto.getRegDate() != null) {
+        if (dto.getStartRegDate() != null && dto.getEndRegDate() != null) {
             //localdatetime을 localdate로 바꿔서 해도 작동
             //Timestamp.valueOf() => 매개변수는 String s, LocalDateTime dateTime
             //atStartOfDay() =>  LocalDate 타입에서만 사용, 해당 날짜의 자정 (00:00:00) 을 나타내는 LocalDateTime 객체를 반환
             //Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
-            LocalDateTime startDate = dto.getRegDate().toLocalDate().atStartOfDay();
+            LocalDateTime startDate = dto.getStartRegDate();
+
             //plusDays => LocalDate, LocalDateTime 타입 모두 사용가능
             //Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
-            LocalDateTime endDate = dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay();
+            LocalDateTime endDate = dto.getEndRegDate();
+
+
             //goe(): A >= ?
             //gt(): A > ?
             //loe(): A <= ?
@@ -70,7 +73,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
             log.info("Timestamp startDate : "+startDate);
             log.info("Timestamp endDate : "+endDate);
             booleanBuilder.and(user.regDate.goe(startDate)); // 이상
-            booleanBuilder.and(user.regDate.lt(endDate)); //  미만
+            booleanBuilder.and(user.regDate.loe(endDate)); //  미만
         }
 
         System.out.println("검색조건 id: " + dto.getId());
@@ -94,9 +97,9 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
                 //OFFSET은 몇 번째 레코드부터 시작할지를 지정하는 값
                 //페이지 번호는 0부터 시작하는 인덱스를 기준
                 //첫 번째 페이지 (pageNumber = 0): 0번째부터 9번째까지의 레코드 (offset = 0)
-                .offset(pageable.getOffset())
+                //.offset(pageable.getOffset())
                 //limit은 한 번에 가져올 데이터의 개수
-                .limit(pageable.getPageSize())
+                //.limit(pageable.getPageSize())
                 //리스트를 조회한다, 값이 없을 때에는 빈 리스트가 반환
                 .fetch();
 

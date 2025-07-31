@@ -30,26 +30,29 @@ public class SearchUserDTO {
 
     private String desc;
 
-    private Long pageNumber;
-
-//    @JsonProperty("reg_date")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-//    private LocalDateTime regDate;
-//
-//    @JsonProperty("reg_date_end")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-//    private LocalDateTime regDateEnd;
-
-    //날짜 문자열을 Java 날짜 객체로 변환
-    //자바 날짜 객체를 문자열로 변환
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    private LocalDate regDate;
-
-
     //Jackson의 @JsonFormat,JsonProperty는 @RequestBody일 때만 적용
     //하지만 @ModelAttribute일 경우에는 @DateTimeFormat을 사용
     @JsonProperty("reg_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
+
+    /*
+       db에 timestamp로 넣기 위해
+       String을 LocalDateTime으로 변환
+   */
+    @JsonProperty("start_reg_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime startRegDate;
+
+    /*
+        db에 timestamp로 넣기 위해
+        String을 LocalDateTime으로 변환
+    */
+    @JsonProperty("end_reg_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endRegDate;
+
+    private Long pageNumber;
+
 }

@@ -1,5 +1,6 @@
 package com.example.test3.controller;
 
+import com.example.test3.data.dto.SearchUserDTO;
 import com.example.test3.utility.Utility;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -135,7 +136,7 @@ public class UserController {
      * @return ResponseBase 응답
      */
     @PostMapping("/search/userList/ajax")
-    public ResponseEntity<?> searchUserListAndAjax(@RequestBody UserDTO searchUserDTO) {
+    public ResponseEntity<?> searchUserListAndAjax(@RequestBody SearchUserDTO searchUserDTO) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
         UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
         return Utility.makeResponseEntity(true, userPagingResultDTO);

@@ -27,23 +27,6 @@ public class UserDAOImpl implements UserDAO {
     /*로그인 성공여부*/
     @Override
     public Optional<User> select(String id) {
-//        Optional<User> optionalUser = userRepository.findByIdAndPwd(id, pwd);
-//        User user = null;
-//        if (optionalUser.isPresent()) { // 아이디랑 비번 둘다 맞으면
-//            user = optionalUser.get();
-//
-//        } else {
-//            Optional<User> optionalUser2 = userRepository.findById(id);
-//            if (optionalUser2.isPresent()) {  //아이디만 맞으면
-//                user = optionalUser2.get();
-//            } else {
-//                Optional<User> optionalUser3 = userRepository.findByPwd(pwd);
-//                if (optionalUser3.isPresent()) {
-//                    user = optionalUser3.get(); //비밀번호만 맞으면
-//                }
-//            }
-//
-//        }
 
         Optional<User> optionalUser = userRepository.findById(id);
 
@@ -101,10 +84,24 @@ public class UserDAOImpl implements UserDAO {
     }
 
     //querydsl 버전 조건에 맞는 페이지별 회원 목록
+    // @Override
+//    public List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber) {
+//        //페이지는 0부터 시작
+//        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO, PageRequest.of((int)(pageNumber-1), 10));
+//
+//        return searchUserDTOResponseList;
+//    }
+
+    /**
+     * dhtmlx8 용
+     * 검색 결과에 맞는 회원 리스트들 뽑기
+     * @param searchUserDTO UserDTO
+     * @return UserDTO List
+     */
     @Override
-    public List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber) {
+    public List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
         //페이지는 0부터 시작
-        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO, PageRequest.of((int)(pageNumber-1), 10));
+        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO);
 
         return searchUserDTOResponseList;
     }

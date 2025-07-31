@@ -428,7 +428,6 @@ const searchAjaxFirst = (event) => {
     let regDate = SearchCalendar.getValue();
     let startRegDate = regDate[0];
     let endRegDate = regDate[1];
-    let pageNumber = 1;
 
     console.log("id : "+id);
     console.log("name : "+name);
@@ -447,11 +446,16 @@ const searchAjaxFirst = (event) => {
     if (startRegDate === undefined || endRegDate === undefined) {
         startRegDate = null;
         endRegDate = null;
+    } else { //localdatetime으로 매핑하기 위해 00:00:00 붙인다.
+        startRegDate = plusZeroTime(startRegDate);
+        endRegDate = plusZeroTime(endRegDate);
     }
 
     console.log("formated id: "+id);
     console.log("formated name: "+name);
     console.log("formated desc: "+desc);
+    console.log("formated startRegDate: "+startRegDate);
+    console.log("formated endRegDate: "+endRegDate);
 
     const searchData = {
         id: id,
@@ -462,37 +466,37 @@ const searchAjaxFirst = (event) => {
         end_reg_date: endRegDate,
     };
 
-    // fetch("/user/search/userList/ajax", {
-    //     method: "POST",
-    //     headers: {"Content-Type": "application/json"},
-    //     body: JSON.stringify(searchData)
-    // }) .then(async response => {
-    //     /*
-    //         그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
-    //         응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
-    //      */
-    //     if (response.ok) {
-    //         const searchAnswer  = await response.json();
-    //
-    //         console.log("검색 조회 성공")
-    //         makePagingTable(searchAnswer.content.userDTOList);
-    //         makePagingButton(searchAnswer.content.buttonBlockDTO);
-    //         //일단 1페이지만
-    //         makeCurrentButtonBlur(clickedNumber);
-    //     } else {
-    //         const errorMessage = await response.json();
-    //         console.log("errorMessage : "+errorMessage);
-    //
-    //     }
-    // }).catch(error => {
-    //     console.log("error : "+error);
-    // })
+    fetch("/user/search/userList/ajax", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(searchData)
+    }) .then(async response => {
+        /*
+            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+         */
+        if (response.ok) {
+            const searchAnswer  = await response.json();
+
+            console.log("검색 조회 성공")
+            makePagingTable(searchAnswer.content.userDTOList);
+            makePagingButton(searchAnswer.content.userDTOList);
+
+        } else {
+            const errorMessage = await response.json();
+            console.log("errorMessage : "+errorMessage);
+
+        }
+    }).catch(error => {
+        console.log("error : "+error);
+    })
 
 }
 
 
 const settingGrid = () => {
     const dataset =[];
+    //thymeleaf 변수
     userDTOList.forEach(userDTO => {
         console.log("userDTO.id : "+userDTO.id);
 
@@ -588,6 +592,12 @@ const settingPagination = () => {
     });
 }
 
+const makePagingTable = (userDTOList) => {
+    userResults.data.parse(userDTOList);
+}
+const makePagingButton = (userDTOList) => {
+    pagination.data.parse(userDTOList);
+}
 
 const awaitRedraw = () => {
     //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
