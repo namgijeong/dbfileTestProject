@@ -96,8 +96,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "id1",
-                                name : "id1",
+                                id : "id",
+                                name : "id",
                                 css: "input",
                                 type : "input",
                                 inputType : "text",
@@ -139,8 +139,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "name1",
-                                name : "name1",
+                                id : "name",
+                                name : "name",
                                 css: "input",
                                 type : "input",
                                 inputType : "text",
@@ -183,37 +183,37 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "level1",
-                                name : "level1",
+                                id : "level",
+                                name : "level",
                                 css: "input",
                                 type : "combo",
                                 data : [
-                                    {id: "id_1", value :"A"},
-                                    {id: "id_2", value :"B"},
-                                    {id: "id_3", value :"C"},
-                                    {id: "id_4", value :"D"},
-                                    {id: "id_5", value :"E"},
-                                    {id: "id_6", value :"F"},
-                                    {id: "id_7", value :"G"},
-                                    {id: "id_8", value :"H"},
-                                    {id: "id_9", value :"I"},
-                                    {id: "id_10", value :"J"},
-                                    {id: "id_11", value :"K"},
-                                    {id: "id_12", value :"L"},
-                                    {id: "id_13", value :"M"},
-                                    {id: "id_14", value :"N"},
-                                    {id: "id_15", value :"O"},
-                                    {id: "id_16", value :"P"},
-                                    {id: "id_17", value :"Q"},
-                                    {id: "id_18", value :"R"},
-                                    {id: "id_19", value :"S"},
-                                    {id: "id_20", value :"T"},
-                                    {id: "id_21", value :"U"},
-                                    {id: "id_22", value :"V"},
-                                    {id: "id_23", value :"W"},
-                                    {id: "id_24", value :"X"},
-                                    {id: "id_25", value :"Y"},
-                                    {id: "id_26", value :"Z"},
+                                    {id: "A", value :"A"},
+                                    {id: "B", value :"B"},
+                                    {id: "C", value :"C"},
+                                    {id: "D", value :"D"},
+                                    {id: "E", value :"E"},
+                                    {id: "F", value :"F"},
+                                    {id: "G", value :"G"},
+                                    {id: "H", value :"H"},
+                                    {id: "I", value :"I"},
+                                    {id: "J", value :"J"},
+                                    {id: "K", value :"K"},
+                                    {id: "L", value :"L"},
+                                    {id: "M", value :"M"},
+                                    {id: "N", value :"N"},
+                                    {id: "O", value :"O"},
+                                    {id: "P", value :"P"},
+                                    {id: "Q", value :"Q"},
+                                    {id: "R", value :"R"},
+                                    {id: "S", value :"S"},
+                                    {id: "T", value :"T"},
+                                    {id: "U", value :"U"},
+                                    {id: "V", value :"V"},
+                                    {id: "W", value :"W"},
+                                    {id: "X", value :"X"},
+                                    {id: "Y", value :"Y"},
+                                    {id: "Z", value :"Z"},
 
                                 ],
 
@@ -256,8 +256,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "desc1",
-                                name : "desc1",
+                                id : "desc",
+                                name : "desc",
                                 css: "input",
                                 type : "input",
                                 inputType : "text",
@@ -300,8 +300,8 @@ const settingForm = () => {
 
                         cols : [
                             {
-                                id : "regDate1",
-                                name : "regDate1",
+                                id : "regDate",
+                                name : "regDate",
                                 //A control to attach HTML code or the DHTMLX widgets.
                                 type : "container",
                                 css: "input",
@@ -367,12 +367,13 @@ const settingForm = () => {
             case "searchButton":
                 console.log("찾기 버튼 클릭");
                 //여기다가 클릭후 ajax 실행시켜서 동적으로 grid 생성해야함
+                searchAjaxFirst(event);
                 break;
         }
     });
 
     //콤보박스 level의 값이 바뀌면
-    searchForm.getItem("level1").events.on("change", function(ids) {
+    searchForm.getItem("level").events.on("change", function(ids) {
         console.log("change", ids);
     });
 
@@ -411,47 +412,46 @@ const settingCalendar = () => {
     console.log("calendar 만들기 ");
 
     //위 dhx.Form 생성할때 내부요소에 type container로 지정해서 가능하다
-    searchForm.getItem("regDate1").attach(SearchCalendar);
+    searchForm.getItem("regDate").attach(SearchCalendar);
 }
 
 
 //검색 버튼을 눌러서 ajax
-function searchAjaxFirst(event) {
+const searchAjaxFirst = (event) => {
     event.preventDefault();
 
-    let id = document.getElementById("id").value;
-    let name = document.getElementById("name").value;
-    let level = document.getElementById("level").value;
-    let desc = document.getElementById("desc").value;
+    let id = searchForm.getItem("id").getValue();
+    let name = searchForm.getItem("name").getValue();
+    //returns IDs of options which are currently selected in the Combo control
+    let level = searchForm.getItem("level").getValue();
+    let desc = searchForm.getItem("desc").getValue();
+    let regDate = SearchCalendar.getValue();
+    let regDate1 = regDate[0];
+    let regDate2 = regDate[1];
     let pageNumber = 1;
 
-    //만약 input에 사용자가 option에 있는 값대신 임의로 입력할 수 있다.
-    let dataList = document.getElementById("levelList");
-    let options = dataList.querySelectorAll("option");
-    let inputValid = false;
-
-    for (option of options) {
-        if (option.value === level) {
-            inputValid = true;
-            break;
-        }
-    }
-
-    if (inputValid === false) {
-        level = null;
-    }
-
-    console.log("id: "+id);
+    console.log("id : "+id);
     console.log("name : "+name);
-    console.log("level: "+level);
-    console.log("desc: "+desc);
-    console.log("reg_date: "+formatedDate);
+    console.log("level : "+level);
+    console.log("regDate1 : "+regDate1);
+    console.log("regDate2 : "+regDate2);
+
 
     //만약 사용자가 입력을 안했으면 null로 바꾸기
-    //이미 위에서 level과 formatedDate는 null처리가 되어있다.
+    //level은 dhtmlx8 콤보박스에서 잘못된 형식으로 입력하면 그냥 공백으로 만든다.
+    //regDate는 dhtmlx8 calendar에서 클릭안한 상태라면 undefined가 반환된다.
     id = makeBlankToNull(id);
     name = makeBlankToNull(name);
+    level = makeBlankToNull(level);
     desc = makeBlankToNull(desc);
+    if (regDate1 === undefined || regDate2 === undefined) {
+        regDate1 = null;
+        regDate2 = null;
+    }
+
+    console.log("formated id: "+id);
+    console.log("formated name: "+name);
+    console.log("formated desc: "+desc);
 
     const searchData = {
         id: id,
@@ -463,31 +463,31 @@ function searchAjaxFirst(event) {
         pageNumber : pageNumber
     };
 
-    fetch("/user/search/userList/ajax", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(searchData)
-    }) .then(async response => {
-        /*
-            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
-            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
-         */
-        if (response.ok) {
-            const searchAnswer  = await response.json();
-
-            console.log("검색 조회 성공")
-            makePagingTable(searchAnswer.content.userDTOList);
-            makePagingButton(searchAnswer.content.buttonBlockDTO);
-            //일단 1페이지만
-            makeCurrentButtonBlur(clickedNumber);
-        } else {
-            const errorMessage = await response.json();
-            console.log("errorMessage : "+errorMessage);
-
-        }
-    }).catch(error => {
-        console.log("error : "+error);
-    })
+    // fetch("/user/search/userList/ajax", {
+    //     method: "POST",
+    //     headers: {"Content-Type": "application/json"},
+    //     body: JSON.stringify(searchData)
+    // }) .then(async response => {
+    //     /*
+    //         그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+    //         응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+    //      */
+    //     if (response.ok) {
+    //         const searchAnswer  = await response.json();
+    //
+    //         console.log("검색 조회 성공")
+    //         makePagingTable(searchAnswer.content.userDTOList);
+    //         makePagingButton(searchAnswer.content.buttonBlockDTO);
+    //         //일단 1페이지만
+    //         makeCurrentButtonBlur(clickedNumber);
+    //     } else {
+    //         const errorMessage = await response.json();
+    //         console.log("errorMessage : "+errorMessage);
+    //
+    //     }
+    // }).catch(error => {
+    //     console.log("error : "+error);
+    // })
 
 }
 
