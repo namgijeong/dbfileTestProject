@@ -295,7 +295,7 @@ function makeHtml(loginAnswer){
         따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
     */
 
-    
+
     if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
         switch (loginAnswer.content.exceptionCode) {
             case "FAIL_LOGIN_VALID":

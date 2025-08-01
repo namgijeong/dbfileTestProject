@@ -23,16 +23,9 @@ public class ProcessResultDTO {
     @Setter
     private String failText;
 
-    /*exception 메세지*/
-    @Setter
-    private String exceptionMessage;
-
-    /*로그인 필드 에러가 어디에서 일어났는지 */
-    @Setter
-    private LoginField loginField;
 
     /*로그인 필드 에러에 관하여 메시지와 LonginField 포함 */
-    private ErrorField  errorField;
+    private ErrorField errorField;
 
     /*로그인 성공시 user정보를 가져오기 위해 */
     @Setter
@@ -47,23 +40,12 @@ public class ProcessResultDTO {
         this.errorField = errorField;
     }
 
-//
-//
-//    @AllArgsConstructor
-//    public static class ErrorField {
-//
-//        String message;
-//        LoginField loginField;
-//
-//    }
 
     private ProcessResultDTO(Builder builder) {
         this.successFlag = builder.successFlag;
         this.successLine = builder.successLine;
         this.failLine = builder.failLine;
         this.failText = builder.failText;
-        this.exceptionMessage = builder.exceptionMessage;
-        this.loginField = builder.loginField;
         this.errorField = builder.errorField;
         this.userDTO = builder.userDTO;
     }
@@ -77,10 +59,6 @@ public class ProcessResultDTO {
         private int failLine;
 
         private String failText;
-
-        private String exceptionMessage;
-
-        private LoginField loginField;
 
         private ErrorField errorField;
 
@@ -103,16 +81,6 @@ public class ProcessResultDTO {
 
         public Builder failText(String failText) {
             this.failText = failText;
-            return this;
-        }
-
-        public Builder exceptionMessage(String exceptionMessage) {
-            this.exceptionMessage = exceptionMessage;
-            return this;
-        }
-
-        public Builder loginField(LoginField loginField) {
-            this.loginField = loginField;
             return this;
         }
 

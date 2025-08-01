@@ -305,7 +305,7 @@ const settingForm = () => {
                                 //A control to attach HTML code or the DHTMLX widgets.
                                 type : "container",
                                 css: "input",
-                                width: 200,
+                                width: 250,
                                 height: 300,
                                 padding : 0,
                             }
@@ -397,7 +397,7 @@ const settingCalendar = () => {
         dateFormat:"%Y-%m-%d",
         //현재 표시된 날짜를 기준으로 이전/다음 달의 날짜를 숨김
         thisMonthOnly:true,
-        width : 200,
+        width : 250,
     });
 
 
@@ -480,7 +480,6 @@ const searchAjaxFirst = (event) => {
 
             console.log("검색 조회 성공")
             makePagingTable(searchAnswer.content.userDTOList);
-            makePagingButton(searchAnswer.content.userDTOList);
 
         } else {
             const errorMessage = await response.json();
@@ -587,13 +586,20 @@ const settingPagination = () => {
     //index: number 새로 활성화된 페이지의 인덱스
     //previousIndex: number- 이전에 활성화된 페이지의 인덱스
     pagination.events.on("change", (index, previousIndex) => {
-        //findSmsUsage(index);
         console.log("현재 페이지: "+index);
     });
 }
 
 const makePagingTable = (userDTOList) => {
+    for (userDTO of userDTOList) {
+        let reg_date;
+        reg_date = parseDate(userDTO.reg_date);
+        reg_date = makeRegDate(reg_date);
+        userDTO.reg_date = reg_date;
+    }
+
     userResults.data.parse(userDTOList);
+    makePagingButton(userDTOList);
 }
 const makePagingButton = (userDTOList) => {
     pagination.data.parse(userDTOList);

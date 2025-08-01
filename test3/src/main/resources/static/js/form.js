@@ -65,6 +65,7 @@ const createLayout = () => {
                         css: "pagingArea",
                         height: 50,
                         padding:0,
+                        hidden:true,
                     }
 
                 ]
@@ -194,6 +195,7 @@ const ajaxSubmit = (event) => {
     const file = document.getElementById("dbFile").files[0];
     formData.append('file', file);
 
+    //일단
     $.ajax({
         url: '/upload/insertTable',
         method: 'POST',
@@ -204,6 +206,11 @@ const ajaxSubmit = (event) => {
             console.log('성공:', response);
             console.log('리턴 타입 : '+typeof response);
 
+            //두번째이상 조회시, 조회하기 버튼 누르기전 페이징 버튼이 나오는 버그가있으므로
+            layout.getCell("pagingArea").hide();
+            //이때 결과 테이블도 초기화로 보이지 않아야함
+            layout.getCell("falseResult").hide();
+            layout.getCell("trueResult").hide();
             makeResultHtml(response);
 
         },
@@ -440,6 +447,9 @@ const makeResultHtml = (response) => {
 
 
 const settingPagination = (resultGrid) => {
+
+    layout.getCell("pagingArea").show();
+
     // dhx.Pagination은 내부적으로 grid.data (즉, 전체 데이터 소스)를 참조해서:
     // 전체 데이터 개수를 파악하고,
     // pageSize에 따라 자동으로 페이지 나눔을 계산하며,
