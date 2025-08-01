@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.example.test3.data.entity.QUser;
+import org.springframework.util.StringUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -42,6 +43,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
             //like(str)은 쿼리가 나갈 때 str자체가 나간다
             //contains(str)은 쿼리가 나갈 때 %str%가 나간다
             booleanBuilder.and(user.id.contains(dto.getId()));
+            //StringUtils.hasText()
         }
 
         if (dto.getName() != null && !dto.getName().isBlank()) {
