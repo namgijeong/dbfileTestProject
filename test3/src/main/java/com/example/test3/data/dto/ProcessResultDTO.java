@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserResultDTO {
+public class ProcessResultDTO {
     /*성공인지 실패인지 여부*/
     private boolean successFlag;
 
@@ -31,7 +31,7 @@ public class UserResultDTO {
     /*로그인 성공시 user정보를 가져오기 위해 */
     private UserDTO userDTO;
 
-    public UserResultDTO() {}
+    public ProcessResultDTO() {}
 
 //    public void setErrorField(ErrorField errorField) {
 //        this.errorField = errorField;
@@ -47,7 +47,7 @@ public class UserResultDTO {
 //
 //    }
 
-    private UserResultDTO(Builder builder) {
+    private ProcessResultDTO(Builder builder) {
         this.successFlag = builder.successFlag;
         this.successLine = builder.successLine;
         this.failLine = builder.failLine;
@@ -108,8 +108,8 @@ public class UserResultDTO {
             return this;
         }
 
-        public UserResultDTO build() {
-            return new UserResultDTO(this);
+        public ProcessResultDTO build() {
+            return new ProcessResultDTO(this);
         }
     }
 }

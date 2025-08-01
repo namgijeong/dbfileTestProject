@@ -1,5 +1,6 @@
 package com.example.test3.controller;
 
+import com.example.test3.data.dto.ProcessResultDTO;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -14,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.test3.data.dto.LoginUserDTO;
-import com.example.test3.data.dto.UserResultDTO;
+import com.example.test3.data.dto.ProcessResultDTO;
 import com.example.test3.service.UserService;
 import com.example.test3.utility.Utility;
 
@@ -71,7 +72,7 @@ public class LoginController {
      *
      * @param "LoginUserDTO"
      * @param session
-     * @return UserResultDTO를 담은 ResponseBase
+     * @return processResultDTO를 담은 ResponseBase
      */
     @PostMapping("/loginCheck")
     public ResponseEntity<?> checkLogin(@RequestBody @Valid LoginUserDTO loginUserDTO, HttpSession session) {
@@ -79,7 +80,7 @@ public class LoginController {
         String pwd = loginUserDTO.getPwd();
         log.info("넘어온 값 : "+id+ ", "+pwd);
 
-        UserResultDTO userLoginOk = userService.userLogin(id, pwd);
+        ProcessResultDTO userLoginOk = userService.userLogin(id, pwd);
 
         //boolean은 getter 메소드가 is로 시작
         boolean isSuccess = userLoginOk.isSuccessFlag();

@@ -312,11 +312,11 @@ const makeResultHtml = (response) => {
             };
             falseResult = new dhx.Grid(null, config);
 
-            response.content.userResultDTOList.forEach(userResultDTO => {
-                if (userResultDTO.successFlag == false) {
+            response.content.processResultDTOList.forEach(processResultDTO => {
+                if (processResultDTO.successFlag == false) {
 
-                    let data = {failLine : userResultDTO.failLine, failText : userResultDTO.failText};
-                    dataset.push(userResultDTO);
+                    let data = {failLine : processResultDTO.failLine, failText : processResultDTO.failText};
+                    dataset.push(processResultDTO);
                     console.log("data : "+data.failLine);
                     console.log("data : "+data.failText);
 

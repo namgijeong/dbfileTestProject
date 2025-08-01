@@ -8,9 +8,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserTotalResultDTO {
+public class ProcessTotalResultDTO {
     /*각 파일줄마다 성공인지,실패인지,몇번째 줄인지,내용에 대한 정보*/
-    List<UserResultDTO> userResultDTOList;
+    List<ProcessResultDTO> processResultDTOList;
 
     /*전체 파일 줄 개수 */
     int totalCount;
@@ -18,19 +18,19 @@ public class UserTotalResultDTO {
     /*전체 삽입 성공한 파일 줄 개수*/
     int successCount;
 
-    private UserTotalResultDTO(Builder builder) {
-        this.userResultDTOList = builder.userResultDTOList;
+    private ProcessTotalResultDTO(Builder builder) {
+        this.processResultDTOList = builder.processResultDTOList;
         this.totalCount = builder.totalCount;
         this.successCount = builder.successCount;
     }
 
     public static class Builder {
-        private List<UserResultDTO> userResultDTOList;
+        private List<ProcessResultDTO> processResultDTOList;
         private int totalCount;
         private int successCount;
 
-        public Builder userResultDTOList(List<UserResultDTO>  userResultDTOList) {
-            this.userResultDTOList = userResultDTOList;
+        public Builder processResultDTOList(List<ProcessResultDTO>  processResultDTOList) {
+            this.processResultDTOList = processResultDTOList;
             return this;
         }
 
@@ -44,8 +44,8 @@ public class UserTotalResultDTO {
             return this;
         }
 
-        public UserTotalResultDTO build() {
-            return new UserTotalResultDTO(this);
+        public ProcessTotalResultDTO build() {
+            return new ProcessTotalResultDTO(this);
         }
     }
 }

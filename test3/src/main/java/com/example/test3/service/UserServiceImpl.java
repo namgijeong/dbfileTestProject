@@ -33,12 +33,12 @@ public class UserServiceImpl implements UserService {
     /**
      * 업로드 된 파일을 가지고 db table에 저장한다.
      * @param file 업로드 한 파일
-     * @return UserTotalResultDTO
+     * @return processTotalResultDTO
      * @throws FailFileOpen
      * @throws WrongFileExtension
      */
     @Override
-    public UserTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension {
+    public ProcessTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension {
         String originalFileName = file.getOriginalFilename();
         System.out.println(originalFileName);
 
@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
                 int count = 0;
                 int successCount = 0;
                 String line;
-                List<UserResultDTO> userResultDTOList = new ArrayList<>();
-                UserTotalResultDTO userTotalResultDTO = null;
+                List<ProcessResultDTO> processResultDTOList = new ArrayList<>();
+                ProcessTotalResultDTO processTotalResultDTO = null;
 
                 /*
                     파일 한줄씩 읽어라.
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 while ((line = reader.readLine()) != null) {
                     log.info("읽은 줄:" +line);
 
-                    UserResultDTO userResultDTO = null;
+                    ProcessResultDTO processResultDTO = null;
                     count++;
 
                     try {
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
                         User user = UserDTO.makeUserDTOToUser(userDTO);
                         userDAO.insert(user);
 
-                        userResultDTO = new UserResultDTO.Builder()
+                        processResultDTO = new ProcessResultDTO.Builder()
                                 .successLine(count)
                                 .successFlag(true)
                                 .build();
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
                         log.warn("라인 오류: " + line);
 
 
-                        userResultDTO = new UserResultDTO.Builder()
+                        processResultDTO = new ProcessResultDTO.Builder()
                                 .failLine(count)
                                 .failText(line)
                                 .successFlag(false)
@@ -103,18 +103,18 @@ public class UserServiceImpl implements UserService {
                                 .build();
 
                     } finally {
-                        userResultDTOList.add(userResultDTO);
+                        processResultDTOList.add(processResultDTO);
 
                     }
                 }
 
-                userTotalResultDTO = new UserTotalResultDTO.Builder()
-                        .userResultDTOList(userResultDTOList)
+                processTotalResultDTO = new ProcessTotalResultDTO.Builder()
+                        .processResultDTOList(processResultDTOList)
                         .totalCount(count)
                         .successCount(successCount)
                         .build();
 
-                return userTotalResultDTO;
+                return processTotalResultDTO;
 
             } catch (IOException e2) {
                 e2.printStackTrace();
@@ -160,32 +160,32 @@ public class UserServiceImpl implements UserService {
      * @return boolean id,password 맞으면 true
      */
     @Override
-    public UserResultDTO userLogin(String id, String pwd) {
+    public ProcessResultDTO userLogin(String id, String pwd) {
         Optional<User> optionalUser =  userDAO.select(id);
 
-        UserResultDTO userResultDTO = new UserResultDTO();
-        userResultDTO.setSuccessFlag(false);
+        ProcessResultDTO processResultDTO = new ProcessResultDTO();
+        processResultDTO.setSuccessFlag(false);
 
         if (optionalUser.isEmpty()) {
-            userResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
-            userResultDTO.setLoginField(LoginField.ID);
-            return userResultDTO;
+            processResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
+            processResultDTO.setLoginField(LoginField.ID);
+            return processResultDTO;
         }
 
         // 아이디로 조회하기 성공하여 아이디는 맞은 상태
         User user = optionalUser.get();
         boolean isSuccess = user.getPwd().equals(pwd);
-        userResultDTO.setSuccessFlag(isSuccess);
+        processResultDTO.setSuccessFlag(isSuccess);
         if (!isSuccess) { //비밀번호 틀림
-            userResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
-            userResultDTO.setLoginField(LoginField.PWD);
+            processResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
+            processResultDTO.setLoginField(LoginField.PWD);
         }
 
         UserDTO userDTO = new UserDTO(user);
-        userResultDTO.setUserDTO(userDTO);
+        processResultDTO.setUserDTO(userDTO);
 
 
-        return userResultDTO;
+        return processResultDTO;
     }
 
 

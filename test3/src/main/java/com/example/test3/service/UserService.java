@@ -10,7 +10,7 @@ import com.example.test3.exception.WrongFileExtension;
 
 public interface UserService {
     /*업로드 된 파일을 가지고 db table에 저장한다.*/
-    public UserTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension;
+    public ProcessTotalResultDTO userInsert(MultipartFile file) throws FailFileOpen, WrongFileExtension;
 
     /*db table에 있는 user 레코드를 모두 조회한다.*/
     public List<UserDTO> findAll();
@@ -19,7 +19,7 @@ public interface UserService {
     public void deleteAll();
 
     /*user 로그인을 수행한다.*/
-    public UserResultDTO userLogin(String id, String pwd);
+    public ProcessResultDTO userLogin(String id, String pwd);
 
     /*
         등록 최신순 user 10명을 찾는다.
