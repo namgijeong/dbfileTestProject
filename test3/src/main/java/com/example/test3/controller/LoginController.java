@@ -88,6 +88,7 @@ public class LoginController {
             session.setAttribute("loginUser", userLoginOk.getUserDTO());
         }
 
+        log.info("userLoginOk : "+userLoginOk);
         //성공했으면 성공한대로, 실패했으면 실패한대로 값이 담긴다.
         return Utility.makeResponseEntity(isSuccess, userLoginOk);
 

@@ -167,8 +167,8 @@ public class UserServiceImpl implements UserService {
         processResultDTO.setSuccessFlag(false);
 
         if (optionalUser.isEmpty()) {
-            processResultDTO.setExceptionMessage("아이디가 틀렸습니다.");
-            processResultDTO.setLoginField(LoginField.ID);
+            log.info("아이디가 틀린곳으로 들어왔다.");
+            processResultDTO.setErrorField("아이디가 틀렸습니다.", LoginField.ID);
             return processResultDTO;
         }
 
@@ -176,9 +176,8 @@ public class UserServiceImpl implements UserService {
         User user = optionalUser.get();
         boolean isSuccess = user.getPwd().equals(pwd);
         processResultDTO.setSuccessFlag(isSuccess);
-        if (!isSuccess) { //비밀번호 틀림
-            processResultDTO.setExceptionMessage("비밀번호가 틀렸습니다.");
-            processResultDTO.setLoginField(LoginField.PWD);
+        if (!isSuccess) {  //비밀번호 틀림
+            processResultDTO.setErrorField("비밀번호가 틀렸습니다.", LoginField.PWD);
         }
 
         UserDTO userDTO = new UserDTO(user);

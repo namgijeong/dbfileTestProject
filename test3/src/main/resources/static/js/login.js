@@ -295,14 +295,17 @@ function makeHtml(loginAnswer){
         따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
     */
 
+    
     if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
         switch (loginAnswer.content.exceptionCode) {
             case "FAIL_LOGIN_VALID":
-                alertText1 = loginAnswer.content.exceptionMessage.exceptionMessage;
+                console.log("loginAnswer.content.exceptionMessage.errorField : "+loginAnswer.content.exceptionMessage.errorField);
+                alertText1 = loginAnswer.content.exceptionMessage.errorField.exceptionMessage;
                 break;
 
             default: //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
-                alertText1 = loginAnswer.content.exceptionMessage;
+                console.log("loginAnswer.content.errorField : "+loginAnswer.content.errorField);
+                alertText1 = loginAnswer.content.errorField.exceptionMessage;
 
         }
 
