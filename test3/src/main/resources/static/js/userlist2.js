@@ -418,6 +418,36 @@ const settingCalendar = () => {
 }
 
 
+/**
+ * 페이징 통신 Ajax
+ * 페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
+ */
+function userListPagingAjax() {
+    $.ajax({
+        url: '/user/userList/ajax?pageNumber=' + currentPage,
+        method: 'GET',
+        success: function (response) {
+            console.log("response.content.buttonBlockDTO : " + response.content.buttonBlockDTO);
+            console.log("response.content.userDTOList : " + response.content.userDTOList);
+
+            makePagingTable(response.content.userDTOList);
+            totalPage = response.content.buttonBlockDTO.totalPageNumber;
+            /*
+                사용자 입장에서 눈속임용
+                페이지 리로드 없이, 서버 통신없이 url 이름만 바꾸기(뒤로가기 기록 남기지 않음)
+                state : 그 URL과 연결된 상태 데이터
+                title : 페이지 제목
+                url : 주소창에 표시될 URL
+            */
+            window.history.replaceState(null, "", "/user/userList/ajax?pageNumber=" + clickedNumber);
+        },
+        error: function (xhr, status, error) {
+            console.error('실패:', error);
+        }
+    });
+}
+
+
 //검색 버튼을 눌러서 ajax
 const searchAjaxFirst = (event) => {
     event.preventDefault();
@@ -581,39 +611,17 @@ const settingPagination = () => {
         //pageSize => 선택 사항. 관련 위젯의 페이지당 표시되는 항목 수
         pageSize: 10,
 
-        //테스트!!!!!
-        //총 수 갱신
-        //totalCount: 120,
-        //currentPage : 1,
     });
 
     layout.getCell("pagingArea").attach(pagination);
     //setPage => 관련 위젯에 활성 페이지를 설정
     //0부터 1페이지
-
+    //눈속임용으로 번호를 바꿀거긴하지만 원래 1/1페이지므로 0 설정
     pagination.setPage(0);
-
-    //눈속임용으로 총숫자 변경
-    // let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
-    // //viewTotalCount.removeAttribute("contenteditable")
-    // viewTotalCount.textContent =  "/100";
-    // console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
-    //
-    // let viewCurrentCount = document.getElementById("count");
-    // currentPage = 2;
-    // //viewCurrentCount.removeAttribute("contenteditable")
-    // viewCurrentCount.value = currentPage;
-    // console.log("viewCurrentCount.value : "+viewCurrentCount.value );
-
-    //테스트!!!!!
-    //총 수 갱신
-    // pagination.totalCount = 100;
-
-
-    //pagination.paint();
-
+    totalPage = buttonBlockDTO.totalPageNumber;
 
     console.log("pagination.config : ",pagination.config);
+
     //활성 페이지 변경
     //change: (index: number, previousIndex: number) => void;
     //index: number 새로 활성화된 페이지의 인덱스
@@ -621,7 +629,6 @@ const settingPagination = () => {
     pagination.events.on("change", (index, previousIndex) => {
         console.log("현재 페이지: "+index);
     });
-
 
 
 }
@@ -639,24 +646,7 @@ const makePagingTable = (userDTOList) => {
 }
 const makePagingButton = (userDTOList) => {
     pagination.data.parse(userDTOList);
-    
-    //눈속임용으로 총숫자 변경
-    // let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
-    // viewTotalCount.removeAttribute("contenteditable")
-    // viewTotalCount.textContent =  "/100";
-    // console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
-    //
-    // let viewCurrentCount = document.getElementById("count");
-    // currentPage = 2;
-    // viewCurrentCount.removeAttribute("contenteditable")
-    // viewCurrentCount.value = currentPage;
-    // console.log("viewCurrentCount.value : "+viewCurrentCount.value );
 
-    //테스트!!!!!
-    //총 수 갱신
-    //pagination.config.totalCount = 100;
-
-    //pagination.paint();
 }
 
 
@@ -697,8 +687,8 @@ const awaitRedraw = () => {
 
 
         //addeventlistener가 중복 등록되서 클릭 여러번 되는것 방지
-        document.querySelector(".dhx_widget .dhx_pagination").removeEventListener("click", paginationButtonClick);
-        document.querySelector(".dhx_widget .dhx_pagination").addEventListener("click", paginationButtonClick);
+        document.querySelector(".dhx_widget .dhx_pagination").removeEventListener("click", userListPaginationButtonClick);
+        document.querySelector(".dhx_widget .dhx_pagination").addEventListener("click", userListPaginationButtonClick);
 
         viewCountChange();
 
@@ -708,7 +698,7 @@ const awaitRedraw = () => {
 
 
 //화살표 누른것에 따라 ajax 통신하면서 버튼 텍스트를 바꿔준다.
-const paginationButtonClick = (event) =>{
+const userListPaginationButtonClick = (event) =>{
     console.log("클릭됨");
     const clickedButton = event.target.dataset.dhxId;
 
@@ -740,26 +730,9 @@ const paginationButtonClick = (event) =>{
         default:
     }
 
+    userListPagingAjax();
 
     viewCountChange();
-
-    // if (event.target.classList.contains("dxi-chevron-left")) {
-    //     console.log("왼쪽 버튼 클릭됨");
-    //     if ((currentPage - 1) !== 0){
-    //         currentPage = currentPage - 1;
-    //     }
-    // } else if (event.target.classList.contains("dxi-chevron-double-left")) {
-    //     console.log("가장 왼쪽 버튼 클릭됨");
-    //     currentPage = 0;
-    // } else if (event.target.classList.contains("dxi-chevron-right")) {
-    //     console.log("오른쪽 버튼 클릭됨");
-    //     if ((currentPage + 1) !==  (totalPage + 1) ){
-    //         currentPage = currentPage + 1;
-    //     }
-    // } else {
-    //     console.log("가장 오른쪽 버튼 클릭됨");
-    //     currentPage = totalPage;
-    // }
 
 }
 

@@ -14,6 +14,9 @@ public class ButtonBlockDTO {
     //현재 페이지 번호
     private Long currentPageNumber;
 
+    //총 페이지 번호
+    private Long totalPageNumber;
+
     //현재 페이지가 몇번째 블록인지 구하기
     private Long currentBlockNumber;
 

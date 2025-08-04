@@ -240,6 +240,7 @@ public class Utility {
 
         ButtonBlockDTO buttonBlockDTO = ButtonBlockDTO.builder()
                 .currentPageNumber(currentPageNumber)
+                .totalPageNumber(totalPageNumber)
                 .currentBlockNumber(currentBlockNumber)
                 .currentBlockFirstNumber(currentBlockFirstNumber)
                 .currentBlockLastNumber(currentBlockLastNumber)
