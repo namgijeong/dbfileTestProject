@@ -39,4 +39,14 @@ public class User implements UserDtoBase {
     @Column(nullable = false)
     private LocalDateTime regDate;
 
+
+    public boolean isPwdCheckSuccess(String pwd) {
+        if (this.pwd.equals(pwd)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 }

@@ -80,7 +80,7 @@ public class LoginController {
         String pwd = loginUserDTO.getPwd();
         log.info("넘어온 값 : "+id+ ", "+pwd);
 
-        ProcessResultDTO userLoginOk = userService.userLogin(id, pwd);
+        ProcessResultDTO userLoginOk = userService.userLogin(loginUserDTO);
 
         //boolean은 getter 메소드가 is로 시작
         boolean isSuccess = userLoginOk.isSuccessFlag();
@@ -90,7 +90,7 @@ public class LoginController {
 
         log.info("userLoginOk : "+userLoginOk);
         //성공했으면 성공한대로, 실패했으면 실패한대로 값이 담긴다.
-        return Utility.makeResponseEntity(isSuccess, userLoginOk);
+        return Utility.makeResponseEntity(userLoginOk.isSuccessFlag(), userLoginOk);
 
     }
 }

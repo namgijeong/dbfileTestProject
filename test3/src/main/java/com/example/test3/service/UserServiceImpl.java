@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -155,16 +156,14 @@ public class UserServiceImpl implements UserService {
 
     /**
      * user 로그인을 수행한다.
-     * @param id
-     * @param pwd
-     * @return boolean id,password 맞으면 true
+     * @param loginUserDTO
+     * @return ProcessResultDTO  => UserDTO와 ErrorField가 담겨있다.
      */
     @Override
-    public ProcessResultDTO userLogin(String id, String pwd) {
-        Optional<User> optionalUser =  userDAO.select(id);
+    public ProcessResultDTO userLogin(LoginUserDTO loginUserDTO) {
+        Optional<User> optionalUser =  userDAO.select(loginUserDTO.getId());
 
         ProcessResultDTO processResultDTO = new ProcessResultDTO();
-        processResultDTO.setSuccessFlag(false);
 
         if (optionalUser.isEmpty()) {
             log.info("아이디가 틀린곳으로 들어왔다.");
@@ -174,16 +173,15 @@ public class UserServiceImpl implements UserService {
 
         // 아이디로 조회하기 성공하여 아이디는 맞은 상태
         User user = optionalUser.get();
-        boolean isSuccess = user.getPwd().equals(pwd);
-        processResultDTO.setSuccessFlag(isSuccess);
-        if (!isSuccess) {  //비밀번호 틀림
+
+        if (!user.isPwdCheckSuccess(loginUserDTO.getPwd())) {  //비밀번호 틀림
             processResultDTO.setErrorField("비밀번호가 틀렸습니다.", LoginField.PWD);
+            return processResultDTO;
         }
 
         UserDTO userDTO = new UserDTO(user);
         processResultDTO.setUserDTO(userDTO);
-
-
+        processResultDTO.setSuccessFlag(true);
         return processResultDTO;
     }
 

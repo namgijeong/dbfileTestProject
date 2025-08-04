@@ -30,11 +30,11 @@ const createLayout = () => {
             {
                 id: "mainContent",
                 css: "mainContent",
-                width:900,
-                height:1200,
+                width:1400,
+                height:600,
                 padding:0,
 
-                rows: [
+                cols: [
                     {
                         id: "searchArea",
                         name : "searchArea",
@@ -44,20 +44,30 @@ const createLayout = () => {
                         padding:0,
                     },
                     {
-                        id: "userResults",
-                        name : "userResults",
+                        width: 850,
+                        height: 510,
+                        padding: 0,
                         css: "userResults",
-                        width: 810,
-                        height: 450,
-                        padding:0,
+
+                      rows: [
+                          {
+                              id: "userResults",
+                              name : "userResults",
+                              css : "userResults2",
+                              width: 810,
+                              height: 450,
+                              padding:0,
+                          },
+                          {
+                              id:	"pagingArea",
+                              name: "pagingArea",
+                              css: "pagingArea",
+                              height: 50,
+                              padding:0,
+                          }
+                      ]
                     },
-                    {
-                        id:	"pagingArea",
-                        name: "pagingArea",
-                        css: "pagingArea",
-                        height: 50,
-                        padding:0,
-                    }
+
                 ]
             },
 

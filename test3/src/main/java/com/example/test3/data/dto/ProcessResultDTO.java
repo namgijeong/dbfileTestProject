@@ -9,7 +9,7 @@ import lombok.ToString;
 public class ProcessResultDTO {
     /*성공인지 실패인지 여부*/
     @Setter
-    private boolean successFlag;
+    private boolean successFlag = false;
 
     /*성공했다면 몇번째 줄인지*/
     @Setter
