@@ -126,14 +126,26 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         if (dto.getDesc() != null && !dto.getDesc().isBlank()) {
             booleanBuilder.and(user.desc.contains(dto.getDesc()));
         }
-        if (dto.getRegDate() != null) {
+        if (dto.getStartRegDate() != null && dto.getEndRegDate() != null) {
             //localdatetime을 localdate로 바꿔서 해도 작동
+            //Timestamp.valueOf() => 매개변수는 String s, LocalDateTime dateTime
+            //atStartOfDay() =>  LocalDate 타입에서만 사용, 해당 날짜의 자정 (00:00:00) 을 나타내는 LocalDateTime 객체를 반환
             //Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
+            LocalDateTime startDate = dto.getStartRegDate();
+
+            //plusDays => LocalDate, LocalDateTime 타입 모두 사용가능
             //Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
-            LocalDateTime startDate = dto.getRegDate().toLocalDate().atStartOfDay();
-            LocalDateTime endDate = dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay();
+            LocalDateTime endDate = dto.getEndRegDate();
+
+
+            //goe(): A >= ?
+            //gt(): A > ?
+            //loe(): A <= ?
+            //lt(): A < ?
+            log.info("Timestamp startDate : "+startDate);
+            log.info("Timestamp endDate : "+endDate);
             booleanBuilder.and(user.regDate.goe(startDate)); // 이상
-            booleanBuilder.and(user.regDate.lt(endDate)); //  미만
+            booleanBuilder.and(user.regDate.loe(endDate)); //  미만
         }
 
         System.out.println("검색조건 id: " + dto.getId());

@@ -3,7 +3,8 @@ let searchForm;
 let SearchCalendar;
 let userResults;
 let currentPage = 1;
-let totalPage = 11;
+let totalPage = 1;
+let isSearching = false;
 
 const init = () => {
     createLayout();
@@ -430,8 +431,12 @@ function userListPagingAjax() {
             console.log("response.content.buttonBlockDTO : " + response.content.buttonBlockDTO);
             console.log("response.content.userDTOList : " + response.content.userDTOList);
 
-            makePagingTable(response.content.userDTOList);
             totalPage = response.content.buttonBlockDTO.totalPageNumber;
+            isSearching = false;
+
+            makePagingTable(response.content.userDTOList);
+            paginationButtonMode();
+            viewCountChange();
             /*
                 사용자 입장에서 눈속임용
                 페이지 리로드 없이, 서버 통신없이 url 이름만 바꾸기(뒤로가기 기록 남기지 않음)
@@ -439,7 +444,7 @@ function userListPagingAjax() {
                 title : 페이지 제목
                 url : 주소창에 표시될 URL
             */
-            window.history.replaceState(null, "", "/user/userList/ajax?pageNumber=" + clickedNumber);
+            window.history.replaceState(null, "", "/user/userList/ajax?pageNumber=" + currentPage);
         },
         error: function (xhr, status, error) {
             console.error('실패:', error);
@@ -496,6 +501,7 @@ const searchAjaxFirst = (event) => {
         desc: desc,
         start_reg_date: startRegDate,
         end_reg_date: endRegDate,
+        page_number : 1,
     };
 
     fetch("/user/search/userList/ajax", {
@@ -511,7 +517,117 @@ const searchAjaxFirst = (event) => {
             const searchAnswer  = await response.json();
 
             console.log("검색 조회 성공")
+            totalPage = searchAnswer.content.buttonBlockDTO.totalPageNumber;
+            currentPage = 1;
+
+            console.log("currentPage : "+currentPage);
+            isSearching = true;
+
             makePagingTable(searchAnswer.content.userDTOList);
+            paginationButtonMode();
+            viewCountChange();
+
+            /*
+                사용자 입장에서 눈속임용
+                페이지 리로드 없이, 서버 통신없이 url 이름만 바꾸기(뒤로가기 기록 남기지 않음)
+                state : 그 URL과 연결된 상태 데이터
+                title : 페이지 제목
+                url : 주소창에 표시될 URL
+            */
+            window.history.replaceState(null, "", "/user/search/userList/ajax?pageNumber=" + currentPage);
+
+        } else {
+            const errorMessage = await response.json();
+            console.log("errorMessage : "+errorMessage);
+
+        }
+    }).catch(error => {
+        console.log("error : "+error);
+    })
+
+}
+
+
+//검색 버튼을 눌러서 첫번째 ajax 후, 페이징 ajax
+const searchAjaxAfterFirst = (event) => {
+
+    let id = searchForm.getItem("id").getValue();
+    let name = searchForm.getItem("name").getValue();
+    //returns IDs of options which are currently selected in the Combo control
+    let level = searchForm.getItem("level").getValue();
+    let desc = searchForm.getItem("desc").getValue();
+    let regDate = SearchCalendar.getValue();
+    let startRegDate = regDate[0];
+    let endRegDate = regDate[1];
+
+    console.log("id : "+id);
+    console.log("name : "+name);
+    console.log("level : "+level);
+    console.log("startRegDate : "+startRegDate);
+    console.log("endRegDate : "+endRegDate);
+
+
+    //만약 사용자가 입력을 안했으면 null로 바꾸기
+    //level은 dhtmlx8 콤보박스에서 잘못된 형식으로 입력하면 그냥 공백으로 만든다.
+    //regDate는 dhtmlx8 calendar에서 클릭안한 상태라면 undefined가 반환된다.
+    id = makeBlankToNull(id);
+    name = makeBlankToNull(name);
+    level = makeBlankToNull(level);
+    desc = makeBlankToNull(desc);
+    if (startRegDate === undefined || endRegDate === undefined) {
+        startRegDate = null;
+        endRegDate = null;
+    } else { //localdatetime으로 매핑하기 위해 00:00:00 붙인다.
+        startRegDate = plusZeroTime(startRegDate);
+        endRegDate = plusZeroTime(endRegDate);
+    }
+
+    console.log("formated id: "+id);
+    console.log("formated name: "+name);
+    console.log("formated desc: "+desc);
+    console.log("formated startRegDate: "+startRegDate);
+    console.log("formated endRegDate: "+endRegDate);
+
+    const searchData = {
+        id: id,
+        name: name,
+        level: level,
+        desc: desc,
+        start_reg_date: startRegDate,
+        end_reg_date: endRegDate,
+        page_number : currentPage,
+    };
+
+    fetch("/user/search/userList/ajax", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(searchData)
+    }) .then(async response => {
+        /*
+            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+         */
+        if (response.ok) {
+            const searchAnswer  = await response.json();
+
+            console.log("검색 조회 성공")
+            totalPage = searchAnswer.content.buttonBlockDTO.totalPageNumber;
+
+            console.log("currentPage : "+currentPage);
+            isSearching = true;
+
+            makePagingTable(searchAnswer.content.userDTOList);
+            paginationButtonMode();
+            viewCountChange();
+
+            /*
+              사용자 입장에서 눈속임용
+              페이지 리로드 없이, 서버 통신없이 url 이름만 바꾸기(뒤로가기 기록 남기지 않음)
+              state : 그 URL과 연결된 상태 데이터
+              title : 페이지 제목
+              url : 주소창에 표시될 URL
+          */
+            window.history.replaceState(null, "", "/user/search/userList/ajax?pageNumber=" + currentPage);
 
         } else {
             const errorMessage = await response.json();
@@ -685,10 +801,7 @@ const awaitRedraw = () => {
             regDateDivText.classList.add("itemDiv");
         }
 
-
-        //addeventlistener가 중복 등록되서 클릭 여러번 되는것 방지
-        document.querySelector(".dhx_widget .dhx_pagination").removeEventListener("click", userListPaginationButtonClick);
-        document.querySelector(".dhx_widget .dhx_pagination").addEventListener("click", userListPaginationButtonClick);
+        paginationButtonMode();
 
         viewCountChange();
 
@@ -696,7 +809,7 @@ const awaitRedraw = () => {
 
 }
 
-
+//기본 회원정보 페이징
 //화살표 누른것에 따라 ajax 통신하면서 버튼 텍스트를 바꿔준다.
 const userListPaginationButtonClick = (event) =>{
     console.log("클릭됨");
@@ -732,8 +845,60 @@ const userListPaginationButtonClick = (event) =>{
 
     userListPagingAjax();
 
-    viewCountChange();
+}
 
+//검색 회원정보 페이징
+//화살표 누른것에 따라 ajax 통신하면서 버튼 텍스트를 바꿔준다.
+const searchPaginationButtonClick = (event) =>{
+    console.log("클릭됨");
+    const clickedButton = event.target.dataset.dhxId;
+
+    switch (clickedButton) {
+        case "first":
+            console.log("가장 왼쪽 버튼 클릭됨");
+            currentPage = 1;
+            break;
+
+        case "previous":
+            console.log("왼쪽 버튼 클릭됨");
+            if ((currentPage - 1) > 0){
+                currentPage = currentPage - 1;
+            }
+            break;
+
+        case "next":
+            console.log("오른쪽 버튼 클릭됨");
+            if ((currentPage + 1) <=  totalPage){
+                currentPage = currentPage + 1;
+            }
+            break;
+
+        case "last":
+            console.log("가장 오른쪽 버튼 클릭됨");
+            currentPage = totalPage;
+            break;
+
+        default:
+    }
+
+    searchAjaxAfterFirst();
+
+}
+
+
+//페이지네이션 버튼이 찾기 모드냐, 일반 모드냐에 따라 이벤트 연결 설정
+const paginationButtonMode = () => {
+    //addeventlistener가 중복 등록되서 클릭 여러번 되는것 방지
+    document.querySelector(".dhx_widget .dhx_pagination").removeEventListener("click", userListPaginationButtonClick);
+    document.querySelector(".dhx_widget .dhx_pagination").removeEventListener("click", searchPaginationButtonClick);
+
+    if (isSearching === false) {
+        document.querySelector(".dhx_widget .dhx_pagination").addEventListener("click", userListPaginationButtonClick);
+
+    } else {
+        document.querySelector(".dhx_widget .dhx_pagination").addEventListener("click", searchPaginationButtonClick);
+
+    }
 }
 
 
@@ -742,9 +907,16 @@ const viewCountChange = () => {
 
     //눈속임용으로 총숫자 변경
     let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
+
+    //기존 요소의 textContent는 바로 렌더링이 되지않을수도있다.
     //viewTotalCount.removeAttribute("contenteditable")
-    viewTotalCount.textContent =  "/"+ totalPage;
-    console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
+    //viewTotalCount.textContent =  "/"+ totalPage;
+    //console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
+
+
+    const viewTotalCountNewInput = viewTotalCount.cloneNode(true);
+    viewTotalCount.parentNode.replaceChild(viewTotalCountNewInput, viewTotalCount);
+    viewTotalCountNewInput.textContent =  "/"+ totalPage;
 
     //dhtmlx8 input 값 value에 직접적으로 못바꾸기 때문에 이렇게 바꿔야함
     const pageInput = document.querySelector('[data-dhx-id="count"]');

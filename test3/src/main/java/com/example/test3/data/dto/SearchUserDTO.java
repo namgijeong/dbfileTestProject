@@ -54,6 +54,7 @@ public class SearchUserDTO {
     private LocalDateTime endRegDate;
 
     //페이징할 번호
+    @JsonProperty("page_number")
     private Long pageNumber;
 
 }

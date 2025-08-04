@@ -207,6 +207,11 @@ public class Utility {
 
         long currentBlockLastNumber = ((currentBlockNumber - 1) * 10) + 10;
         log.info("currentBlockLastNumber : "+currentBlockLastNumber);
+
+        //만약 게시글 갯수가 0이어도 totalPageNumber는 1이 되도록 하자
+        if (totalPageNumber == 0L) {
+            totalPageNumber = 1L;
+        }
         //만약 총 게시글 페이지 보다 많게 계산되면 안된다.
         if (currentBlockLastNumber > totalPageNumber) {
             currentBlockLastNumber = totalPageNumber;

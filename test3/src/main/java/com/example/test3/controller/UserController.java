@@ -127,6 +127,7 @@ public class UserController {
     public ResponseEntity<?> searchUserListAndAjax(@RequestBody SearchUserDTO searchUserDTO) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
         UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
+        log.info("userPagingResultDTO  : "+userPagingResultDTO );
         return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 
