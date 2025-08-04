@@ -2,7 +2,8 @@ let layout;
 let searchForm;
 let SearchCalendar;
 let userResults;
-let currentPage;
+let currentPage = 1;
+let totalPage = 11;
 
 const init = () => {
     createLayout();
@@ -620,6 +621,9 @@ const settingPagination = () => {
     pagination.events.on("change", (index, previousIndex) => {
         console.log("현재 페이지: "+index);
     });
+
+
+
 }
 
 const makePagingTable = (userDTOList) => {
@@ -654,6 +658,7 @@ const makePagingButton = (userDTOList) => {
 
     //pagination.paint();
 }
+
 
 const awaitRedraw = () => {
     //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
@@ -691,28 +696,89 @@ const awaitRedraw = () => {
         }
 
 
-        //눈속임용으로 총숫자 변경
-        let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
-        //viewTotalCount.removeAttribute("contenteditable")
-        viewTotalCount.textContent =  "/100";
-        console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
+        //addeventlistener가 중복 등록되서 클릭 여러번 되는것 방지
+        document.querySelector(".dhx_widget .dhx_pagination").removeEventListener("click", paginationButtonClick);
+        document.querySelector(".dhx_widget .dhx_pagination").addEventListener("click", paginationButtonClick);
 
-        // let viewCurrentCount = document.getElementById("count");
-        // currentPage = 2;
-        // //viewCurrentCount.removeAttribute("contenteditable")
-        // viewCurrentCount.readOnly = false;
-        // viewCurrentCount.disabled = false;
-        // viewCurrentCount.value = currentPage;
-
-        //dhtmlx8 input 값 value에 직접적으로 못바꾸기 때문에 이렇게 바꿔야함
-        currentPage =2;
-        const pageInput = document.querySelector('[data-dhx-id="count"]');
-        const newInput = pageInput.cloneNode(true);
-        pageInput.parentNode.replaceChild(newInput, pageInput);
-        newInput.value = currentPage;
-
-        console.log("viewCurrentCount.value : "+newInput.value );
+        viewCountChange();
 
     });
+
+}
+
+
+//화살표 누른것에 따라 ajax 통신하면서 버튼 텍스트를 바꿔준다.
+const paginationButtonClick = (event) =>{
+    console.log("클릭됨");
+    const clickedButton = event.target.dataset.dhxId;
+
+    switch (clickedButton) {
+        case "first":
+            console.log("가장 왼쪽 버튼 클릭됨");
+            currentPage = 1;
+            break;
+
+        case "previous":
+            console.log("왼쪽 버튼 클릭됨");
+            if ((currentPage - 1) > 0){
+                currentPage = currentPage - 1;
+            }
+            break;
+
+        case "next":
+            console.log("오른쪽 버튼 클릭됨");
+            if ((currentPage + 1) <=  totalPage){
+                currentPage = currentPage + 1;
+            }
+            break;
+
+        case "last":
+            console.log("가장 오른쪽 버튼 클릭됨");
+            currentPage = totalPage;
+            break;
+
+        default:
+    }
+
+
+    viewCountChange();
+
+    // if (event.target.classList.contains("dxi-chevron-left")) {
+    //     console.log("왼쪽 버튼 클릭됨");
+    //     if ((currentPage - 1) !== 0){
+    //         currentPage = currentPage - 1;
+    //     }
+    // } else if (event.target.classList.contains("dxi-chevron-double-left")) {
+    //     console.log("가장 왼쪽 버튼 클릭됨");
+    //     currentPage = 0;
+    // } else if (event.target.classList.contains("dxi-chevron-right")) {
+    //     console.log("오른쪽 버튼 클릭됨");
+    //     if ((currentPage + 1) !==  (totalPage + 1) ){
+    //         currentPage = currentPage + 1;
+    //     }
+    // } else {
+    //     console.log("가장 오른쪽 버튼 클릭됨");
+    //     currentPage = totalPage;
+    // }
+
+}
+
+
+//눈속임용으로 dhtmlx8 페이지네이션 숫자 바꾸기
+const viewCountChange = () => {
+
+    //눈속임용으로 총숫자 변경
+    let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
+    //viewTotalCount.removeAttribute("contenteditable")
+    viewTotalCount.textContent =  "/"+ totalPage;
+    console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
+
+    //dhtmlx8 input 값 value에 직접적으로 못바꾸기 때문에 이렇게 바꿔야함
+    const pageInput = document.querySelector('[data-dhx-id="count"]');
+    const newInput = pageInput.cloneNode(true);
+    pageInput.parentNode.replaceChild(newInput, pageInput);
+    newInput.value = currentPage;
+
+    console.log("viewCurrentCount.value : "+newInput.value );
 }
 
