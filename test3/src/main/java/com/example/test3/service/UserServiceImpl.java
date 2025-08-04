@@ -189,76 +189,52 @@ public class UserServiceImpl implements UserService {
 
 
     /**
+     * 페이징 버전
      * 등록 최신순 user 10명을 찾는다.
      * 등록된 전체 유저 개수를 세서 페이징 버튼들 정보도 넘겨준다.
      * @param pageNumber 페이지 번호
      * @return UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
      */
-//    @Override
-//    public UserPagingResultDTO<UserDTO> select10Users(long pageNumber) {
-//        //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.
-//        List<User> userList =  userDAO.select10Users(pageNumber);
-//        List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
-//
-//        //총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
-//        long totalUsers = userDAO.countUsers();
-//        ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
-//
-//        UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
-//                .userDTOList(userDTOList)
-//                .buttonBlockDTO(buttonBlockDTO)
-//                .build();
-//        return userPagingResultDTO;
-//    }
-
-
-    /**
-     * dhtmlx8용
-     * 페이지 진입시 전체 회원들 목록을 조회해서 준다.
-     * @return UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
-     */
     @Override
-    public UserPagingResultDTO<UserDTO> selectAllUsers() {
+    public UserPagingResultDTO<UserDTO> select10Users(long pageNumber) {
         //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.
-        List<User> userList =  userDAO.selectAllUsers();
+        List<User> userList =  userDAO.select10Users(pageNumber);
         List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
+
+        //총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
+        long totalUsers = userDAO.countUsers();
+        ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
 
         UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
                 .userDTOList(userDTOList)
+                .buttonBlockDTO(buttonBlockDTO)
                 .build();
         return userPagingResultDTO;
     }
 
 
+    /**
+     * 페이징 버전 아님
+     * 페이지 진입시 전체 회원들 목록을 조회해서 준다.
+     * @return UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
+     */
 //    @Override
-//    public UserPagingResultDTO<UserDTO>  selectUsersBySearchUserDTO(UserDTO searchUserDTO) {
-//        //jpql 사용
-//        //List<User> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
-//        //log.info("userList : "+userList);
-//
-//        //query dsl 사용
-//        long pageNumber = searchUserDTO.getPageNumber();
-//        List<UserDTO>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO, pageNumber);
-//        log.info("userList : "+searchUserDTOResponseList.toString());
-//
-//        //검색 조건에 맞는 총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
-//        long totalUsers = userDAO.selectUsersCountBySearchUserDTO(searchUserDTO);
-//        ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
-//
+//    public UserPagingResultDTO<UserDTO> selectAllUsers() {
+//        //현재 페이지 번호에 맞는 최신순 user 10명을 뽑아온다.
+//        List<User> userList =  userDAO.selectAllUsers();
+//        List<UserDTO> userDTOList = userList.stream().map(user -> new UserDTO(user)).collect(Collectors.toList());
 //
 //        UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
-//                .userDTOList(searchUserDTOResponseList)
-//                .buttonBlockDTO(buttonBlockDTO)
+//                .userDTOList(userDTOList)
 //                .build();
 //        return userPagingResultDTO;
 //    }
 
 
     /**
-     * dhtmlx8용
-     * 검색조건을 가지고 회원 리스트 뽑기
-     * @param searchUserDTO UserDTO
-     * @return UserPagingResultDTO
+     * 페이징 버전임
+     * @param searchUserDTO
+     * @return  UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
      */
     @Override
     public UserPagingResultDTO<UserDTO>  selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
@@ -267,13 +243,43 @@ public class UserServiceImpl implements UserService {
         //log.info("userList : "+userList);
 
         //query dsl 사용
-        List<UserDTO>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO);
+        long pageNumber = searchUserDTO.getPageNumber();
+        List<UserDTO>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO, pageNumber);
         log.info("userList : "+searchUserDTOResponseList.toString());
+
+        //검색 조건에 맞는 총 게시물 갯수를 세서 페이징버튼들 처리 ButtonBlockDTO를 생성한다.
+        long totalUsers = userDAO.selectUsersCountBySearchUserDTO(searchUserDTO);
+        ButtonBlockDTO buttonBlockDTO = Utility.makeButtonBlockDTO(pageNumber, totalUsers);
+
 
         UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
                 .userDTOList(searchUserDTOResponseList)
+                .buttonBlockDTO(buttonBlockDTO)
                 .build();
         return userPagingResultDTO;
     }
+
+
+    /**
+     * 페이징 버전 아님
+     * 검색조건을 가지고 회원 리스트 뽑기
+     * @param searchUserDTO UserDTO
+     * @return UserPagingResultDTO
+     */
+//    @Override
+//    public UserPagingResultDTO<UserDTO>  selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+//        //jpql 사용
+//        //List<User> userList = userDAO.selectUsersBySearchUserDTO(searchUserDTO);
+//        //log.info("userList : "+userList);
+//
+//        //query dsl 사용
+//        List<UserDTO>  searchUserDTOResponseList =  userDAO.selectUsersBySearchUserDTO(searchUserDTO);
+//        log.info("userList : "+searchUserDTOResponseList.toString());
+//
+//        UserPagingResultDTO<UserDTO> userPagingResultDTO = UserPagingResultDTO.<UserDTO>builder()
+//                .userDTOList(searchUserDTOResponseList)
+//                .build();
+//        return userPagingResultDTO;
+//    }
 
 }

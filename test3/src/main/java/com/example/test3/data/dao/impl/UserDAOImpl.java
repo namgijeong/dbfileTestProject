@@ -53,15 +53,15 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /*시간 최신순 10개만 user 정보 출력*/
-//    @Override
-//    public List<User> select10Users(Long pageNumber) {
-//        //페이지는 0부터 시작
-//        Page<User> userPage= userRepository.findAllByOrderByRegDateDesc(PageRequest.of((int)(pageNumber-1), 10));
-//        log.info("paging jpa 결과 : "+userPage.getContent());
-//        List<User> userList = userPage.getContent();
-//
-//        return userList;
-//    }
+    @Override
+    public List<User> select10Users(Long pageNumber) {
+        //페이지는 0부터 시작
+        Page<User> userPage= userRepository.findAllByOrderByRegDateDesc(PageRequest.of((int)(pageNumber-1), 10));
+        log.info("paging jpa 결과 : "+userPage.getContent());
+        List<User> userList = userPage.getContent();
+
+        return userList;
+    }
 
     /**
      * dhtmlx8용
@@ -84,30 +84,30 @@ public class UserDAOImpl implements UserDAO {
     }
 
     //querydsl 버전 조건에 맞는 페이지별 회원 목록
-    // @Override
-//    public List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber) {
-//        //페이지는 0부터 시작
-//        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO, PageRequest.of((int)(pageNumber-1), 10));
-//
-//        return searchUserDTOResponseList;
-//    }
-
-    /**
-     * dhtmlx8 용
-     * 검색 결과에 맞는 회원 리스트들 뽑기
-     * @param searchUserDTO UserDTO
-     * @return UserDTO List
-     */
-    @Override
-    public List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+     @Override
+    public List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber) {
         //페이지는 0부터 시작
-        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO);
+        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO, PageRequest.of((int)(pageNumber-1), 10));
 
         return searchUserDTOResponseList;
     }
 
+    /**
+     * 페이징버전 아님
+     * 검색 결과에 맞는 회원 리스트들 뽑기
+     * @param searchUserDTO UserDTO
+     * @return UserDTO List
+     */
+//    @Override
+//    public List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO) {
+//        //페이지는 0부터 시작
+//        List<UserDTO> searchUserDTOResponseList =  userRepository.searchUsers(searchUserDTO);
+//
+//        return searchUserDTOResponseList;
+//    }
+
     @Override
-    public Long selectUsersCountBySearchUserDTO(UserDTO searchUserDTO) {
+    public Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO) {
         Long count =  userRepository.searchUsersCount(searchUserDTO);
         return count;
     }

@@ -178,6 +178,8 @@
 <!--Thymeleaf는 외부 파일 내용을 파싱하지 않습니다.-->
 <script th:inline="javascript">
     let userDTOList = /*[[${userPagingResultDTO.userDTOList}]]*/;
+    let buttonBlockDTO = /*[[${userPagingResultDTO.buttonBlockDTO}]]*/;
+    let pageNumber = /*[[${pageNumber}]]*/
 </script>
 
 <script src="/js/userlist2.js"></script>

@@ -53,6 +53,7 @@ public class SearchUserDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endRegDate;
 
+    //페이징할 번호
     private Long pageNumber;
 
 }

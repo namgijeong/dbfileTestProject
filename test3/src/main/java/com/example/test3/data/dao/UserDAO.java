@@ -22,32 +22,54 @@ public interface UserDAO {
     void deleteAll();
 
     /*시간 최신순 10개만 user 정보 출력*/
-//    List<User> select10Users(Long pageNumber);
 
     /**
-     * dhtmlx8용
+     * 페이징 기법적용
+     * 시간 최신순 10개만 user 정보 출력
+     * @param pageNumber
+     * @return User List
+     */
+    List<User> select10Users(Long pageNumber);
+
+    /**
      * 페이지 진입시 전체 유저리스트 뽑기
      * @return User List
      */
     List<User> selectAllUsers();
 
-    /*전체 회원정보 개수 불러오기 */
+
+    /**
+     * 전체 회원정보 개수 불러오기
+     * @return long
+     */
     long countUsers();
+
 
     /* 검색 결과 회원 리스트 */
 //    List<User> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
-    /*query dsl 검색결과 회원 리스트 페이지단위*/
-//    List<UserDTO> selectUsersBySearchUserDTO(UserDTO searchUserDTO, Long pageNumber);
+    /**
+     * 페이징 기법
+     * query dsl 검색결과 회원 리스트 페이지단위
+     * @param searchUserDTO
+     * @param pageNumber
+     * @return UserDTO List
+     */
+   List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO, Long pageNumber);
 
     /**
-     * dhtmlx8 용
+     *  페이징 아님
      * 검색 결과에 맞는 회원 리스트들 뽑기
      * @param searchUserDTO UserDTO
      * @return UserDTO List
      */
-    List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+//    List<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 
-    /*query dsl 검색결과 회원 리스트 전체 개수*/
-    Long selectUsersCountBySearchUserDTO(UserDTO searchUserDTO);
+
+    /**
+     * query dsl 검색결과 회원 리스트 전체 개수
+     * @param searchUserDTO
+     * @return Long
+     */
+    Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO);
 }

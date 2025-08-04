@@ -25,14 +25,35 @@ public interface UserService {
         등록 최신순 user 10명을 찾는다.
         등록된 전체 유저 개수를 세서 페이징 버튼들 블록 처리
     */
-//    public UserPagingResultDTO<UserDTO> select10Users(long pageNumber);
 
     /**
-     * dhtmlx8용
+     * 페이징 버전임
+     * 모든 회원을 최신 10명만 조회한다.
+     * @param pageNumber
+     * @return  UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
+     */
+    public UserPagingResultDTO<UserDTO> select10Users(long pageNumber);
+
+    /**
+     * 페이징 버전임
+     * @param searchUserDTO
+     * @return UserPagingResultDTO => UserDTOList, ButtonBlockDTO가 포함
+     */
+    public UserPagingResultDTO<UserDTO>  selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+
+
+    /**
+     * 페이징 버전 아님
+     * 모든 회원을 조회한다.
      * @return UserDTO LIST
      */
-    public UserPagingResultDTO<UserDTO> selectAllUsers();
+    //public UserPagingResultDTO<UserDTO> selectAllUsers();
 
-    // 검색 dto를 가지고 회원들을 찾는다.
-    public UserPagingResultDTO<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+    /**
+     * 페이징 버전 아님
+     * 검색 dto를 가지고 회원들을 찾는다.
+     * @param searchUserDTO
+     * @return UserDTO를 담은 UserPagingResultDTO
+     */
+    //public UserPagingResultDTO<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
 }

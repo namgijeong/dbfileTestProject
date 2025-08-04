@@ -1,7 +1,8 @@
-var layout;
-var searchForm;
-var SearchCalendar;
-var userResults;
+let layout;
+let searchForm;
+let SearchCalendar;
+let userResults;
+let currentPage;
 
 const init = () => {
     createLayout();
@@ -581,19 +582,34 @@ const settingPagination = () => {
 
         //테스트!!!!!
         //총 수 갱신
-        totalCount: 120,
-        currentPage : 1,
+        //totalCount: 120,
+        //currentPage : 1,
     });
 
     layout.getCell("pagingArea").attach(pagination);
     //setPage => 관련 위젯에 활성 페이지를 설정
     //0부터 1페이지
-    //pagination.setPage(0);
+
+    pagination.setPage(0);
+
+    //눈속임용으로 총숫자 변경
+    // let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
+    // //viewTotalCount.removeAttribute("contenteditable")
+    // viewTotalCount.textContent =  "/100";
+    // console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
+    //
+    // let viewCurrentCount = document.getElementById("count");
+    // currentPage = 2;
+    // //viewCurrentCount.removeAttribute("contenteditable")
+    // viewCurrentCount.value = currentPage;
+    // console.log("viewCurrentCount.value : "+viewCurrentCount.value );
 
     //테스트!!!!!
     //총 수 갱신
     // pagination.totalCount = 100;
-    // pagination.paint();
+
+
+    //pagination.paint();
 
 
     console.log("pagination.config : ",pagination.config);
@@ -618,12 +634,25 @@ const makePagingTable = (userDTOList) => {
     makePagingButton(userDTOList);
 }
 const makePagingButton = (userDTOList) => {
-    //pagination.data.parse(userDTOList);
+    pagination.data.parse(userDTOList);
+    
+    //눈속임용으로 총숫자 변경
+    // let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
+    // viewTotalCount.removeAttribute("contenteditable")
+    // viewTotalCount.textContent =  "/100";
+    // console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
+    //
+    // let viewCurrentCount = document.getElementById("count");
+    // currentPage = 2;
+    // viewCurrentCount.removeAttribute("contenteditable")
+    // viewCurrentCount.value = currentPage;
+    // console.log("viewCurrentCount.value : "+viewCurrentCount.value );
 
     //테스트!!!!!
     //총 수 갱신
-    pagination.config.totalCount = 100;
-    pagination.paint();
+    //pagination.config.totalCount = 100;
+
+    //pagination.paint();
 }
 
 const awaitRedraw = () => {
@@ -660,6 +689,29 @@ const awaitRedraw = () => {
             regDateDivText.textContent = "RegDate";
             regDateDivText.classList.add("itemDiv");
         }
+
+
+        //눈속임용으로 총숫자 변경
+        let viewTotalCount = document.querySelector('[data-dhx-id="size"]');
+        //viewTotalCount.removeAttribute("contenteditable")
+        viewTotalCount.textContent =  "/100";
+        console.log("viewTotalCount.textContent : "+viewTotalCount.textContent );
+
+        // let viewCurrentCount = document.getElementById("count");
+        // currentPage = 2;
+        // //viewCurrentCount.removeAttribute("contenteditable")
+        // viewCurrentCount.readOnly = false;
+        // viewCurrentCount.disabled = false;
+        // viewCurrentCount.value = currentPage;
+
+        //dhtmlx8 input 값 value에 직접적으로 못바꾸기 때문에 이렇게 바꿔야함
+        currentPage =2;
+        const pageInput = document.querySelector('[data-dhx-id="count"]');
+        const newInput = pageInput.cloneNode(true);
+        pageInput.parentNode.replaceChild(newInput, pageInput);
+        newInput.value = currentPage;
+
+        console.log("viewCurrentCount.value : "+newInput.value );
 
     });
 }
