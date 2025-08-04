@@ -74,7 +74,7 @@ public class LoginController {
      * @param session
      * @return processResultDTO를 담은 ResponseBase
      */
-    @PostMapping("/loginCheck")
+    @PostMapping("/login_check")
     public ResponseEntity<?> checkLogin(@RequestBody @Valid LoginUserDTO loginUserDTO, HttpSession session) {
         String id = loginUserDTO.getId();
         String pwd = loginUserDTO.getPwd();

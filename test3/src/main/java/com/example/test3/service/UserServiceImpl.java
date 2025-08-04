@@ -167,7 +167,8 @@ public class UserServiceImpl implements UserService {
 
         if (optionalUser.isEmpty()) {
             log.info("아이디가 틀린곳으로 들어왔다.");
-            processResultDTO.setErrorField("아이디가 틀렸습니다.", LoginField.ID);
+            //processResultDTO.setErrorField("아이디가 틀렸습니다.", LoginField.ID);
+            processResultDTO.setErrorMessage(LoginField.ID.getMessage());
             return processResultDTO;
         }
 
@@ -175,7 +176,8 @@ public class UserServiceImpl implements UserService {
         User user = optionalUser.get();
 
         if (!user.isPwdCheckSuccess(loginUserDTO.getPwd())) {  //비밀번호 틀림
-            processResultDTO.setErrorField("비밀번호가 틀렸습니다.", LoginField.PWD);
+            //processResultDTO.setErrorField("비밀번호가 틀렸습니다.", LoginField.PWD);
+            processResultDTO.setErrorMessage(LoginField.PWD.getMessage());
             return processResultDTO;
         }
 

@@ -258,7 +258,7 @@ function ajaxSubmit(event) {
     console.log("{id:id, pwd:pwd} json 문자열 출력 : "+JSON.stringify({id:id, pwd:pwd}));
     console.log("{id,pwd} json 문자열 출력 : "+JSON.stringify({id, pwd}));
 
-    fetch("/login/loginCheck", {
+    fetch("/login/login_check", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(loginData)
@@ -299,13 +299,15 @@ function makeHtml(loginAnswer){
     if (loginAnswer.normal == false) {  //body에 error code가 존재할때- valid에 걸렸을때
         switch (loginAnswer.content.exceptionCode) {
             case "FAIL_LOGIN_VALID":
-                console.log("loginAnswer.content.exceptionMessage.errorField : "+loginAnswer.content.exceptionMessage.errorField);
-                alertText1 = loginAnswer.content.exceptionMessage.errorField.exceptionMessage;
+                console.log(loginAnswer.content.exceptionMessage);
+                alertText1 = ""+loginAnswer.content.exceptionMessage.errorMessage;
+                console.log(alertText1);
                 break;
 
             default: //body에 error code가 존재하지 않을때- valid는 통과하였으나 DB 조회결과 일치하지 않을때
-                console.log("loginAnswer.content.errorField : "+loginAnswer.content.errorField);
-                alertText1 = loginAnswer.content.errorField.exceptionMessage;
+                console.log(loginAnswer.content);
+                alertText1 = loginAnswer.content.errorMessage;
+                console.log(alertText1);
 
         }
 
@@ -313,7 +315,7 @@ function makeHtml(loginAnswer){
         loginForm.getItem("checkDiv").show();
 
     } else { //아이디랑 비번이 맞다.
-        window.location.href = "/user/userList/page?pageNumber=1";
+        window.location.href = "/user/user_list/page?pageNumber=1";
 
         //로그인 경고 메시지 칸 숨기기
         loginForm.getItem("checkDiv").hide();

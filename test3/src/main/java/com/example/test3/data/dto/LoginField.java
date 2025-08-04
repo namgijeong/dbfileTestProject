@@ -3,8 +3,22 @@ package com.example.test3.data.dto;
 import java.util.Arrays;
 
 public enum LoginField {
-    ID,
-    PWD;
+    //enum 매핑
+    //enum 상수 하나당 자신의 인스턴스를 하나씩 만들어 public static final 필드로 공개
+    ID("아이디가 틀렸습니다."),
+    PWD("비밀번호가 틀렸습니다.");
+
+    private final String message;
+
+    //생성자에 "아이디가 틀렸습니다")가 들어간다
+    private LoginField(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return this.message;
+    }
+
 
     /**
      * 특정 문자열을 가지고 LoginField enum에 존재하는 값이면

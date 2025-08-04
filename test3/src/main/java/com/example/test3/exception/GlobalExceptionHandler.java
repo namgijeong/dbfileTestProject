@@ -69,7 +69,8 @@ public class GlobalExceptionHandler {
             FieldError fieldError = (FieldError) error;
 
             //문자열 필드이름대로 enum 세팅
-            processResultDTO.setErrorField(fieldError.getDefaultMessage(),LoginField.findLoginFieldEnum(fieldError.getField()));
+            //processResultDTO.setErrorField(fieldError.getDefaultMessage(),LoginField.findLoginFieldEnum(fieldError.getField()));
+            processResultDTO.setErrorMessage(LoginField.findLoginFieldEnum(fieldError.getField()).getMessage());
         }
 
         log.info("processResultDTO : "+processResultDTO);

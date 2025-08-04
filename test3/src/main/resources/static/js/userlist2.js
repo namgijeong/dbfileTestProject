@@ -435,7 +435,7 @@ const settingCalendar = () => {
  */
 function userListPagingAjax() {
     $.ajax({
-        url: '/user/userList/ajax?pageNumber=' + currentPage,
+        url: '/user/user_list/ajax?pageNumber=' + currentPage,
         method: 'GET',
         success: function (response) {
             console.log("response.content.buttonBlockDTO : " + response.content.buttonBlockDTO);
@@ -454,7 +454,7 @@ function userListPagingAjax() {
                 title : 페이지 제목
                 url : 주소창에 표시될 URL
             */
-            window.history.replaceState(null, "", "/user/userList/ajax?pageNumber=" + currentPage);
+            window.history.replaceState(null, "", "/user/user_list/ajax?pageNumber=" + currentPage);
         },
         error: function (xhr, status, error) {
             console.error('실패:', error);
@@ -514,7 +514,7 @@ const searchAjaxFirst = (event) => {
         page_number : 1,
     };
 
-    fetch("/user/search/userList/ajax", {
+    fetch("/user/search/user_list/ajax", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(searchData)
@@ -544,7 +544,7 @@ const searchAjaxFirst = (event) => {
                 title : 페이지 제목
                 url : 주소창에 표시될 URL
             */
-            window.history.replaceState(null, "", "/user/search/userList/ajax?pageNumber=" + currentPage);
+            window.history.replaceState(null, "", "/user/search/user_list/ajax?pageNumber=" + currentPage);
 
         } else {
             const errorMessage = await response.json();
@@ -608,7 +608,7 @@ const searchAjaxAfterFirst = (event) => {
         page_number : currentPage,
     };
 
-    fetch("/user/search/userList/ajax", {
+    fetch("/user/search/user_list/ajax", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(searchData)
@@ -637,7 +637,7 @@ const searchAjaxAfterFirst = (event) => {
               title : 페이지 제목
               url : 주소창에 표시될 URL
           */
-            window.history.replaceState(null, "", "/user/search/userList/ajax?pageNumber=" + currentPage);
+            window.history.replaceState(null, "", "/user/search/user_list/ajax?pageNumber=" + currentPage);
 
         } else {
             const errorMessage = await response.json();

@@ -54,7 +54,7 @@ public class UserController {
      * @param model 화면 객체
      * @return user 목록 화면으로 이동
      */
-    @GetMapping("/userList/page")
+    @GetMapping("/user_list/page")
     //public String goUserListPage(@SessionAttribute(name = "loginId", required = false) String loginId, @ModelAttribute("pageNumber") int pageNumber, Model model) {
     public String goUserListPage(@RequestParam("pageNumber") int pageNumber, Model model) {
         UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
@@ -72,7 +72,7 @@ public class UserController {
      * @param pageNumber 유저리스트에서 볼 페이지 번호
      * @return user list를 담은 ResponseEntity
      */
-    @GetMapping("/userList/ajax")
+    @GetMapping("/user_list/ajax")
     //public ResponseEntity<?> ExchangeUserList(@SessionAttribute(name = "loginId", required = false) String loginId, @RequestParam int pageNumber) {
     public ResponseEntity<?> ExchangeUserList(@RequestParam int pageNumber) {
         UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.select10Users(pageNumber);
@@ -105,17 +105,6 @@ public class UserController {
 //        return "searchuserlist";
 //    }
 
-    /**
-     * 검색 조회 후, 하단 페이징버튼 클릭시 ajax로 처리
-     * @param searchUserDTO 원하는 페이지 숫자 + 그전에 입력했던 검색 조건들 정보가 포함
-     * @return ResponseBase 응답
-     */
-//    @PostMapping("/search/userList/ajax")
-//    public ResponseEntity<?> searchUserListAndAjax(@RequestBody UserDTO searchUserDTO) {
-//        log.info("searchUserDTO :  "+searchUserDTO.toString());
-//        UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);
-//        return Utility.makeResponseEntity(true, userPagingResultDTO);
-//    }
 
     /**
      * 페이징방식, 페이징 아님 다 적용
@@ -123,7 +112,7 @@ public class UserController {
      * @param searchUserDTO 원하는 페이지 숫자 + 그전에 입력했던 검색 조건들 정보가 포함
      * @return ResponseBase 응답
      */
-    @PostMapping("/search/userList/ajax")
+    @PostMapping("/search/user_list/ajax")
     public ResponseEntity<?> searchUserListAndAjax(@RequestBody SearchUserDTO searchUserDTO) {
         log.info("searchUserDTO :  "+searchUserDTO.toString());
         UserPagingResultDTO<UserDTO> userPagingResultDTO = userService.selectUsersBySearchUserDTO(searchUserDTO);

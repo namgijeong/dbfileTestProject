@@ -154,6 +154,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         System.out.println("검색조건 desc: " + dto.getDesc());
         System.out.println("검색조건 regDate: " + dto.getRegDate());
 
+        //집계 함수의 결과는 null일 가능성이 있기 때문에, long(기본형 타입) 대신 Long(객체형 타입)을 반환
         Long totalCount = jpaQueryFactory
                 .select(user.count())
                 .from(user)

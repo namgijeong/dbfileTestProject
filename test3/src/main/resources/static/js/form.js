@@ -197,7 +197,7 @@ const ajaxSubmit = (event) => {
 
     //일단
     $.ajax({
-        url: '/upload/insertTable',
+        url: '/upload/insert_table',
         method: 'POST',
         data: formData,              // 일반 데이터나 FormData 객체
         processData: false,          // 파일 업로드 시 false
@@ -490,7 +490,7 @@ const ajaxSelectAll = (event) => {
 
 
     $.ajax({
-        url: '/upload/selectFullUsers',
+        url: '/upload/select_full_users',
         method: 'POST',
         success: function(response) {
             makeTableHtml(response);

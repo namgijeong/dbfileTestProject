@@ -23,9 +23,12 @@ public class ProcessResultDTO {
     @Setter
     private String failText;
 
+    //로그인이 어디서 잘못되었는지
+    @Setter
+    private String errorMessage;
 
     /*로그인 필드 에러에 관하여 메시지와 LonginField 포함 */
-    private ErrorField errorField;
+//    private ErrorField errorField;
 
     /*로그인 성공시 user정보를 가져오기 위해 */
     @Setter
@@ -33,12 +36,12 @@ public class ProcessResultDTO {
 
     public ProcessResultDTO() {}
 
-    public void setErrorField(String exceptionMessage, LoginField loginField) {
-        ErrorField errorField = new ErrorField();
-        errorField.setExceptionMessage(exceptionMessage);
-        errorField.setLoginField(loginField);
-        this.errorField = errorField;
-    }
+//    public void setErrorField(String exceptionMessage, LoginField loginField) {
+//        ErrorField errorField = new ErrorField();
+//        errorField.setExceptionMessage(exceptionMessage);
+//        errorField.setLoginField(loginField);
+//        this.errorField = errorField;
+//    }
 
 
     private ProcessResultDTO(Builder builder) {
@@ -46,7 +49,7 @@ public class ProcessResultDTO {
         this.successLine = builder.successLine;
         this.failLine = builder.failLine;
         this.failText = builder.failText;
-        this.errorField = builder.errorField;
+        //this.errorField = builder.errorField;
         this.userDTO = builder.userDTO;
     }
 
@@ -60,7 +63,7 @@ public class ProcessResultDTO {
 
         private String failText;
 
-        private ErrorField errorField;
+        //private ErrorField errorField;
 
         private UserDTO userDTO;
 
@@ -84,11 +87,11 @@ public class ProcessResultDTO {
             return this;
         }
 
-        public Builder errorField(String exceptionMessage, LoginField loginField) {
-            this.errorField.setExceptionMessage(exceptionMessage);
-            this.errorField.setLoginField(loginField);
-            return this;
-        }
+//        public Builder errorField(String exceptionMessage, LoginField loginField) {
+//            this.errorField.setExceptionMessage(exceptionMessage);
+//            this.errorField.setLoginField(loginField);
+//            return this;
+//        }
 
         public Builder userDTO(UserDTO userDTO) {
             this.userDTO = userDTO;
