@@ -105,6 +105,8 @@ const settingForm1 = () => {
 
     layout.getCell("addUser").attach(addUserForm);
 }
+
+
 //레이아웃 만들어놓고
 // 레이아웃 내부에 id 가 form 인 부분을 선언했다면
 const settingForm2 = () => {

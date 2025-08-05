@@ -120,4 +120,9 @@ public class UserController {
         return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 
+    @GetMapping("/insert")
+    public String insertUser() {
+        return "userinsert";
+    }
+
 }
