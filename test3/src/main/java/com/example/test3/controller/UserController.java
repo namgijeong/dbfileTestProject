@@ -1,7 +1,5 @@
 package com.example.test3.controller;
 
-import com.example.test3.data.dto.SearchUserDTO;
-import com.example.test3.utility.Utility;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.test3.data.dto.UserDTO;
 import com.example.test3.data.dto.UserPagingResultDTO;
 import com.example.test3.service.UserService;
+import com.example.test3.data.dto.SearchUserDTO;
+import com.example.test3.utility.Utility;
 
 @Controller
 @RequestMapping("/user/*")

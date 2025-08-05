@@ -2,7 +2,6 @@ package com.example.test3.controller;
 
 import java.util.List;
 
-import com.example.test3.data.dto.ProcessTotalResultDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +16,7 @@ import com.example.test3.data.dto.UserDTO;
 import com.example.test3.data.dto.ProcessTotalResultDTO;
 import com.example.test3.service.UserService;
 import com.example.test3.utility.Utility;
+import com.example.test3.data.dto.ProcessTotalResultDTO;
 
 @Controller
 @RequestMapping("/upload/*")

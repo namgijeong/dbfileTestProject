@@ -1,11 +1,13 @@
 package com.example.test3.data.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@Builder
 public class ProcessResultDTO {
     /*성공인지 실패인지 여부*/
     @Setter
@@ -36,6 +38,15 @@ public class ProcessResultDTO {
 
     public ProcessResultDTO() {}
 
+    public ProcessResultDTO (boolean successFlag, int successLine, int failLine, String failText, String errorMessage, UserDTO userDTO) {
+        this.successFlag = successFlag;
+        this.successLine = successLine;
+        this.failLine = failLine;
+        this.failText = failText;
+        this.errorMessage = errorMessage;
+        this.userDTO = userDTO;
+    }
+
 //    public void setErrorField(String exceptionMessage, LoginField loginField) {
 //        ErrorField errorField = new ErrorField();
 //        errorField.setExceptionMessage(exceptionMessage);
@@ -44,62 +55,4 @@ public class ProcessResultDTO {
 //    }
 
 
-    private ProcessResultDTO(Builder builder) {
-        this.successFlag = builder.successFlag;
-        this.successLine = builder.successLine;
-        this.failLine = builder.failLine;
-        this.failText = builder.failText;
-        //this.errorField = builder.errorField;
-        this.userDTO = builder.userDTO;
-    }
-
-    public static class Builder {
-
-        private boolean successFlag;
-
-        private int successLine;
-
-        private int failLine;
-
-        private String failText;
-
-        //private ErrorField errorField;
-
-        private UserDTO userDTO;
-
-        public Builder successFlag(boolean successFlag) {
-            this.successFlag = successFlag;
-            return this;
-        }
-
-        public Builder successLine(int successLine) {
-            this.successLine = successLine;
-            return this;
-        }
-
-        public Builder failLine(int failLine) {
-            this.failLine = failLine;
-            return this;
-        }
-
-        public Builder failText(String failText) {
-            this.failText = failText;
-            return this;
-        }
-
-//        public Builder errorField(String exceptionMessage, LoginField loginField) {
-//            this.errorField.setExceptionMessage(exceptionMessage);
-//            this.errorField.setLoginField(loginField);
-//            return this;
-//        }
-
-        public Builder userDTO(UserDTO userDTO) {
-            this.userDTO = userDTO;
-            return this;
-        }
-
-        public ProcessResultDTO build() {
-            return new ProcessResultDTO(this);
-        }
-    }
 }

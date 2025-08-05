@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
                         User user = UserDTO.makeUserDTOToUser(userDTO);
                         userDAO.insert(user);
 
-                        processResultDTO = new ProcessResultDTO.Builder()
+                        processResultDTO = ProcessResultDTO.builder()
                                 .successLine(count)
                                 .successFlag(true)
                                 .build();
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
                         log.warn("라인 오류: " + line);
 
 
-                        processResultDTO = new ProcessResultDTO.Builder()
+                        processResultDTO = ProcessResultDTO.builder()
                                 .failLine(count)
                                 .failText(line)
                                 .successFlag(false)
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
                     }
                 }
 
-                processTotalResultDTO = new ProcessTotalResultDTO.Builder()
+                processTotalResultDTO = ProcessTotalResultDTO.builder()
                         .processResultDTOList(processResultDTOList)
                         .totalCount(count)
                         .successCount(successCount)
