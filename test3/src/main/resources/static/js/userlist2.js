@@ -1,4 +1,5 @@
 let layout;
+let addUserForm;
 let searchForm;
 let SearchCalendar;
 let userResults;
@@ -8,8 +9,9 @@ let isSearching = false;
 
 const init = () => {
     createLayout();
+    settingForm1();
 
-    settingForm();
+    settingForm2();
     settingCalendar();
 
     settingGrid();
@@ -31,7 +33,7 @@ const createLayout = () => {
                 id: "mainContent",
                 css: "mainContent",
                 width:1400,
-                height:600,
+                height:620,
                 padding:0,
 
                 cols: [
@@ -44,18 +46,26 @@ const createLayout = () => {
                         padding:0,
                     },
                     {
-                        width: 850,
-                        height: 510,
+                        width: 900,
+                        height: 620,
                         padding: 0,
                         css: "userResults",
 
                       rows: [
                           {
+                              id: "addUser",
+                              name: "addUser",
+                              css:"addUser",
+                              width:140,
+                              height:70,
+                              padding:0,
+                          },
+                          {
                               id: "userResults",
                               name : "userResults",
                               css : "userResults2",
-                              width: 810,
-                              height: 450,
+                              width: 880,
+                              height: 470,
                               padding:0,
                           },
                           {
@@ -75,10 +85,29 @@ const createLayout = () => {
     });
 }
 
+const settingForm1 = () => {
+    addUserForm = new dhx.Form(null, {
+        rows:[
+            {
+                id:"addUserButton",
+                name:"addUserButton",
+                css:"addUserButton",
+                type : "button",
+                submit: false,
+                text: "회원추가",
+                width:120,
+                height:50,
+                padding:0,
 
+            }
+        ]
+    });
+
+    layout.getCell("addUser").attach(addUserForm);
+}
 //레이아웃 만들어놓고
 // 레이아웃 내부에 id 가 form 인 부분을 선언했다면
-const settingForm = () => {
+const settingForm2 = () => {
 
     searchForm = new dhx.Form(null, {
         //사방으로 border가 있다
@@ -652,7 +681,7 @@ const searchAjaxAfterFirst = (event) => {
 
 
 const settingGrid = () => {
-    const dataset =[];
+    let dataset =[];
 
 
     //thymeleaf 변수
@@ -668,7 +697,8 @@ const settingGrid = () => {
         let descText = userDTO.desc;
         let cleanText = makeNullToBlank(descText);
 
-        const data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate }
+        //let data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate, update_button: `<button data-name="${userDTO.id}">수정하기</button>` };
+        let data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate};
         dataset.push(data);
     });
 
@@ -691,10 +721,29 @@ const settingGrid = () => {
             { id: "name", header: [{ text: "NAME"}], width:100 },
             { id: "level", header: [{ text: "LEVEL" }], width:100 },
             { id: "desc", header: [{ text: "DESC" }],width:100 },
-            { id: "reg_date", header: [{ text: "REGDATE" }], width:300 },
+            { id: "reg_date", header: [{ text: "REGDATE" }], width:250 },
+            //htmlEnable => 열에서 HTML 콘텐츠를 사용하고 표시 가능
+            { id:"update_button", htmlEnable:true, header: [{ text: "UPDATE" }],width:100,
+                template: (cellValue, row, column) => {
+                    return `<button class="updateButton" data-id="${row.id}">수정하기</button>`
+                }
+            },
         ],
 
         data: dataset,
+
+        //event - an event object
+        // item - an object with two attributes:
+        // - row - an object with a row configuration
+        // - column - an object with a column configuration
+        eventHandlers: {
+            onclick: {
+                updateButton: function (event, item) {
+                    //console.log(JSON.stringify(data.row, null, 2));
+                    console.log("event.target.id : "+event.target.dataset.id);
+                },
+            },
+        },
 
         //사방으로 border가 있다
         css: "dhx_widget--bordered table",
@@ -760,12 +809,18 @@ const settingPagination = () => {
 }
 
 const makePagingTable = (userDTOList) => {
+    let dataset = [];
     for (userDTO of userDTOList) {
         let reg_date;
         reg_date = parseDate(userDTO.reg_date);
         reg_date = makeRegDate(reg_date);
         userDTO.reg_date = reg_date;
+
+        //let data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate, update_button: `<button data-name="${userDTO.id}">수정하기</button>` };
+        //dataset.push(data);
     }
+
+    //userResults.data.parse(dataset);
 
     userResults.data.parse(userDTOList);
     makePagingButton(userDTOList);

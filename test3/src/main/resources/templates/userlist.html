@@ -50,6 +50,28 @@
             border-radius:10px;
         }
 
+        .addUser{
+            margin:auto;
+            margin-right:30px;
+            padding: 0;
+        }
+
+        /*!important를 사용하는 이유는 DHTMLX의 기본 스타일이 우선순위가 높기 때문*/
+        .addUserButton .dhx_button{
+            margin:auto !important;
+            padding: 0 !important;
+            width: 100px !important;
+            
+            line-height:50px !important;
+            text-align:center !important;
+
+            background-color:tomato !important;
+            color:white !important;
+            border: 1px solid tomato !important;
+            border-radius: 5px !important;
+
+        }
+
         .userResults{
             position:relative;
             margin:auto;
@@ -169,7 +191,23 @@
             text-align:center !important;
             line-height: 40px !important;
         }
+        .updateButton{
+            display:block;
+            width:100px;
+            height:30px;
 
+            margin:auto;
+            padding: 0;
+
+            line-height:30px;
+            text-align:center;
+
+            background-color:tomato;
+            color:white;
+            border: 1px solid tomato;
+            border-radius: 5px;
+
+        }
 
         .pagingArea{
             /*inline-block은 block처럼 박스이지만 inline처럼 내용 크기에 맞는 width*/
