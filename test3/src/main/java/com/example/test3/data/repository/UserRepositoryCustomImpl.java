@@ -1,6 +1,5 @@
 package com.example.test3.data.repository;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,47 +35,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         //and()와 or() 메서드는 BooleanBuilder 객체에 조건을 추가할 때 사용
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        //isEmpty() null 뿐만 아니라 빈문자열일때 true 반환
-        //isBlank()는 null 뿐만 아니라 빈 문자열("")이나 공백만 있는 문자열에도 true를 반환
-        //다만, null 값에 isBlank()를 호출할 수 없음
-        if (dto.getId() != null && !dto.getId().isBlank()) {
-            //like(str)은 쿼리가 나갈 때 str자체가 나간다
-            //contains(str)은 쿼리가 나갈 때 %str%가 나간다
-            booleanBuilder.and(user.id.contains(dto.getId()));
-            //StringUtils.hasText()
-        }
-
-        if (dto.getName() != null && !dto.getName().isBlank()) {
-            booleanBuilder.and(user.name.contains(dto.getName()));
-        }
-        if (dto.getLevel() != null && !dto.getLevel().isBlank()) {
-            //builder.eq(field, value) => 주어진 필드와 값이 같은지 확인하는 조건을 추가
-            booleanBuilder.and(user.level.eq(dto.getLevel()));
-        }
-        if (dto.getDesc() != null && !dto.getDesc().isBlank()) {
-            booleanBuilder.and(user.desc.contains(dto.getDesc()));
-        }
-        if (dto.getStartRegDate() != null && dto.getEndRegDate() != null) {
-            //localdatetime을 localdate로 바꿔서 해도 작동
-            //Timestamp.valueOf() => 매개변수는 String s, LocalDateTime dateTime
-            //atStartOfDay() =>  LocalDate 타입에서만 사용, 해당 날짜의 자정 (00:00:00) 을 나타내는 LocalDateTime 객체를 반환
-            //Timestamp startDate = Timestamp.valueOf(dto.getRegDate().toLocalDate().atStartOfDay());
-            LocalDateTime startDate = dto.getStartRegDate();
-
-            //plusDays => LocalDate, LocalDateTime 타입 모두 사용가능
-            //Timestamp endDate = Timestamp.valueOf(dto.getRegDate().plusDays(1).toLocalDate().atStartOfDay());
-            LocalDateTime endDate = dto.getEndRegDate();
-
-
-            //goe(): A >= ?
-            //gt(): A > ?
-            //loe(): A <= ?
-            //lt(): A < ?
-            log.info("Timestamp startDate : "+startDate);
-            log.info("Timestamp endDate : "+endDate);
-            booleanBuilder.and(user.regDate.goe(startDate)); // 이상
-            booleanBuilder.and(user.regDate.loe(endDate)); //  미만
-        }
+        booleanBuilder = makeSearchUsersBooleanBuilder(booleanBuilder, user, dto);
 
         System.out.println("검색조건 id: " + dto.getId());
         System.out.println("검색조건 name: " + dto.getName());
@@ -114,18 +73,56 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         QUser user = QUser.user;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if (dto.getId() != null && !dto.getId().isBlank()) {
+        booleanBuilder = makeSearchUsersBooleanBuilder(booleanBuilder, user, dto);
+
+        System.out.println("검색조건 id: " + dto.getId());
+        System.out.println("검색조건 name: " + dto.getName());
+        System.out.println("검색조건 level: " + dto.getLevel());
+        System.out.println("검색조건 desc: " + dto.getDesc());
+        System.out.println("검색조건 regDate: " + dto.getRegDate());
+
+        //집계 함수의 결과는 null일 가능성이 있기 때문에, long(기본형 타입) 대신 Long(객체형 타입)을 반환
+        Long totalCount = jpaQueryFactory
+                .select(user.count())
+                .from(user)
+                .where(booleanBuilder)
+                //fetchOne(): 단 건 조회
+                //결과가 없을 때에는 null을 리턴한다.
+                //결과가 둘 이상일 때에는 NonUniqueResultException이 발생
+                .fetchOne();
+
+        //Long,Integer 는 null이 가능. long,int는 null이 불가능
+        if(totalCount == null){
+            return 0L;
+        }
+        return totalCount;
+    }
+
+
+    private BooleanBuilder makeSearchUsersBooleanBuilder(BooleanBuilder booleanBuilder, QUser user, SearchUserDTO dto) {
+        //isEmpty() null 뿐만 아니라 빈문자열일때 true 반환
+        //isBlank()는 null 뿐만 아니라 빈 문자열("")이나 공백만 있는 문자열에도 true를 반환
+        //다만, null 값에 isBlank()를 호출할 수 없음
+        //StringUtils.hasText() => 공백과 null 다 체크하는 함수
+        if (StringUtils.hasText(dto.getId())) {
+            //like(str)은 쿼리가 나갈 때 str자체가 나간다
+            //contains(str)은 쿼리가 나갈 때 %str%가 나간다
             booleanBuilder.and(user.id.contains(dto.getId()));
         }
-        if (dto.getName() != null && !dto.getName().isBlank()) {
+
+        if (StringUtils.hasText(dto.getName())) {
             booleanBuilder.and(user.name.contains(dto.getName()));
         }
-        if (dto.getLevel() != null && !dto.getLevel().isBlank()) {
+
+        if (StringUtils.hasText(dto.getLevel())) {
+            //builder.eq(field, value) => 주어진 필드와 값이 같은지 확인하는 조건을 추가
             booleanBuilder.and(user.level.eq(dto.getLevel()));
         }
-        if (dto.getDesc() != null && !dto.getDesc().isBlank()) {
+
+        if (StringUtils.hasText(dto.getDesc())) {
             booleanBuilder.and(user.desc.contains(dto.getDesc()));
         }
+
         if (dto.getStartRegDate() != null && dto.getEndRegDate() != null) {
             //localdatetime을 localdate로 바꿔서 해도 작동
             //Timestamp.valueOf() => 매개변수는 String s, LocalDateTime dateTime
@@ -147,24 +144,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
             booleanBuilder.and(user.regDate.goe(startDate)); // 이상
             booleanBuilder.and(user.regDate.loe(endDate)); //  미만
         }
-
-        System.out.println("검색조건 id: " + dto.getId());
-        System.out.println("검색조건 name: " + dto.getName());
-        System.out.println("검색조건 level: " + dto.getLevel());
-        System.out.println("검색조건 desc: " + dto.getDesc());
-        System.out.println("검색조건 regDate: " + dto.getRegDate());
-
-        //집계 함수의 결과는 null일 가능성이 있기 때문에, long(기본형 타입) 대신 Long(객체형 타입)을 반환
-        Long totalCount = jpaQueryFactory
-                .select(user.count())
-                .from(user)
-                .where(booleanBuilder)
-                //fetchOne(): 단 건 조회
-                //결과가 없을 때에는 null을 리턴한다.
-                //결과가 둘 이상일 때에는 NonUniqueResultException이 발생
-                .fetchOne();
-
-        return totalCount;
+        return booleanBuilder;
     }
 }
 

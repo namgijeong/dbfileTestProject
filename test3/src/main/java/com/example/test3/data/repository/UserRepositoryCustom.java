@@ -3,6 +3,8 @@ package com.example.test3.data.repository;
 import java.util.List;
 
 import com.example.test3.data.dto.UserDTO;
+import com.example.test3.data.entity.QUser;
+import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
 
 import com.example.test3.data.dto.SearchUserDTO;
@@ -26,4 +28,5 @@ public interface UserRepositoryCustom {
     //List<UserDTO> searchUsers(SearchUserDTO dto);
 
     Long searchUsersCount(SearchUserDTO dto);
+
 }
