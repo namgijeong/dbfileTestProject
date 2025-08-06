@@ -121,34 +121,5 @@ public class UserController {
         return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 
-    //회원추가페이지로 이동
-    @GetMapping("/insert_page")
-    public String goInsertUserPage() {
-        return "userinsert";
-    }
-
-    //회원가입시-아이디가 중복되었는지 체크
-    @PostMapping("/check/duplicated_id")
-    public ResponseEntity<?> checkDuplicatedId(@RequestBody SearchUserDTO searchUserDTO) {
-        ProcessResultDTO processResultDTO = userService.isIDDuplicated(searchUserDTO);
-        return Utility.makeResponseEntity(true, processResultDTO);
-    }
-
-    //회원수정페이지로 이동
-    @PostMapping("/update_page")
-    public String goUpdateUserPage(@ModelAttribute SearchUserDTO searchUserDTO, Model model) {
-        log.info("searchUserDTO :  "+searchUserDTO.toString());
-
-        ProcessResultDTO processResultDTO= userService.findUser(searchUserDTO);
-        if(!processResultDTO.isSuccessFlag()){
-            return "userupdate";
-            //return "redirect:/user/user_list/page?pageNumber=1";
-        }
-
-        log.info("processResultDTO :  "+processResultDTO.toString());
-        model.addAttribute("processResultDTO", processResultDTO);
-
-        return "userupdate";
-    }
 
 }

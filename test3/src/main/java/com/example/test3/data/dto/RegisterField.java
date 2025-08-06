@@ -7,8 +7,8 @@ public enum RegisterField {
     //enum 상수 하나당 자신의 인스턴스를 하나씩 만들어 public static final 필드로 공개
     DUPLICATED_ID("아이디가 중복되었습니다."),
     NOT_DUPLICATED_ID("아이디가 중복되지않았습니다."),
-    ID("아이디를 입력해주세요."),
-    PWD("패스워드를 입력해주세요"),
+    ID("아이디는 4글자 이상이어야합니다."),
+    PWD("비밀번호는 8글자 이상이어야합니다."),
     NAME("이름을 입력해주세요."),
     LEVEL("레벨을 설정해주세요.");
 

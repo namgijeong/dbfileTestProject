@@ -110,7 +110,7 @@ const settingForm1 = () => {
             case "addUserButton":
                 console.log("추가 버튼 클릭");
                 //회원가입 페이지 이동을 한다
-                window.location.href = "/user/insert_page";
+                window.location.href = "/register/insert_page";
                 break;
         }
     });
@@ -707,7 +707,7 @@ const goUserUpdatePage = (event, id) => {
     };
 
     // form 생성- 페이지 이동인데 객체를 보내기위해서
-    let url ="/user/update_page";
+    let url ="/register/update_page";
     let form = document.createElement("form");
     form.method = "POST";
     form.action = url;

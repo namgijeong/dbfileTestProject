@@ -118,7 +118,7 @@ const settingForm = () => {
                     },
 
                     {
-                        id:"conditionArea1",
+                        id:"conditionArea2",
                         css:"conditionArea",
                         width: 450,
                         height: 50,
@@ -371,7 +371,32 @@ const settingForm = () => {
             },
 
             {
-                id : "insertCondition6",
+                id:"insertCondition6",
+                css:"insertCondition",
+                width: 450,
+                height: 250,
+                padding:0,
+
+                cols:[
+
+                    {
+                        //회원가입 에러 문구표시
+                        id:"registerErrorSection",
+                        name:"registerErrorSection",
+                        css:"conditionArea",
+                        type: "container",
+                        hidden:true,
+
+                        width:300,
+                        height:250,
+                        padding:0,
+                    }
+                ]
+
+            },
+
+            {
+                id : "insertCondition7",
                 css : "insertCondition",
                 width : 450,
                 height : 50,
@@ -379,7 +404,7 @@ const settingForm = () => {
 
                 cols:[
                     {
-                        id: "conditionName6",
+                        id: "conditionName7",
                         css : "conditionName",
                         width : 300,
                         height : 40,
@@ -433,6 +458,12 @@ const settingForm = () => {
                 //여기다가 클릭후 ajax 실행시켜서 문구표출
                 checkIdAjax(event);
                 break;
+
+            case "insertButton":
+                console.log("추가 버튼 클릭");
+                //여기다가 클릭후 ajax 실행시켜서 문구표출
+                checkRegistrationAjax(event);
+                break;
         }
     });
 
@@ -442,7 +473,47 @@ const settingForm = () => {
 const checkIdAjax = (event) => {
     let id = insertUserForm.getItem("id").getValue();
     const checkIdData = {id:id};
-    fetch("/user/check/duplicated_id", {
+    fetch("/register/check/duplicated_id", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(checkIdData)
+    }) .then(async response => {
+        /*
+            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+         */
+        if (response.ok) {
+            const checkAnswer  = await response.json();
+
+            console.log("아이디 검사 성공");
+            insertUserForm.getItem("idDuplicatedSection").show();
+            idCheckFlag = checkAnswer.content.successFlag;
+
+            insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
+
+
+
+
+        } else {
+            const errorMessage = await response.json();
+            console.log("errorMessage : "+errorMessage);
+
+        }
+    }).catch(error => {
+        console.log("error : "+error);
+    })
+}
+
+
+const checkRegistrationAjax = (event) => {
+    let id = insertUserForm.getItem("id").getValue();
+    let pwd = insertUserForm.getItem("pwd").getValue();
+    let name = insertUserForm.getItem("name").getValue();
+    let level = insertUserForm.getItem("id").getValue();
+    let desc = insertUserForm.getItem("desc").getValue();
+
+    const checkRegistrationData = {id:id, pwd:pwd, name:name, level:level, desc:desc};
+    fetch("/register/check/duplicated_id", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(checkIdData)

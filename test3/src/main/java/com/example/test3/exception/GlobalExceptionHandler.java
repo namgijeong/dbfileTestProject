@@ -1,14 +1,16 @@
 package com.example.test3.exception;
 
 import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
 
-import com.example.test3.data.dto.ProcessResultDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +19,8 @@ import com.example.test3.data.dto.ProcessResultDTO;
 import com.example.test3.response.ErrorResponse;
 import com.example.test3.response.ResponseBase;
 import com.example.test3.utility.Utility;
+import com.example.test3.data.dto.ProcessResultDTO;
+
 
 @RestControllerAdvice
 @Slf4j
@@ -63,6 +67,15 @@ public class GlobalExceptionHandler {
          */
 
         List<ObjectError> errors = exception.getBindingResult().getAllErrors();
+
+        // 현재 요청 URL을 확인하여 로그인/회원가입을 구분
+        //RequestContextHolder => Spring에서 현재 HTTP 요청의 컨텍스트를 저장하고 있는 클래스
+        //RequestContextHolder.getRequestAttributes() => RequestAttributes 객체를 반환
+        //ServletRequestAttributes => RequestAttribute의 자식 클래스
+        //ServletRequestAttributes => HttpServletRequest를 담고 있는 객체
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        //getRequestURI() 메서드 => 현재 HTTP 요청의 URI를 반환
+        String requestURI = request.getRequestURI();
         ObjectError error = errors.get(0);
         ProcessResultDTO processResultDTO = new ProcessResultDTO();
         if (error instanceof FieldError) {
