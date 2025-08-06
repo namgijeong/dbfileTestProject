@@ -1,8 +1,12 @@
 let layout;
-let insertUserForm;
+let updateUserForm;
+let updateCalendar;
 const init = () => {
     createLayout();
+
     settingForm();
+    settingCalendar();
+
 
 }
 
@@ -18,16 +22,16 @@ const createLayout = () => {
                 id: "mainContent",
                 css: "mainContent",
                 width:1000,
-                height:800,
+                height:1100,
                 padding:0,
 
                 cols: [
                     {
-                        id: "insertUserForm",
-                        name : "insertUserForm",
-                        css : "insertUserForm",
+                        id: "updateUserForm",
+                        name : "updateUserForm",
+                        css : "updateUserForm",
                         width: 500,
-                        height: 700,
+                        height: 1000,
                         padding:0,
                     },
 
@@ -42,12 +46,12 @@ const createLayout = () => {
 }
 
 const settingForm = () => {
-    insertUserForm = new dhx.Form(null, {
+    updateUserForm = new dhx.Form(null, {
         padding: 0,
         rows: [
             {
-                id: "insertCondition0",
-                css : "insertCondition",
+                id: "updateCondition0",
+                css : "updateCondition",
                 width : 450,
                 height : 50,
                 padding:0,
@@ -58,7 +62,7 @@ const settingForm = () => {
                         name:"formTitle",
                         css:"formTitle",
                         type: "text",
-                        value: "회원가입",
+                        value: "회원수정",
                         width:300,
                         height:50,
                         padding:0,
@@ -66,72 +70,108 @@ const settingForm = () => {
                 ]
             },
             {
-                id : "insertCondition1",
-                css : "insertCondition",
+                id : "updateCondition1",
+                css : "updateCondition",
                 width : 450,
-                height : 100,
+                height : 50,
                 padding:0,
 
-                rows:[
+                cols:[
                     {
-                        id:"conditionArea1",
-                        css:"conditionArea",
-                        width: 450,
+                        id: "conditionName1",
+                        css : "conditionName",
+                        width : 100,
+                        height : 40,
+                        padding:0,
+                        type: "text",
+                        value: "ID",
+                    },
+                    {
+                        id: "conditionValue1",
+                        css : "conditionValue",
+                        width:300,
                         height: 50,
                         padding:0,
 
-                        cols:[
+                        cols : [
                             {
-                                id: "conditionName1",
-                                css : "conditionName",
-                                width : 100,
-                                height : 40,
-                                padding:0,
-                                type: "text",
-                                value: "ID",
-                            },
-                            {
-                                id: "conditionValue1",
-                                css : "conditionValue",
-                                width:300,
-                                height: 50,
-                                padding:0,
-
-                                cols : [
-                                    {
-                                        id : "id",
-                                        name : "id",
-                                        css: "input",
-                                        type : "input",
-                                        inputType : "text",
-                                        placeholder : "id",
-                                        width: 200,
-                                        height: 30,
-                                        padding : 0,
-                                    }
-
-                                ]
+                                id : "id",
+                                name : "id",
+                                css: "input",
+                                type : "input",
+                                inputType : "text",
+                                placeholder : "id",
+                                readOnly:true,
+                                width: 200,
+                                height: 30,
+                                padding : 0,
                             }
-                        ]
-                    },
 
-                    {
-                        //아이디가 중복되었습니다 문구 표시
-                        id:"idDuplicatedSection",
-                        name:"idDuplicatedSection",
-                        css:"conditionArea",
-                        type: "text",
-                        value: "아이디가 중복되었습니다.",
-                        //hidden:true,
-                    },
-                ],
+                        ]
+                    }
+                ]
+
+                // rows:[
+                //     {
+                //         id:"conditionArea1",
+                //         css:"conditionArea",
+                //         width: 450,
+                //         height: 50,
+                //         padding:0,
+                //
+                //         cols:[
+                //             {
+                //                 id: "conditionName1",
+                //                 css : "conditionName",
+                //                 width : 100,
+                //                 height : 40,
+                //                 padding:0,
+                //                 type: "text",
+                //                 value: "ID",
+                //             },
+                //             {
+                //                 id: "conditionValue1",
+                //                 css : "conditionValue",
+                //                 width:300,
+                //                 height: 50,
+                //                 padding:0,
+                //
+                //                 cols : [
+                //                     {
+                //                         id : "id",
+                //                         name : "id",
+                //                         css: "input",
+                //                         type : "input",
+                //                         inputType : "text",
+                //                         placeholder : "id",
+                //                         readOnly:true,
+                //                         width: 200,
+                //                         height: 30,
+                //                         padding : 0,
+                //                     }
+                //
+                //                 ]
+                //             }
+                //         ]
+                //     },
+                //
+                //     {
+                //         //아이디가 중복되었습니다 문구 표시
+                //         id:"idDuplicatedSection",
+                //         name:"idDuplicatedSection",
+                //         css:"conditionArea",
+                //         type: "text",
+                //         value: "아이디가 중복되었습니다.",
+                //         //hidden:true,
+                //     },
+                // ],
 
 
             },
 
             {
-                id : "insertCondition2",
-                css : "insertCondition",
+                id : "updateCondition2",
+                css : "updateCondition",
                 width : 450,
                 height : 50,
                 padding:0,
@@ -175,8 +215,8 @@ const settingForm = () => {
             },
 
             {
-                id : "insertCondition3",
-                css : "insertCondition",
+                id : "updateCondition3",
+                css : "updateCondition",
                 width : 450,
                 height : 50,
                 padding:0,
@@ -214,15 +254,13 @@ const settingForm = () => {
                         ]
                     },
 
-
-
                 ]
 
             },
 
             {
-                id : "insertCondition4",
-                css : "insertCondition",
+                id : "updateCondition4",
+                css : "updateCondition",
                 width : 450,
                 height : 50,
                 padding:0,
@@ -289,15 +327,13 @@ const settingForm = () => {
                         ]
                     },
 
-
-
                 ]
 
             },
 
             {
-                id : "insertCondition5",
-                css : "insertCondition",
+                id : "updateCondition5",
+                css : "updateCondition",
                 width : 450,
                 height : 50,
                 padding:0,
@@ -335,22 +371,63 @@ const settingForm = () => {
                         ]
                     },
 
+                ]
 
+            },
+
+            {
+                id : "updateCondition6",
+                css : "updateCondition",
+                width : 450,
+                height : 300,
+                padding:0,
+
+                cols:[
+                    {
+                        id: "conditionName6",
+                        css : "conditionName",
+                        width : 100,
+                        height : 40,
+                        padding:0,
+                        type: "text",
+                        value: "REGDATE",
+                    },
+                    {
+                        id: "conditionValue6",
+                        css : "conditionValue",
+                        width:300,
+                        height: 300,
+                        padding:0,
+
+                        cols : [
+                            {
+                                id : "regDate",
+                                name : "regDate",
+                                //A control to attach HTML code or the DHTMLX widgets.
+                                type : "container",
+                                css: "input",
+                                width: 250,
+                                height: 300,
+                                padding : 0,
+                            }
+
+                        ]
+                    },
 
                 ]
 
             },
 
             {
-                id : "insertCondition6",
-                css : "insertCondition",
+                id : "updateCondition7",
+                css : "updateCondition",
                 width : 450,
                 height : 50,
                 padding:0,
 
                 cols:[
                     {
-                        id: "conditionName6",
+                        id: "conditionName7",
                         css : "conditionName",
                         width : 300,
                         height : 40,
@@ -371,9 +448,9 @@ const settingForm = () => {
                                 text:"돌아가기",
                             },
                             {
-                                id : "insertButton",
-                                name : "insertButton",
-                                css: "insertButton",
+                                id : "updateButton",
+                                name : "updateButton",
+                                css: "updateButton",
 
                                 type : "button",
                                 submit: false,
@@ -381,7 +458,7 @@ const settingForm = () => {
                                 width: 100,
                                 height: 40,
                                 padding : 0,
-                                text:"추가",
+                                text:"수정완료",
                             }
 
                         ]
@@ -395,5 +472,36 @@ const settingForm = () => {
         ]
     });
 
-    layout.getCell("insertUserForm").attach(insertUserForm);
+    layout.getCell("updateUserForm").attach(updateUserForm);
+}
+
+const settingCalendar = () => {
+    //getWidget() => returns the widget attached to Window
+    //let regDateInput = searchForm.getItem("regDate").getWidget();
+    //let regDateInput = searchForm.getItem("regDate");
+    //console.log("regDateInput : "+regDateInput);
+
+    updateCalendar = new dhx.Calendar(null, {
+        css: "dhx_widget--bordered",
+        // 날짜 범위 선택을 활성화
+        range: false,
+        dateFormat:"%Y-%m-%d",
+        //현재 표시된 날짜를 기준으로 이전/다음 달의 날짜를 숨김
+        thisMonthOnly:true,
+        width : 250,
+    });
+
+
+    //change: (date: Date, oldDate: Date, byClick: boolean) => void;
+    //date: Date- 새로 선택한 날짜
+    //oldDate: Date- 이전에 선택한 날짜
+    //byClick: boolean- 날짜 클릭으로 인해 변경이 발생했는지( true) 또는 API 호출로 인해 변경이 발생했는지( false) 를 정의
+    updateCalendar.events.on("change",function(date, oldDate, byClick){
+        console.log("Change selection from "+oldDate+" to "+date);
+    });
+
+    console.log("calendar 만들기 ");
+
+    //위 dhx.Form 생성할때 내부요소에 type container로 지정해서 가능하다
+    updateUserForm.getItem("regDate").attach(updateCalendar);
 }

@@ -685,7 +685,6 @@ const searchAjaxAfterFirst = (event) => {
 const settingGrid = () => {
     let dataset =[];
 
-
     //thymeleaf 변수
     userDTOList.forEach(userDTO => {
         console.log("userDTO.id : "+userDTO.id);
@@ -699,7 +698,6 @@ const settingGrid = () => {
         let descText = userDTO.desc;
         let cleanText = makeNullToBlank(descText);
 
-        //let data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate, update_button: `<button data-name="${userDTO.id}">수정하기</button>` };
         let data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate};
         dataset.push(data);
     });
@@ -767,8 +765,6 @@ const settingGrid = () => {
 
     userResults = new dhx.Grid(null, config);
 
-    //load()데이터 수집 메서드를 통해 Grid에 데이터를 로드 하고 lazyDataProxy이 메서드의 매개변수로 전달
-    // userResults.data.load(lazyDataProxy);
     layout.getCell("userResults").attach(userResults);
 
 
@@ -817,12 +813,7 @@ const makePagingTable = (userDTOList) => {
         reg_date = parseDate(userDTO.reg_date);
         reg_date = makeRegDate(reg_date);
         userDTO.reg_date = reg_date;
-
-        //let data = {id : userDTO.id, pwd: userDTO.pwd, name:userDTO.name, desc:cleanText, reg_date:completeRegDate, update_button: `<button data-name="${userDTO.id}">수정하기</button>` };
-        //dataset.push(data);
     }
-
-    //userResults.data.parse(dataset);
 
     userResults.data.parse(userDTOList);
     makePagingButton(userDTOList);

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>남기정_회원가입</title>
+    <script type="text/javascript" src="/dhtmlx8/codebase/suite.js"></script>
+    <link rel="stylesheet" href="/dhtmlx8/codebase/suite.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box !important;
+
+            font-family: "Hahmlet", serif;
+        }
+
+        .layout.dhx_layout {
+            width: 100% !important;
+            height: 180vh !important;
+
+            /*
+               opacity: 0.3;을 사용하면, 해당 요소의 모든 자식 요소까지 영향
+               즉, 배경색뿐만 아니라 자식 요소들도 흐리게
+               opacity:0.3;
+          */
+            background-color: rgba(211, 211, 211, 0.3);
+        }
+
+        .mainContent{
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translate(-50%, 0%);
+
+            height: auto;
+
+            z-index:1;
+
+            background: none;
+        }
+
+        .updateUserForm{
+            position:relative;
+            margin:auto;
+
+            height: auto;
+
+            background-color:white;
+            border: 3px solid tomato;
+            border-radius:10px;
+        }
+
+
+        .updateCondition{
+            margin: auto;
+
+            display:flex;
+            justify-content: center;
+            align-items: center;
+
+            line-height:50px;
+        }
+
+        .formTitle{
+            margin: auto;
+
+            font-weight:bold;
+            font-size: 20px;
+            line-height:50px;
+            text-align:center;
+            color:black;
+        }
+        .formTitle .dhx_input {
+            margin: auto;
+
+            font-weight:bold;
+            font-size: 20px;
+            line-height:50px;
+            text-align:center;
+            color:black;
+        }
+
+        /*.conditionArea{*/
+        /*    margin: auto;*/
+
+        /*    display:flex;*/
+        /*    justify-content: center;*/
+        /*    align-items: center;*/
+
+        /*    line-height:50px;*/
+        /*}*/
+        /*.conditionArea .dhx_form-group{*/
+        /*    margin-bottom: 0 !important;*/
+        /*}*/
+
+        .conditionName{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+
+            text-align:center;
+            font-weight:bold;
+            font-size: 20px;
+            line-height:40px;
+
+            color:black;
+        }
+        .conditionName .dhx_input{
+            margin: auto !important;
+            padding: 0 !important;
+
+            display:flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+
+            text-align: center !important;
+            line-height:40px !important;
+        }
+        .conditionName .dhx_form-group{
+            margin-bottom: 0 !important;
+        }
+
+
+        .conditionValue{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+
+            margin-left: 30px;
+
+            text-align:center;
+        }
+
+
+        .input {
+            display:block !important;
+
+            margin:auto !important;
+
+            line-height:30px !important;
+            text-align: center !important;
+
+        }
+        .input .dhx_input {
+            display:block !important;
+
+            margin:auto !important;
+            /*margin-top:20px !important;*/
+            width: 200px !important;
+            height: 30px !important;
+            text-align: center !important;
+
+            border-radius:10px !important;
+            border:1px solid lightgray !important;
+
+        }
+        .input .dhx_combobox-input{
+            text-align: center !important;
+        }
+
+        .itemDiv{
+            font-weight:bold;
+            font-size: 20px;
+            line-height:50px;
+
+            color:black;
+        }
+
+
+        /*!important를 사용하는 이유는 DHTMLX의 기본 스타일이 우선순위가 높기 때문*/
+        .goListButton .dhx_button{
+            display:block !important;
+
+            margin:auto !important;
+            padding: 0px !important;
+            width: 100px !important;
+            height: 40px !important;
+            text-align: center !important;
+
+            background-color:tomato !important;
+            color:white !important;
+            border: 1px solid tomato !important;
+            border-radius: 5px !important;
+        }
+
+
+        /*!important를 사용하는 이유는 DHTMLX의 기본 스타일이 우선순위가 높기 때문*/
+        .updateButton .dhx_button{
+            display:block !important;
+
+            margin:auto !important;
+            margin-left:30px !important;
+            padding: 0px !important;
+            width: 100px !important;
+            height: 40px !important;
+            text-align: center !important;
+
+            background-color:tomato !important;
+            color:white !important;
+            border: 1px solid tomato !important;
+            border-radius: 5px !important;
+        }
+
+
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="/js/utility.js"></script>
+
+<script src="/js/userupdate.js"></script>
+<body onload="init()">
+<div id="layout" style="width:100%; height: 170vh;"></div>
+</body>
+</html>

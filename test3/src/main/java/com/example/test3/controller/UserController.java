@@ -120,9 +120,16 @@ public class UserController {
         return Utility.makeResponseEntity(true, userPagingResultDTO);
     }
 
+    //회원추가
     @GetMapping("/insert")
     public String insertUser() {
         return "userinsert";
+    }
+
+    //회원수정
+    @GetMapping("/update")
+    public String updateUser() {
+        return "userupdate";
     }
 
 }
