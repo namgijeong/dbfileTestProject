@@ -57,4 +57,19 @@ public interface UserService {
      * @return UserDTO를 담은 UserPagingResultDTO
      */
     //public UserPagingResultDTO<UserDTO> selectUsersBySearchUserDTO(SearchUserDTO searchUserDTO);
+
+
+    /**
+     * 수정페이지로 이동할때 수정버튼 누른 해당 회원의 정보 전체를 찾아 반환한다.
+     * @param searchUserDTO
+     * @return ProcessResultDTO
+     */
+    public ProcessResultDTO findUser(SearchUserDTO searchUserDTO);
+
+    /**
+     * 회원가입시, 아이디가 중복되었는지 체크한다.
+     * @param searchUserDTO
+     * @return ProcessResultDTO
+     */
+    public ProcessResultDTO isIDDuplicated(SearchUserDTO searchUserDTO);
 }

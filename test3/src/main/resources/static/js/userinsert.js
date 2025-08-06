@@ -1,9 +1,11 @@
 let layout;
 let insertUserForm;
+let idCheckFlag = false;
 const init = () => {
     createLayout();
     settingForm();
 
+    awaitRedraw();
 }
 
 const createLayout = () => {
@@ -116,13 +118,40 @@ const settingForm = () => {
                     },
 
                     {
-                        //아이디가 중복되었습니다 문구 표시
-                        id:"idDuplicatedSection",
-                        name:"idDuplicatedSection",
+                        id:"conditionArea1",
                         css:"conditionArea",
-                        type: "text",
-                        value: "아이디가 중복되었습니다.",
-                        //hidden:true,
+                        width: 450,
+                        height: 50,
+                        padding:0,
+
+                        cols:[
+                            {
+                                id : "idCheckButton",
+                                name : "idCheckButton",
+                                css: "idCheckButton",
+
+                                type : "button",
+                                submit: false,
+
+                                width: 120,
+                                height: 40,
+                                padding : 0,
+                                text:"아이디 중복",
+
+                            },
+                            {
+                                //아이디가 중복되었습니다 문구 표시
+                                id:"idDuplicatedSection",
+                                name:"idDuplicatedSection",
+                                css:"conditionArea",
+                                type: "text",
+                                hidden:true,
+
+                                width:300,
+                                height:50,
+                            }
+                        ]
+
                     },
                 ],
 
@@ -395,5 +424,64 @@ const settingForm = () => {
         ]
     });
 
+    //id => 클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
+    insertUserForm.events.on("click", (id, event) => {
+        switch (id) {
+            //이걸 클릭했을때
+            case "idCheckButton":
+                console.log("아이디 중복 버튼 클릭");
+                //여기다가 클릭후 ajax 실행시켜서 문구표출
+                checkIdAjax(event);
+                break;
+        }
+    });
+
     layout.getCell("insertUserForm").attach(insertUserForm);
+}
+
+const checkIdAjax = (event) => {
+    let id = insertUserForm.getItem("id").getValue();
+    const checkIdData = {id:id};
+    fetch("/user/check/duplicated_id", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(checkIdData)
+    }) .then(async response => {
+        /*
+            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+         */
+        if (response.ok) {
+            const checkAnswer  = await response.json();
+
+            console.log("아이디 검사 성공");
+            insertUserForm.getItem("idDuplicatedSection").show();
+            idCheckFlag = checkAnswer.content.successFlag;
+
+            insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
+
+
+
+
+        } else {
+            const errorMessage = await response.json();
+            console.log("errorMessage : "+errorMessage);
+
+        }
+    }).catch(error => {
+        console.log("error : "+error);
+    })
+}
+
+const awaitRedraw = () => {
+    //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
+    // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
+    dhx.awaitRedraw().then(() => {
+
+        // let insertButton = document.getElementById("insertButton");
+        // insertButton.classList.add("notActiveButton");
+
+
+    });
+
 }

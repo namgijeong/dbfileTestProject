@@ -7,7 +7,7 @@ const init = () => {
     settingForm();
     settingCalendar();
 
-
+    awaitRedraw();
 }
 
 const createLayout = () => {
@@ -110,62 +110,6 @@ const settingForm = () => {
                         ]
                     }
                 ]
-
-                // rows:[
-                //     {
-                //         id:"conditionArea1",
-                //         css:"conditionArea",
-                //         width: 450,
-                //         height: 50,
-                //         padding:0,
-                //
-                //         cols:[
-                //             {
-                //                 id: "conditionName1",
-                //                 css : "conditionName",
-                //                 width : 100,
-                //                 height : 40,
-                //                 padding:0,
-                //                 type: "text",
-                //                 value: "ID",
-                //             },
-                //             {
-                //                 id: "conditionValue1",
-                //                 css : "conditionValue",
-                //                 width:300,
-                //                 height: 50,
-                //                 padding:0,
-                //
-                //                 cols : [
-                //                     {
-                //                         id : "id",
-                //                         name : "id",
-                //                         css: "input",
-                //                         type : "input",
-                //                         inputType : "text",
-                //                         placeholder : "id",
-                //                         readOnly:true,
-                //                         width: 200,
-                //                         height: 30,
-                //                         padding : 0,
-                //                     }
-                //
-                //                 ]
-                //             }
-                //         ]
-                //     },
-                //
-                //     {
-                //         //아이디가 중복되었습니다 문구 표시
-                //         id:"idDuplicatedSection",
-                //         name:"idDuplicatedSection",
-                //         css:"conditionArea",
-                //         type: "text",
-                //         value: "아이디가 중복되었습니다.",
-                //         //hidden:true,
-                //     },
-                // ],
-
 
             },
 
@@ -476,10 +420,6 @@ const settingForm = () => {
 }
 
 const settingCalendar = () => {
-    //getWidget() => returns the widget attached to Window
-    //let regDateInput = searchForm.getItem("regDate").getWidget();
-    //let regDateInput = searchForm.getItem("regDate");
-    //console.log("regDateInput : "+regDateInput);
 
     updateCalendar = new dhx.Calendar(null, {
         css: "dhx_widget--bordered",
@@ -504,4 +444,29 @@ const settingCalendar = () => {
 
     //위 dhx.Form 생성할때 내부요소에 type container로 지정해서 가능하다
     updateUserForm.getItem("regDate").attach(updateCalendar);
+}
+
+
+const awaitRedraw = () => {
+    //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
+    // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
+    dhx.awaitRedraw().then(() => {
+        //수정대상 회원을 못찾음
+        if (!successFlag) {
+            window.location.href = "/user/user_list/page?pageNumber=1";
+        }
+
+        updateUserForm.getItem("id").setValue(userDTO.id);
+        updateUserForm.getItem("pwd").setValue(userDTO.pwd);
+        updateUserForm.getItem("name").setValue(userDTO.name);
+        updateUserForm.getItem("level").setValue(userDTO.level);
+        updateUserForm.getItem("desc").setValue(userDTO.desc);
+
+        //th:inline="javascript" 때문에 thymeleaf가 JSON으로 렌더링하여 JsonProperty로 접근
+        console.log(userDTO.reg_date);
+        //위에서 설정한 dateFormat 속성대로 넣어줘야한다.
+        updateCalendar.setValue(makeLocalDateTimeToDhxCalendar(userDTO.reg_date));
+        console.log("makeLocalDateTimeToDhxCalendar(userDTO.regDate) : " + makeLocalDateTimeToDhxCalendar(userDTO.reg_date));
+    });
+
 }

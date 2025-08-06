@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -281,5 +280,60 @@ public class UserServiceImpl implements UserService {
 //                .build();
 //        return userPagingResultDTO;
 //    }
+
+
+    /**
+     * 수정페이지로 이동할때 수정버튼 누른 해당 회원의 정보 전체를 찾아 반환한다.
+     * @param searchUserDTO
+     * @return ProcessResultDTO
+     */
+    @Override
+    public ProcessResultDTO findUser(SearchUserDTO searchUserDTO) {
+        Optional<User> optionalUser =  userDAO.select(searchUserDTO.getId());
+
+        ProcessResultDTO processResultDTO = new ProcessResultDTO();
+
+        if (optionalUser.isEmpty()) {
+            log.info("잘못된 수정페이지 접근. 해당 회원 아이디로 접근실패");
+
+            processResultDTO.setErrorMessage("잘못된 수정페이지 접근. 해당 회원 아이디로 접근실패");
+            return processResultDTO;
+        }
+
+        //회원 아이디로 접근 성공
+        User user = optionalUser.get();
+
+        UserDTO userDTO = new UserDTO(user);
+        processResultDTO.setUserDTO(userDTO);
+        processResultDTO.setSuccessFlag(true);
+        return processResultDTO;
+    }
+
+
+    /**
+     * 회원가입시, 아이디가 중복되었는지 체크한다.
+     * @param searchUserDTO
+     * @return ProcessResultDTO
+     */
+    @Override
+    public ProcessResultDTO isIDDuplicated(SearchUserDTO searchUserDTO) {
+
+        Optional<User> optionalUser =  userDAO.select(searchUserDTO.getId());
+
+        ProcessResultDTO processResultDTO = new ProcessResultDTO();
+
+        if (optionalUser.isEmpty()) {
+            log.info("아이디가 중복되지 않습니다.");
+
+            processResultDTO.setErrorMessage(RegisterField.NOT_DUPLICATED_ID.getMessage());
+            processResultDTO.setSuccessFlag(true);
+            return processResultDTO;
+        }
+
+        processResultDTO.setErrorMessage(RegisterField.DUPLICATED_ID.getMessage());
+
+        return processResultDTO;
+    }
+
 
 }

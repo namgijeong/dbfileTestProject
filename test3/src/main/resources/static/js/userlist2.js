@@ -103,6 +103,18 @@ const settingForm1 = () => {
         ]
     });
 
+    //id => 클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
+    addUserForm.events.on("click", (id, event) => {
+        switch (id) {
+            //이걸 클릭했을때
+            case "addUserButton":
+                console.log("추가 버튼 클릭");
+                //회원가입 페이지 이동을 한다
+                window.location.href = "/user/insert_page";
+                break;
+        }
+    });
+
     layout.getCell("addUser").attach(addUserForm);
 }
 
@@ -429,10 +441,6 @@ const settingForm2 = () => {
 }
 
 const settingCalendar = () => {
-    //getWidget() => returns the widget attached to Window
-    //let regDateInput = searchForm.getItem("regDate").getWidget();
-    //let regDateInput = searchForm.getItem("regDate");
-    //console.log("regDateInput : "+regDateInput);
 
     SearchCalendar = new dhx.Calendar(null, {
         css: "dhx_widget--bordered",
@@ -464,7 +472,7 @@ const settingCalendar = () => {
  * 페이징 통신 Ajax
  * 페이지 이동없이 누른 버튼 값에 따라 회원정보 페이지 내용 변경
  */
-function userListPagingAjax() {
+const userListPagingAjax = () => {
     $.ajax({
         url: '/user/user_list/ajax?pageNumber=' + currentPage,
         method: 'GET',
@@ -682,6 +690,47 @@ const searchAjaxAfterFirst = (event) => {
 }
 
 
+/**
+ * 수정하기 버튼을 누르면, 아이디 정보를 가지고 페이지 이동
+ * 페이지 이동 + post방식
+ * @param event
+ * @param id
+ */
+const goUserUpdatePage = (event, id) => {
+    event.preventDefault();
+
+    console.log("id: "+id);
+
+    const userData = {
+        id: id,
+
+    };
+
+    // form 생성- 페이지 이동인데 객체를 보내기위해서
+    let url ="/user/update_page";
+    let form = document.createElement("form");
+    form.method = "POST";
+    form.action = url;
+
+    // 데이터를 폼의 hidden input으로 추가
+    // 하지만 ajax와 다르게 input 태그 value 빈값이면 null로 가지 않는다
+    // input 태그에 null을 넣어도, JavaScript 에서는 해당 속성이 빈 문자열('')로 설정
+    for (let key in userData) {
+        if (userData.hasOwnProperty(key)) {
+            let input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = userData[key];
+            form.appendChild(input);
+        }
+    }
+
+    // form을 body에 추가하고 제출
+    document.body.appendChild(form);
+    form.submit();
+
+}
+
 const settingGrid = () => {
     let dataset =[];
 
@@ -741,6 +790,9 @@ const settingGrid = () => {
                 updateButton: function (event, item) {
                     //console.log(JSON.stringify(data.row, null, 2));
                     console.log("event.target.id : "+event.target.dataset.id);
+
+                    //페이지 이동이면서 post로 제출하겠다.
+                    goUserUpdatePage(event, event.target.dataset.id);
                 },
             },
         },

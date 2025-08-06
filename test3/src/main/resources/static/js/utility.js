@@ -191,6 +191,18 @@ function makeTimestampToString(timestamp) {
 
 
 /**
+ * dhxCalendar format 형식 맞추기 위해
+ * Ajax json이 아닌 자바객체의 LocalDateTime 타입 값을 yyyy-mm-dd 형태의 문자열로 바꾼다.
+ * @param localDateTime  자바객체의 Timestamp 타입의 문자열
+ * @returns {string} yyyy-mm-dd 형태 문자열
+ */
+function makeLocalDateTimeToDhxCalendar(localDateTime) {
+    const date = new Date(localDateTime);
+    let regDateText = makeEasePickDateToString(date);
+    return regDateText;
+}
+
+/**
  * 필드를 화면에 출력할때 null이면 아예 공백으로 출력하기 위해
  * @param originText  string 문자열
  * @returns cleanText string 문자열
