@@ -371,26 +371,68 @@ const settingForm = () => {
             },
 
             {
+                //회원가입 에러 문구표시
                 id:"insertCondition6",
                 css:"insertCondition",
                 width: 450,
-                height: 250,
+                height: 200,
                 padding:0,
+                //hidden:true,
 
-                cols:[
-
+                rows: [
                     {
-                        //회원가입 에러 문구표시
-                        id:"registerErrorSection",
-                        name:"registerErrorSection",
+
+                        id:"registerErrorSection1",
+                        name:"registerErrorSection1",
                         css:"conditionArea",
-                        type: "container",
+                        //type:"container",
+                        type: "text",
                         hidden:true,
 
-                        width:300,
-                        height:250,
+                        width:400,
+                        height:50,
                         padding:0,
-                    }
+                    },
+                    {
+
+                        id:"registerErrorSection2",
+                        name:"registerErrorSection2",
+                        css:"conditionArea",
+                        //type:"container",
+                        type: "text",
+                        hidden:true,
+
+                        width:400,
+                        height:50,
+                        padding:0,
+                    },
+                    {
+
+                        id:"registerErrorSection3",
+                        name:"registerErrorSection3",
+                        css:"conditionArea",
+                        //type:"container",
+                        type: "text",
+                        hidden:true,
+
+                        width:400,
+                        height:50,
+                        padding:0,
+                    },
+                    {
+
+                        id:"registerErrorSection4",
+                        name:"registerErrorSection4",
+                        css:"conditionArea",
+                        //type:"container",
+                        type: "text",
+                        hidden:true,
+
+                        width:400,
+                        height:50,
+                        padding:0,
+                    },
+
                 ]
 
             },
@@ -487,7 +529,6 @@ const checkIdAjax = (event) => {
 
             console.log("아이디 검사 성공");
             insertUserForm.getItem("idDuplicatedSection").show();
-            //idCheckFlag = checkAnswer.content.successFlag;
 
             insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
 
@@ -547,15 +588,30 @@ const checkRegistrationAjax = (event) => {
 
 
             } else { //오류 메시지 출력
-                insertUserForm.getItem("registerErrorSection").show();
-                let errorCount = checkAnswer.content.exceptionMessage.length;
-                console.log(errorCount);
+                //insertUserForm.getItem("insertCondition6").show();
+
                 console.log(checkAnswer.content.exceptionMessage);
+
+                let formItemId = "registerErrorSection";
+                let formItemIdFull = '';
+
+                //다시 출력할때는 초기화하자
+                for(let i= 1; i <= 4 ; i++) {
+                    let formItemIdFull='';
+                    formItemIdFull = formItemId+i;
+                    insertUserForm.getItem(formItemIdFull).hide();
+                }
+                checkAnswer.content.exceptionMessage.forEach((processResultDTO,index) => {
+                    let formItemIdFull = '';
+                    formItemIdFull = formItemId+(index+1);
+                    console.log(formItemIdFull)
+                    insertUserForm.getItem(formItemIdFull).show();
+                    insertUserForm.getItem(formItemIdFull).setValue(processResultDTO.errorMessage);
+
+                });
+
+
             }
-            //
-            // insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
-
-
 
 
         } else {
