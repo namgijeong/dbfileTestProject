@@ -1,5 +1,7 @@
 package com.example.test3.controller;
 
+import com.example.test3.data.dto.*;
+import com.example.test3.data.entity.User;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -13,10 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.test3.data.dto.LoginUserDTO;
-import com.example.test3.data.dto.ProcessResultDTO;
-import com.example.test3.data.dto.RegisterUserDTO;
-import com.example.test3.data.dto.SearchUserDTO;
 import com.example.test3.service.UserService;
 import com.example.test3.utility.Utility;
 
@@ -36,7 +34,7 @@ public class RegisterController {
     //회원가입시-아이디가 중복되었는지 체크
     @PostMapping("/check/duplicated_id")
     public ResponseEntity<?> checkDuplicatedId(@RequestBody SearchUserDTO searchUserDTO) {
-        ProcessResultDTO processResultDTO = userService.isIDDuplicated(searchUserDTO);
+        ProcessResultDTO processResultDTO = userService.isIDDuplicated(searchUserDTO.getId());
         return Utility.makeResponseEntity(true, processResultDTO);
     }
 
@@ -49,6 +47,7 @@ public class RegisterController {
      */
     @PostMapping("/register_check")
     public ResponseEntity<?> checkLogin(@RequestBody @Valid RegisterUserDTO registerUserDTO) {
+        log.info("레벨 값: '{}'", registerUserDTO.getLevel());
         String id = registerUserDTO.getId();
         String pwd = registerUserDTO.getPwd();
         String name = registerUserDTO.getName();
@@ -59,6 +58,10 @@ public class RegisterController {
 
         //등록날짜는 오늘날로 설정
         registerUserDTO.setRegDate(LocalDateTime.now());
+
+
+//        User user = UserDTO.makeUserDTOToUser(userDTO);
+//        userDAO.insert(user);
 
         //boolean은 getter 메소드가 is로 시작
 

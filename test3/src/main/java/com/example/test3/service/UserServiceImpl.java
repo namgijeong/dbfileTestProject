@@ -312,13 +312,13 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 회원가입시, 아이디가 중복되었는지 체크한다.
-     * @param searchUserDTO
+     * @param id
      * @return ProcessResultDTO
      */
     @Override
-    public ProcessResultDTO isIDDuplicated(SearchUserDTO searchUserDTO) {
+    public ProcessResultDTO isIDDuplicated(String id) {
 
-        Optional<User> optionalUser =  userDAO.select(searchUserDTO.getId());
+        Optional<User> optionalUser =  userDAO.select(id);
 
         ProcessResultDTO processResultDTO = new ProcessResultDTO();
 

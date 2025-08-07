@@ -509,14 +509,16 @@ const checkRegistrationAjax = (event) => {
     let id = insertUserForm.getItem("id").getValue();
     let pwd = insertUserForm.getItem("pwd").getValue();
     let name = insertUserForm.getItem("name").getValue();
-    let level = insertUserForm.getItem("id").getValue();
+    let level = insertUserForm.getItem("level").getValue();
     let desc = insertUserForm.getItem("desc").getValue();
 
     const checkRegistrationData = {id:id, pwd:pwd, name:name, level:level, desc:desc};
-    fetch("/register/check/duplicated_id", {
+    console.log(checkRegistrationData);
+
+    fetch("/register/register_check", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(checkIdData)
+        body: JSON.stringify(checkRegistrationData)
     }) .then(async response => {
         /*
             그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
@@ -525,11 +527,11 @@ const checkRegistrationAjax = (event) => {
         if (response.ok) {
             const checkAnswer  = await response.json();
 
-            console.log("아이디 검사 성공");
-            insertUserForm.getItem("idDuplicatedSection").show();
-            idCheckFlag = checkAnswer.content.successFlag;
-
-            insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
+            // console.log("아이디 검사 성공");
+            // insertUserForm.getItem("idDuplicatedSection").show();
+            // idCheckFlag = checkAnswer.content.successFlag;
+            //
+            // insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
 
 
 

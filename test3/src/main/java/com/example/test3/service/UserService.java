@@ -68,8 +68,8 @@ public interface UserService {
 
     /**
      * 회원가입시, 아이디가 중복되었는지 체크한다.
-     * @param searchUserDTO
+     * @param id
      * @return ProcessResultDTO
      */
-    public ProcessResultDTO isIDDuplicated(SearchUserDTO searchUserDTO);
+    public ProcessResultDTO isIDDuplicated(String id);
 }
