@@ -47,7 +47,7 @@ public class RegisterController {
      */
     @PostMapping("/register_check")
     public ResponseEntity<?> checkLogin(@RequestBody @Valid RegisterUserDTO registerUserDTO) {
-        log.info("레벨 값: '{}'", registerUserDTO.getLevel());
+
         String id = registerUserDTO.getId();
         String pwd = registerUserDTO.getPwd();
         String name = registerUserDTO.getName();
@@ -59,19 +59,12 @@ public class RegisterController {
         //등록날짜는 오늘날로 설정
         registerUserDTO.setRegDate(LocalDateTime.now());
 
+        //테이블에 삽입
+        userService.registerUser(registerUserDTO);
 
-//        User user = UserDTO.makeUserDTOToUser(userDTO);
-//        userDAO.insert(user);
-
-        //boolean은 getter 메소드가 is로 시작
-
-        //성공했으면 성공한대로, 실패했으면 실패한대로 값이 담긴다.
-        //return Utility.makeResponseEntity(userLoginOk.isSuccessFlag(), userLoginOk);
-
-        return null;
+        return Utility.makeResponseEntity(true, "회원가입 성공");
 
     }
-
 
 
     //회원수정페이지로 이동

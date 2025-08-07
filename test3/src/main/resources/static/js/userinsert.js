@@ -1,6 +1,6 @@
 let layout;
 let insertUserForm;
-let idCheckFlag = false;
+let registerCheckFlag = false;
 const init = () => {
     createLayout();
     settingForm();
@@ -487,11 +487,9 @@ const checkIdAjax = (event) => {
 
             console.log("아이디 검사 성공");
             insertUserForm.getItem("idDuplicatedSection").show();
-            idCheckFlag = checkAnswer.content.successFlag;
+            //idCheckFlag = checkAnswer.content.successFlag;
 
             insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
-
-
 
 
         } else {
@@ -527,9 +525,33 @@ const checkRegistrationAjax = (event) => {
         if (response.ok) {
             const checkAnswer  = await response.json();
 
-            // console.log("아이디 검사 성공");
-            // insertUserForm.getItem("idDuplicatedSection").show();
-            // idCheckFlag = checkAnswer.content.successFlag;
+            /*
+                boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
+                getXxx()가 아니라 isXxx()가 자동으로 인식
+                따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
+            */
+
+            registerCheckFlag = checkAnswer.normal;
+            if (registerCheckFlag == true) {
+                //alert 창 띄우고, ok 누르면 유저리스트 페이지로
+                dhx.alert({
+                    header: "완료 메시지",
+                    text: "회원가입이 완료 되었습니다.",
+                    buttonsAlignment: "center",
+                    buttons: ["ok"],
+
+                }).then(function(answer){
+
+                    window.location.href = "/user/user_list/page?pageNumber=1";
+                });
+
+
+            } else { //오류 메시지 출력
+                insertUserForm.getItem("registerErrorSection").show();
+                let errorCount = checkAnswer.content.exceptionMessage.length;
+                console.log(errorCount);
+                console.log(checkAnswer.content.exceptionMessage);
+            }
             //
             // insertUserForm.getItem("idDuplicatedSection").setValue(checkAnswer.content.errorMessage);
 

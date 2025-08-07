@@ -9,6 +9,8 @@ reg_date timestamp not null);
 
 select * from t_user;
 
+select * from t_user where id ='ABCDEA';
+
 delete from t_user where id = 'HKT';
 
 delete  from t_user;

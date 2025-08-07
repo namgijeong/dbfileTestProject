@@ -22,10 +22,6 @@ public interface UserService {
     /*user 로그인을 수행한다.*/
     public ProcessResultDTO userLogin(LoginUserDTO loginUserDTO);
 
-    /*
-        등록 최신순 user 10명을 찾는다.
-        등록된 전체 유저 개수를 세서 페이징 버튼들 블록 처리
-    */
 
     /**
      * 페이징 버전임
@@ -72,4 +68,10 @@ public interface UserService {
      * @return ProcessResultDTO
      */
     public ProcessResultDTO isIDDuplicated(String id);
+
+    /**
+     * valid를 통과한후, 테이블에 회원정보 넣기
+     * @param registerUserDTO
+     */
+    public void registerUser(RegisterUserDTO registerUserDTO);
 }

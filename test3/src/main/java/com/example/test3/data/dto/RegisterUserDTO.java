@@ -1,5 +1,6 @@
 package com.example.test3.data.dto;
 
+import com.example.test3.data.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
@@ -43,5 +44,23 @@ public class RegisterUserDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
+
+
+    /**
+     * RegisterUserDTO를 User entity로 반환한다.
+     * @param "RegisterUserDTO"
+     * @return User entity
+     */
+    public static User makeRegisterUserDTOToUser(RegisterUserDTO registerUserDTO) {
+        User user = new User();
+        user.setId(registerUserDTO.getId());
+        user.setPwd(registerUserDTO.getPwd());
+        user.setName(registerUserDTO.getName());
+        user.setLevel(registerUserDTO.getLevel());
+        user.setDesc(registerUserDTO.getDesc());
+        user.setRegDate(registerUserDTO.getRegDate());
+        //user.setRegDate(Timestamp.valueOf(userDTO.getRegDate()));
+        return user;
+    }
 
 }

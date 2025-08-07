@@ -336,4 +336,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     * valid를 통과한후, 테이블에 회원정보 넣기
+     * @param registerUserDTO
+     */
+    @Override
+    public void registerUser(RegisterUserDTO registerUserDTO) {
+        User user = RegisterUserDTO.makeRegisterUserDTOToUser(registerUserDTO);
+        userDAO.insert(user);
+    }
+
+
 }
