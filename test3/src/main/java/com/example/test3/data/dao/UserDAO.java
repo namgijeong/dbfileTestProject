@@ -3,9 +3,7 @@ package com.example.test3.data.dao;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.test3.data.dto.SearchUserDTO;
-import com.example.test3.data.dto.SearchUserDTOResponse;
-import com.example.test3.data.dto.UserDTO;
+import com.example.test3.data.dto.*;
 import com.example.test3.data.entity.User;
 
 public interface UserDAO {
@@ -72,4 +70,10 @@ public interface UserDAO {
      * @return Long
      */
     Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO);
+
+    /**
+     * 회원수정을 할때
+     * @param registerUserDTO
+     */
+    void updateUser(RegisterUserDTO registerUserDTO);
 }

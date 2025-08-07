@@ -293,12 +293,12 @@ public class UserServiceImpl implements UserService {
 
         ProcessResultDTO processResultDTO = new ProcessResultDTO();
 
-        if (optionalUser.isEmpty()) {
-            log.info("잘못된 수정페이지 접근. 해당 회원 아이디로 접근실패");
-
-            processResultDTO.setErrorMessage("잘못된 수정페이지 접근. 해당 회원 아이디로 접근실패");
-            return processResultDTO;
-        }
+//        if (optionalUser.isEmpty()) {
+//            log.info("잘못된 수정페이지 접근. 해당 회원 아이디로 접근실패");
+//
+//            processResultDTO.setErrorMessage("잘못된 수정페이지 접근. 해당 회원 아이디로 접근실패");
+//            return processResultDTO;
+//        }
 
         //회원 아이디로 접근 성공
         User user = optionalUser.get();
@@ -344,6 +344,11 @@ public class UserServiceImpl implements UserService {
     public void registerUser(RegisterUserDTO registerUserDTO) {
         User user = RegisterUserDTO.makeRegisterUserDTOToUser(registerUserDTO);
         userDAO.insert(user);
+    }
+
+    @Override
+    public void updateUser(RegisterUserDTO registerUserDTO) {
+        userDAO.updateUser(registerUserDTO);
     }
 
 

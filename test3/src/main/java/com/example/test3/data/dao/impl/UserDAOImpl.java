@@ -3,7 +3,7 @@ package com.example.test3.data.dao.impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.test3.data.dto.UserDTO;
+import com.example.test3.data.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.example.test3.data.dao.UserDAO;
-import com.example.test3.data.dto.SearchUserDTO;
-import com.example.test3.data.dto.SearchUserDTOResponse;
 import com.example.test3.data.entity.User;
 import com.example.test3.data.repository.UserRepository;
 
@@ -106,10 +104,34 @@ public class UserDAOImpl implements UserDAO {
 //        return searchUserDTOResponseList;
 //    }
 
+
+    /**
+     * query dsl 검색결과 회원 리스트 전체 개수
+     * @param searchUserDTO
+     * @return Long
+     */
     @Override
     public Long selectUsersCountBySearchUserDTO(SearchUserDTO searchUserDTO) {
         Long count =  userRepository.searchUsersCount(searchUserDTO);
         return count;
+    }
+
+
+    /**
+     * 회원수정을 할때
+     * @param registerUserDTO
+     */
+    @Override
+    public void updateUser(RegisterUserDTO registerUserDTO) {
+        User user = userRepository.findById(registerUserDTO.getId()).orElse(null);
+
+        user.setPwd(registerUserDTO.getPwd());
+        user.setName(registerUserDTO.getName());
+        user.setLevel(registerUserDTO.getLevel());
+        user.setDesc(registerUserDTO.getDesc());
+        user.setRegDate(registerUserDTO.getRegDate());
+
+        userRepository.save(user);
     }
 
     //jpql 버전

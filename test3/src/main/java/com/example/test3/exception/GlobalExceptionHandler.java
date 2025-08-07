@@ -87,14 +87,21 @@ public class GlobalExceptionHandler {
         switch (requestURI) {
             case "/register/register_check":
                 // 모든 필드별 에러메시지를 출력- 각 필드별로 에러메시지는 하나만
-                processResultDTOList = makeErrorMessageList(errors);
+                processResultDTOList = makeRegisterErrorMessageList(errors);
+                log.warn("processResultDTOList : "+processResultDTOList);
+                isRegister = true;
+                break;
+
+            case "/register/update_check":
+                // 모든 필드별 에러메시지를 출력- 각 필드별로 에러메시지는 하나만
+                processResultDTOList = makeUpdateErrorMessageList(errors);
                 log.warn("processResultDTOList : "+processResultDTOList);
                 isRegister = true;
                 break;
 
             case "/login/login_check":
                 // 아이디나 비밀번호중 하나만 랜덤으로 출력
-                processResultDTO = makeErrorMessage(errors);
+                processResultDTO = makeLoginErrorMessage(errors);
                 break;
 
             default:
@@ -118,7 +125,7 @@ public class GlobalExceptionHandler {
             필드에러(FieldError) => 특정 필드 값에 대한 유효성 검증 실패
             글로벌에러(ObjectError) => 객체 전체 또는 필드 조합에 대한 검증 실패
      */
-    public List<ProcessResultDTO> makeErrorMessageList(List<ObjectError> errors) {
+    public List<ProcessResultDTO> makeRegisterErrorMessageList(List<ObjectError> errors) {
 
         List<ProcessResultDTO> processResultDTOList = new ArrayList<>();
         //registerField를 이미 맞닥뜨렸는지 판단하기 위해 카운트를 저장
@@ -164,7 +171,47 @@ public class GlobalExceptionHandler {
         return processResultDTOList;
     }
 
-    public ProcessResultDTO makeErrorMessage(List<ObjectError> errors) {
+    public List<ProcessResultDTO> makeUpdateErrorMessageList(List<ObjectError> errors) {
+
+        List<ProcessResultDTO> processResultDTOList = new ArrayList<>();
+        //registerField를 이미 맞닥뜨렸는지 판단하기 위해 카운트를 저장
+        Map<RegisterField, Integer> registerFieldCountMap = new HashMap<>();
+
+        //RegisterField 상수 개수만큼 map에 세팅해준다
+        RegisterField[] registerFields = RegisterField.values();
+        for (RegisterField registerField : registerFields) {
+            registerFieldCountMap.put(registerField, 0);
+        }
+
+        log.warn("registerFieldCountMap :"+registerFieldCountMap);
+        for (ObjectError error : errors) {
+            ProcessResultDTO processResultDTO = new ProcessResultDTO();
+            if (error instanceof FieldError) {
+                FieldError fieldError = (FieldError) error;
+                // 같은 종류의 필드 관련 메시지를 한번도 뽑지 않았다면 => ex 아이디 필드를 처음맞닥뜨리면
+                log.warn("전체 에러메시지들 목록에서 : "+error.getDefaultMessage());
+                log.warn("egisterFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())) : "+registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())));
+                if (registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())) == 0) {
+                    registerFieldCountMap.put(RegisterField.findRegisterFieldEnum(fieldError.getField()), 1);
+
+                    //name을 해야지 enum을 문자열로 변환
+                    processResultDTO.setErrorMessage(RegisterField.findRegisterFieldEnum(fieldError.getField()).getMessage());
+
+                    processResultDTOList.add(processResultDTO);
+                } else {
+                    continue;
+                }
+
+            }
+            else {
+                log.warn("혹시 글로벌 에러로 들어오니?");
+            } //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
+        }
+
+        return processResultDTOList;
+    }
+
+    public ProcessResultDTO makeLoginErrorMessage(List<ObjectError> errors) {
         ObjectError error = errors.get(0);
         ProcessResultDTO processResultDTO = new ProcessResultDTO();
         if (error instanceof FieldError) {

@@ -22,7 +22,7 @@ const createLayout = () => {
                 id: "mainContent",
                 css: "mainContent",
                 width:1000,
-                height:1100,
+                height:1200,
                 padding:0,
 
                 cols: [
@@ -31,7 +31,7 @@ const createLayout = () => {
                         name : "updateUserForm",
                         css : "updateUserForm",
                         width: 500,
-                        height: 1000,
+                        height: 1150,
                         padding:0,
                     },
 
@@ -363,7 +363,61 @@ const settingForm = () => {
             },
 
             {
-                id : "updateCondition7",
+                //회원가입 에러 문구표시
+                id:"updateCondition7",
+                css:"updateCondition",
+                width: 450,
+                height: 150,
+                padding:0,
+                //hidden:true,
+
+                rows: [
+                    {
+
+                        id:"registerErrorSection1",
+                        name:"registerErrorSection1",
+                        css:"conditionArea",
+                        //type:"container",
+                        type: "text",
+                        hidden:true,
+
+                        width:400,
+                        height:50,
+                        padding:0,
+                    },
+                    {
+
+                        id:"registerErrorSection2",
+                        name:"registerErrorSection2",
+                        css:"conditionArea",
+                        //type:"container",
+                        type: "text",
+                        hidden:true,
+
+                        width:400,
+                        height:50,
+                        padding:0,
+                    },
+                    {
+
+                        id:"registerErrorSection3",
+                        name:"registerErrorSection3",
+                        css:"conditionArea",
+                        //type:"container",
+                        type: "text",
+                        hidden:true,
+
+                        width:400,
+                        height:50,
+                        padding:0,
+                    },
+
+                ]
+
+            },
+
+            {
+                id : "updateCondition8",
                 css : "updateCondition",
                 width : 450,
                 height : 50,
@@ -371,7 +425,7 @@ const settingForm = () => {
 
                 cols:[
                     {
-                        id: "conditionName7",
+                        id: "conditionName8",
                         css : "conditionName",
                         width : 300,
                         height : 40,
@@ -416,6 +470,19 @@ const settingForm = () => {
         ]
     });
 
+    //id => 클릭한 버튼의 이름(또는 이름이 지정되지 않은 경우 ID)
+    updateUserForm.events.on("click", (id, event) => {
+        switch (id) {
+            //이걸 클릭했을때
+            case "updateButton":
+                console.log("업데이트 버튼 클릭");
+                //여기다가 클릭후 ajax 실행시켜서 문구표출
+                checkUpdateAjax(event);
+                break;
+
+        }
+    });
+
     layout.getCell("updateUserForm").attach(updateUserForm);
 }
 
@@ -447,14 +514,97 @@ const settingCalendar = () => {
 }
 
 
+const checkUpdateAjax = (event) => {
+    let id = updateUserForm.getItem("id").getValue();
+    let pwd = updateUserForm.getItem("pwd").getValue();
+    let name = updateUserForm.getItem("name").getValue();
+    let level = updateUserForm.getItem("level").getValue();
+    let desc = updateUserForm.getItem("desc").getValue();
+    let regDate = updateCalendar.getValue();
+    regDate = plusZeroTime(regDate);
+
+    const checkUpdateData = {id:id, pwd:pwd, name:name, level:level, desc:desc, reg_date:regDate};
+    console.log(checkUpdateData);
+
+    fetch("/register/update_check", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(checkUpdateData)
+    }) .then(async response => {
+        /*
+            그냥 ok로 하고 body 객체 안에서 flag 검사해서 아이디,비번 오류 메시지 출력
+            응답(response) 본문을 JSON으로 파싱해서 Promise로 반환
+         */
+        if (response.ok) {
+            const checkAnswer  = await response.json();
+
+            /*
+                boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
+                getXxx()가 아니라 isXxx()가 자동으로 인식
+                따라서 Jackson 등 직렬화 라이브러리는 getter 이름에서 is 접두사를 빼고 필드명을 normal로 추론
+            */
+
+            registerCheckFlag = checkAnswer.normal;
+            if (registerCheckFlag == true) {
+                //alert 창 띄우고, ok 누르면 유저리스트 페이지로
+                dhx.alert({
+                    header: "완료 메시지",
+                    text: "업데이트가 완료 되었습니다.",
+                    buttonsAlignment: "center",
+                    buttons: ["ok"],
+
+                }).then(function(answer){
+
+                    window.location.href = "/user/user_list/page?pageNumber=1";
+                });
+
+
+            } else { //오류 메시지 출력
+                //insertUserForm.getItem("insertCondition6").show();
+
+                console.log(checkAnswer.content.exceptionMessage);
+
+                let formItemId = "registerErrorSection";
+                let formItemIdFull = '';
+
+                //다시 출력할때는 초기화하자
+                for(let i= 1; i <= 4 ; i++) {
+                    let formItemIdFull='';
+                    formItemIdFull = formItemId+i;
+                    updateUserForm.getItem(formItemIdFull).hide();
+                }
+                checkAnswer.content.exceptionMessage.forEach((processResultDTO,index) => {
+                    let formItemIdFull = '';
+                    formItemIdFull = formItemId+(index+1);
+                    console.log(formItemIdFull)
+                    updateUserForm.getItem(formItemIdFull).show();
+                    updateUserForm.getItem(formItemIdFull).setValue(processResultDTO.errorMessage);
+
+                });
+
+
+            }
+
+
+        } else {
+            const errorMessage = await response.json();
+            console.log("errorMessage : "+errorMessage);
+
+        }
+    }).catch(error => {
+        console.log("error : "+error);
+    })
+}
+
+
 const awaitRedraw = () => {
     //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
     // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
     dhx.awaitRedraw().then(() => {
         //수정대상 회원을 못찾음
-        if (!successFlag) {
-            window.location.href = "/user/user_list/page?pageNumber=1";
-        }
+        // if (!successFlag) {
+        //     window.location.href = "/user/user_list/page?pageNumber=1";
+        // }
 
         updateUserForm.getItem("id").setValue(userDTO.id);
         updateUserForm.getItem("pwd").setValue(userDTO.pwd);
