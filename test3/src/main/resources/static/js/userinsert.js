@@ -506,6 +506,11 @@ const settingForm = () => {
                 //여기다가 클릭후 ajax 실행시켜서 문구표출
                 checkRegistrationAjax(event);
                 break;
+
+            case "goListButton":
+                console.log("돌아가기 버튼 클릭");
+                window.history.back();
+                break;
         }
     });
 

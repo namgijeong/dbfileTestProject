@@ -374,8 +374,8 @@ const settingForm = () => {
                 rows: [
                     {
 
-                        id:"registerErrorSection1",
-                        name:"registerErrorSection1",
+                        id:"updateErrorSection1",
+                        name:"updateErrorSection1",
                         css:"conditionArea",
                         //type:"container",
                         type: "text",
@@ -387,8 +387,8 @@ const settingForm = () => {
                     },
                     {
 
-                        id:"registerErrorSection2",
-                        name:"registerErrorSection2",
+                        id:"updateErrorSection2",
+                        name:"updateErrorSection2",
                         css:"conditionArea",
                         //type:"container",
                         type: "text",
@@ -400,8 +400,8 @@ const settingForm = () => {
                     },
                     {
 
-                        id:"registerErrorSection3",
-                        name:"registerErrorSection3",
+                        id:"updateErrorSection3",
+                        name:"updateErrorSection3",
                         css:"conditionArea",
                         //type:"container",
                         type: "text",
@@ -478,6 +478,11 @@ const settingForm = () => {
                 console.log("업데이트 버튼 클릭");
                 //여기다가 클릭후 ajax 실행시켜서 문구표출
                 checkUpdateAjax(event);
+                break;
+
+            case "goListButton":
+                console.log("돌아가기 버튼 클릭");
+                window.history.back();
                 break;
 
         }
@@ -564,7 +569,7 @@ const checkUpdateAjax = (event) => {
 
                 console.log(checkAnswer.content.exceptionMessage);
 
-                let formItemId = "registerErrorSection";
+                let formItemId = "updateErrorSection";
                 let formItemIdFull = '';
 
                 //다시 출력할때는 초기화하자

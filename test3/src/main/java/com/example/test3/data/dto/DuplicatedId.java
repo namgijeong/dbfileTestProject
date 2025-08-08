@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 //검증할 검증 클래스 
 @Constraint(validatedBy = IdDuplicatedCheckValidator.class)
-public @interface IdDuplicatedCheck {
+public @interface DuplicatedId {
     
     String message() default "아이디가 중복됩니다.";
 

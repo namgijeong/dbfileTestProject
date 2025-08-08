@@ -1,10 +1,12 @@
 package com.example.test3.exception;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.test3.data.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -18,13 +20,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.test3.data.dto.LoginField;
-import com.example.test3.data.dto.ProcessResultDTO;
 import com.example.test3.response.ErrorResponse;
 import com.example.test3.response.ResponseBase;
 import com.example.test3.utility.Utility;
 import com.example.test3.data.dto.ProcessResultDTO;
-import com.example.test3.data.dto.RegisterField;
 
 
 @RestControllerAdvice
@@ -137,22 +136,28 @@ public class GlobalExceptionHandler {
             registerFieldCountMap.put(registerField, 0);
         }
 
-        log.warn("registerFieldCountMap :"+registerFieldCountMap);
         for (ObjectError error : errors) {
             ProcessResultDTO processResultDTO = new ProcessResultDTO();
             if (error instanceof FieldError) {
                 FieldError fieldError = (FieldError) error;
+
                 // 같은 종류의 필드 관련 메시지를 한번도 뽑지 않았다면 => ex 아이디 필드를 처음맞닥뜨리면
-                log.warn("전체 에러메시지들 목록에서 : "+error.getDefaultMessage());
-                log.warn("egisterFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())) : "+registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())));
+                log.warn("전체 에러메시지들 목록에서 : "+fieldError.getDefaultMessage());
+                log.warn("registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())) : "+registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())));
                 if (registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())) == 0) {
                     registerFieldCountMap.put(RegisterField.findRegisterFieldEnum(fieldError.getField()), 1);
-                    
-                    //만약 아이디 필드면 valid에서 설정한 고유메시지를 넣는다 => RegisterField ID로만 들어가기 때문에 분간이 안됨
-                    //name을 해야지 enum을 문자열로 변환
+
+                    //아이디 필드에 관한경우, 같은 필드여도 어노테이션마다 출력하고 싶은 문구가 다르므로
+                    //name() => enum을 문자열로 변환
                     if (RegisterField.ID.name().equalsIgnoreCase(fieldError.getField())) {
-                        log.warn("error.getDefaultMessage() : "+error.getDefaultMessage());
-                        processResultDTO.setErrorMessage(error.getDefaultMessage());
+                        //getCode() => 어느 valid 이름인지 나온다. ex Size
+                        String code = Utility.makeCamelCaseToSnakeCase(fieldError.getCode());
+                        if (code.equalsIgnoreCase("Duplicated_Id")) {
+                            processResultDTO.setErrorMessage(RegisterField.findRegisterFieldEnum(code).getMessage());
+                        } else {
+                            processResultDTO.setErrorMessage(RegisterField.findRegisterFieldEnum(fieldError.getField()).getMessage());
+                        }
+
                     } else {
                         processResultDTO.setErrorMessage(RegisterField.findRegisterFieldEnum(fieldError.getField()).getMessage());
                     }
@@ -163,9 +168,7 @@ public class GlobalExceptionHandler {
                 }
 
             }
-            else {
-                log.warn("혹시 글로벌 에러로 들어오니?");
-            } //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
+            else { } //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
         }
 
         return processResultDTOList;
@@ -183,29 +186,24 @@ public class GlobalExceptionHandler {
             registerFieldCountMap.put(registerField, 0);
         }
 
-        log.warn("registerFieldCountMap :"+registerFieldCountMap);
         for (ObjectError error : errors) {
             ProcessResultDTO processResultDTO = new ProcessResultDTO();
             if (error instanceof FieldError) {
                 FieldError fieldError = (FieldError) error;
                 // 같은 종류의 필드 관련 메시지를 한번도 뽑지 않았다면 => ex 아이디 필드를 처음맞닥뜨리면
-                log.warn("전체 에러메시지들 목록에서 : "+error.getDefaultMessage());
+                log.warn("전체 에러메시지들 목록에서 : "+fieldError.getDefaultMessage());
                 log.warn("egisterFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())) : "+registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())));
                 if (registerFieldCountMap.get(RegisterField.findRegisterFieldEnum(fieldError.getField())) == 0) {
                     registerFieldCountMap.put(RegisterField.findRegisterFieldEnum(fieldError.getField()), 1);
 
-                    //name을 해야지 enum을 문자열로 변환
                     processResultDTO.setErrorMessage(RegisterField.findRegisterFieldEnum(fieldError.getField()).getMessage());
-
                     processResultDTOList.add(processResultDTO);
                 } else {
                     continue;
                 }
 
             }
-            else {
-                log.warn("혹시 글로벌 에러로 들어오니?");
-            } //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
+            else { } //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
         }
 
         return processResultDTOList;
@@ -222,6 +220,13 @@ public class GlobalExceptionHandler {
         }
         else {} //필드에러가 아닌 글로벌 에러 - 지금으로썬 쓸일 없다.
         return processResultDTO;
+    }
+
+    public <T> int countClassMembers(T someClass) {
+        //getClass() => Class<?> 반환
+        //getDeclaredFields() => 클래스 자체에서 선언된 모든 필드(private, protected, public, default)를 가져옴
+        Field[] fields = someClass.getClass().getDeclaredFields();
+        return fields.length;
     }
 }
 

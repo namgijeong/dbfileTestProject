@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class IdDuplicatedCheckValidator implements ConstraintValidator<IdDuplicatedCheck, String> {
+public class IdDuplicatedCheckValidator implements ConstraintValidator<DuplicatedId, String> {
 
     private final UserService userService;
 
