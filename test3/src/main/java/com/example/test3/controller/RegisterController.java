@@ -101,9 +101,6 @@ public class RegisterController {
 
         log.info("넘어온 값 : "+id+ ", "+pwd+ ", "+name+ ", "+level+ ", "+desc);
 
-        //등록날짜는 오늘날로 설정
-        //registerUserDTO.setRegDate(LocalDateTime.now());
-
         //테이블에 삽입
         userService.updateUser(updateUserDTO);
 

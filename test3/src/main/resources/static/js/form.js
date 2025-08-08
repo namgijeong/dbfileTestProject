@@ -5,11 +5,9 @@ let trueResult;
 let falseResult;
 
 const init = () => {
-
     createLayout();
-
     settingForm();
-
+    awaitRedraw();
 }
 
 
@@ -145,41 +143,6 @@ const settingForm = () => {
     //이렇게 해당 레이아웃 cell 에 다시 attach 까지 해주면 화면에 나올거에요
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
     layout.getCell("fileForm").attach(fileForm);
-
-
-    //.events.on("ready", ...)는 DHTMLX에서 공식적으로 컴포넌트가 화면에 완전히 렌더된 후를 알려주는 신뢰성 높은 방식
-    //afterAdd 이벤트는 새 필드가 동적으로 추가될 때만 동작
-    // fileForm.events.on("afterAdd", (id, event) => {
-    //     // const placeholder = document.getElementById("dbFilePlaceholder");
-    //     // if (placeholder) {
-    //     //     const input = document.createElement("input");
-    //     //     input.type = "file";
-    //     //     input.id = "dbFile";
-    //     //     input.className = "dbFile";
-    //     //     placeholder.appendChild(input);
-    //     //     console.log("들어왔다");
-    //     // }
-    //
-    //     const inputHtml = `<input type="file" id="dbFile" class="dbFile">`;
-    //     fileForm.getCell("dbFile").attachHTML(inputHtml);
-    // });
-
-    //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
-    // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
-    dhx.awaitRedraw().then(() => {
-        const placeholder = document.querySelector('[data-cell-id="dbFile"]')
-        if (placeholder) {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.id = "dbFile";
-            input.className = "dbFileInput";
-            placeholder.innerHTML = '';
-            placeholder.appendChild(input);
-            console.log("파일 input 삽입됨");
-        } else {
-            console.warn("dbFile이 아직 없음");
-        }
-    });
 
 }
 
@@ -594,6 +557,26 @@ const makeTableHtml = (response) => {
     layout.getCell("trueResult").show();
     layout.getCell("trueResult").attach(trueResult);
 
+}
+
+
+const awaitRedraw = () => {
+    //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
+    // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
+    dhx.awaitRedraw().then(() => {
+        const placeholder = document.querySelector('[data-cell-id="dbFile"]')
+        if (placeholder) {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.id = "dbFile";
+            input.className = "dbFileInput";
+            placeholder.innerHTML = '';
+            placeholder.appendChild(input);
+            console.log("파일 input 삽입됨");
+        } else {
+            console.warn("dbFile이 아직 없음");
+        }
+    });
 }
 
 

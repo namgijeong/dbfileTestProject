@@ -4,11 +4,10 @@ let alertText1;
 let alertText2;
 
 const init = () => {
-
     createLayout();
 
     settingForm();
-
+    awaitRedraw();
 }
 
 
@@ -216,31 +215,11 @@ const settingForm = () => {
     //attach()는 내부적으로 새롭게 렌더를 트리거하지만 ready 이벤트를 자동으로 다시 내보내지 않음
     layout.getCell("loginForm").attach(loginForm);
 
-    //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
-    dhx.awaitRedraw().then(() => {
-
-        const idDivText = document.querySelector('[data-cell-id="idDiv"] > div');
-        if(idDivText) {
-            idDivText.textContent = "ID";
-
-            idDivText.classList.add("itemDiv");
-        }
-
-
-        const pwdDivText = document.querySelector('[data-cell-id="pwdDiv"] > div');
-        if(pwdDivText) {
-            pwdDivText.textContent = "PWD";
-
-            pwdDivText.classList.add("itemDiv");
-        }
-
-    });
-
 }
 
 
 /**
- *  로그인 로직을 Ajax로 처리한다.
+ * 로그인 로직을 Ajax로 처리한다.
  * @param event
  */
 function ajaxSubmit(event) {
@@ -283,8 +262,6 @@ function ajaxSubmit(event) {
 
 
 /**
- * 아이디와 관련한 메시지는 아이디칸 밑에,
- * 비밀번호와 관련한 메시지는 비밀번호칸 밑에
  * 메시지가 존재한다면 숨겨져있던 메시지 태그를 보여준다.
  * @param loginAnswer ResponseBase 응답객체
  */
@@ -322,5 +299,28 @@ function makeHtml(loginAnswer){
     }
 
     loginForm.getItem("checkDiv").setValue(alertText1);
+}
+
+
+const awaitRedraw = () => {
+    //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
+    dhx.awaitRedraw().then(() => {
+
+        const idDivText = document.querySelector('[data-cell-id="idDiv"] > div');
+        if(idDivText) {
+            idDivText.textContent = "ID";
+
+            idDivText.classList.add("itemDiv");
+        }
+
+
+        const pwdDivText = document.querySelector('[data-cell-id="pwdDiv"] > div');
+        if(pwdDivText) {
+            pwdDivText.textContent = "PWD";
+
+            pwdDivText.classList.add("itemDiv");
+        }
+
+    });
 }
 

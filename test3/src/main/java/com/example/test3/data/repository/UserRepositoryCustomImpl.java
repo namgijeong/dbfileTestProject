@@ -3,9 +3,9 @@ package com.example.test3.data.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.example.test3.data.dto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.example.test3.data.entity.QUser;
-import org.springframework.util.StringUtils;
+import com.example.test3.data.dto.*;
+
 
 @Repository
 @RequiredArgsConstructor
