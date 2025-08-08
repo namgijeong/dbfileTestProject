@@ -740,7 +740,7 @@ const settingGrid = () => {
             //htmlEnable => 열에서 HTML 콘텐츠를 사용하고 표시 가능
             { id:"update_button", htmlEnable:true, header: [{ text: "UPDATE" }],width:100,
                 template: (cellValue, row, column) => {
-                    return `<button class="updateButton" data-id="${row.id}">수정하기</button>`
+                    return `<button class="updateButton" data-id="${row.id}">수정하기</button>`;
                 }
             },
         ],

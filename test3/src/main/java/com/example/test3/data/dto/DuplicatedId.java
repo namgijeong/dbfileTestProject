@@ -11,14 +11,17 @@ import java.lang.annotation.Target;
 //어노테이션을 적용할 수 있는 위치
 //ElementType.FIELD => 필드가 대상
 @Target(ElementType.FIELD)
-//실행하는 동안 어노테이션을 적용함
+//class 파일에도 유지되고 JVM 실행 시에도 유지된다.
 @Retention(RetentionPolicy.RUNTIME)
 //검증할 검증 클래스 
 @Constraint(validatedBy = IdDuplicatedCheckValidator.class)
 public @interface DuplicatedId {
-    
+
+    //유효하지 않을 경우 반환할 메세지
     String message() default "아이디가 중복됩니다.";
 
-    Class<?>[] groups() default {};  // 반드시 선언해야 함
-    Class<? extends Payload>[] payload() default {};  // 권장
+    //유효성 검증이 진행될 그룹=> @Validated를 사용해서 그룹을 묶을 때 사용
+    Class<?>[] groups() default {};
+    //유효성 검증 시에 전달할 메타 정보
+    Class<? extends Payload>[] payload() default {};
 }

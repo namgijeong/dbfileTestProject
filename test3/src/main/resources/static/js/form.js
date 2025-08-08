@@ -199,8 +199,6 @@ const makeResultHtml = (response) => {
     let showFalseResult = false;
     let showTrueResult = false;
     let showResponseSpaceText3 = false;
-    //성공했을때 표냐, 실패했을때 표냐
-    let resultGrid = null;
 
     /*
         boolean 타입 필드에 대해 getter는 isXxx() 형식이 권장되며,
@@ -295,7 +293,6 @@ const makeResultHtml = (response) => {
 
             console.log("dataset : "+dataset);
             falseResult.data.parse(dataset);
-            resultGrid = falseResult;
 
             //실패든, 성공이든 페이징을 해야한다.
             settingPagination(falseResult);
