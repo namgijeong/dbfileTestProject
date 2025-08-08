@@ -73,7 +73,7 @@ public interface UserDAO {
 
     /**
      * 회원수정을 할때
-     * @param registerUserDTO
+     * @param updateUserDTO
      */
-    void updateUser(RegisterUserDTO registerUserDTO);
+    void updateUser(UpdateUserDTO updateUserDTO);
 }

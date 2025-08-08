@@ -77,7 +77,7 @@ public interface UserService {
 
     /**
      * valid를 통과한 후, 테이블에 회원정보 업데이트하기
-     * @param registerUserDTO
+     * @param updateUserDTO
      */
-    public void updateUser(RegisterUserDTO registerUserDTO);
+    public void updateUser(UpdateUserDTO updateUserDTO);
 }

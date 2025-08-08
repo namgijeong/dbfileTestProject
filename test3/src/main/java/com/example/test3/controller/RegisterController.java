@@ -1,7 +1,5 @@
 package com.example.test3.controller;
 
-import com.example.test3.data.dto.*;
-import com.example.test3.data.entity.User;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -17,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.test3.service.UserService;
 import com.example.test3.utility.Utility;
+import com.example.test3.data.dto.*;
+import com.example.test3.data.entity.User;
 
 @Controller
 @RequestMapping("/register/*")
@@ -91,13 +91,13 @@ public class RegisterController {
      * @return processResultDTO를 담은 ResponseBase
      */
     @PostMapping("/update_check")
-    public ResponseEntity<?> checkUpdate(@RequestBody @Valid RegisterUserDTO registerUserDTO) {
+    public ResponseEntity<?> checkUpdate(@RequestBody @Valid UpdateUserDTO updateUserDTO) {
 
-        String id = registerUserDTO.getId();
-        String pwd = registerUserDTO.getPwd();
-        String name = registerUserDTO.getName();
-        String level = registerUserDTO.getLevel();
-        String desc =  registerUserDTO.getDesc();
+        String id = updateUserDTO.getId();
+        String pwd = updateUserDTO.getPwd();
+        String name = updateUserDTO.getName();
+        String level = updateUserDTO.getLevel();
+        String desc =  updateUserDTO.getDesc();
 
         log.info("넘어온 값 : "+id+ ", "+pwd+ ", "+name+ ", "+level+ ", "+desc);
 
@@ -105,9 +105,9 @@ public class RegisterController {
         //registerUserDTO.setRegDate(LocalDateTime.now());
 
         //테이블에 삽입
+        userService.updateUser(updateUserDTO);
 
-
-        return Utility.makeResponseEntity(true, "회원가입 성공");
+        return Utility.makeResponseEntity(true, "회원수정 성공");
 
     }
 }

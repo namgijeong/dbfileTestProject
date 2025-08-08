@@ -568,7 +568,7 @@ const checkUpdateAjax = (event) => {
                 let formItemIdFull = '';
 
                 //다시 출력할때는 초기화하자
-                for(let i= 1; i <= 4 ; i++) {
+                for(let i= 1; i <= 3 ; i++) {
                     let formItemIdFull='';
                     formItemIdFull = formItemId+i;
                     updateUserForm.getItem(formItemIdFull).hide();
@@ -601,10 +601,6 @@ const awaitRedraw = () => {
     //DHTMLX는 화면이 완전히 그려질 때까지 기다리는 공식적인 Promise API를 제공
     // Form attach → Layout attach → DOM 실제 렌더링까지 모두 끝나야 원하는 엘리먼트를 안전하게 조작
     dhx.awaitRedraw().then(() => {
-        //수정대상 회원을 못찾음
-        // if (!successFlag) {
-        //     window.location.href = "/user/user_list/page?pageNumber=1";
-        // }
 
         updateUserForm.getItem("id").setValue(userDTO.id);
         updateUserForm.getItem("pwd").setValue(userDTO.pwd);

@@ -119,17 +119,17 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * 회원수정을 할때
-     * @param registerUserDTO
+     * @param updateUserDTO
      */
     @Override
-    public void updateUser(RegisterUserDTO registerUserDTO) {
-        User user = userRepository.findById(registerUserDTO.getId()).orElse(null);
+    public void updateUser(UpdateUserDTO updateUserDTO) {
+        User user = userRepository.findById(updateUserDTO.getId()).orElse(null);
 
-        user.setPwd(registerUserDTO.getPwd());
-        user.setName(registerUserDTO.getName());
-        user.setLevel(registerUserDTO.getLevel());
-        user.setDesc(registerUserDTO.getDesc());
-        user.setRegDate(registerUserDTO.getRegDate());
+        user.setPwd(updateUserDTO.getPwd());
+        user.setName(updateUserDTO.getName());
+        user.setLevel(updateUserDTO.getLevel());
+        user.setDesc(updateUserDTO.getDesc());
+        user.setRegDate(updateUserDTO.getRegDate());
 
         userRepository.save(user);
     }
